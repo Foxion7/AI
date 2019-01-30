@@ -25,7 +25,7 @@ namespace SteeringCS
 
             timer = new System.Timers.Timer();
             timer.Elapsed += Timer_Elapsed;
-            timer.Interval = 20;
+            timer.Interval = 10;
             timer.Enabled = true;
         }
 

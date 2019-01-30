@@ -28,7 +28,6 @@ namespace SteeringCS
         public double Length()
             => Math.Sqrt(Math.Pow(X,2) + Math.Pow(Y,2));
 
-
         public double LengthSquared()
             => Math.Pow(X, 2) + Math.Pow(Y, 2);
 
@@ -46,10 +45,8 @@ namespace SteeringCS
         public Vector2D Divide(double value)
             => new Vector2D(this.X / value, this.Y /=value);
         
-
         public Vector2D Normalize()=> Divide(Length());
         
-
         public Vector2D Truncate(double max)
         {
             if (Length() > max)
@@ -64,7 +61,12 @@ namespace SteeringCS
         {
             return new Vector2D(this.X, this.Y);
         }
-        
+
+        public Vector2D Perp()
+        {
+            return new Vector2D(-this.Y, this.X);
+        }
+
         public override string ToString()
         {
             return $"({X},{Y})";

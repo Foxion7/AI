@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BD179484-1369-4437-BD3B-4AECFB627286}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SteeringCS</RootNamespace>
     <AssemblyName>SteeringCS</AssemblyName>
@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,13 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="behaviour\ArriveBehaviour.cs" />
     <Compile Include="entity\BaseGameEntity.cs" />
     <Compile Include="behaviour\SeekBehaviour.cs" />
     <Compile Include="DBPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="entity\MovingEntity.cs" />
-    <Compile Include="entity\Vehicle.cs" />
+    <Compile Include="entity\Creature.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

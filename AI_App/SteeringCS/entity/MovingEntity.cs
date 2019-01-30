@@ -15,13 +15,16 @@ namespace SteeringCS.entity
         public float MaxSpeed { get; set; }
         public BaseGameEntity Target { get; set; }
         public SteeringBehaviour SB { get; set; }
+        public Vector2D Heading { get; set; }
+        public Vector2D Side { get; set; }
 
         public MovingEntity(Vector2D pos, World w) : base(pos, w)
         {
-            Mass = 30;
+            Mass = 10;
             MaxSpeed = 30;
             Velocity = new Vector2D();
-            SB = new ArriveBehaviour(this);
+            SB = new ArriveBehaviour(this, ArriveBehaviour.Deceleration.fast);
+            //SB = new SeekBehaviour(this);
         }
 
         public override void Update(float timeElapsed)
@@ -36,7 +39,7 @@ namespace SteeringCS.entity
 
                 //update velocity
                 Velocity = Velocity.Add(acceleration.Multiply(timeElapsed));
-
+                
                 //make sure vehicle does not exceed maximum velocity
                 Velocity = Velocity.Truncate(MaxSpeed);
 
@@ -46,13 +49,9 @@ namespace SteeringCS.entity
                 //update the heading if the vehicle has a non zero velocity
                 if (Velocity.LengthSquared() > 0.00000001)
                 {
-                    //m_vHeading = Vec2DNormalize(m_vVelocity);
-                    //m_vSide = m_vHeading.Perp();
+                    //Heading = Velocity.Normalize();
+                    //Side = Heading.Perp();
                 }
-            }
-            else if(Velocity.LengthSquared() > 0.00000001)
-            {
-                Velocity = Velocity.Multiply(0);
             }
         }
 

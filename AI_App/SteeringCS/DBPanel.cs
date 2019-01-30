@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace AI_App
+namespace SteeringCS
 {
-    public partial class Form1 : Form
+    class DBPanel : Panel
     {
-        public Form1()
+        public DBPanel() 
         {
-            InitializeComponent();
+           this.DoubleBuffered = true;
         }
+        
     }
 }
+

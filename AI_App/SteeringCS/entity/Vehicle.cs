@@ -12,10 +12,12 @@ namespace SteeringCS.entity
     public class Vehicle : MovingEntity, IArriver, IPursuer, IEvader
     {
         public Color VColor { get; set; }
+        public string name { get; set; }
+
         public SteeringBehaviour<Vehicle> SB;
         private MovingEntity _target;
 
-        public Vehicle(Vector2D pos, World w) : base(pos, w)
+        public Vehicle(string name, Vector2D pos, World w) : base(pos, w)
         {
             Mass = 5;
             MaxSpeed = 15;
@@ -29,21 +31,26 @@ namespace SteeringCS.entity
 
             Scale = 5;
             VColor = Color.Black;
-
+            this.name = name;
         }
 
         public override void Update(float timeElapsed)
         {
+            if (!name.Equals("Player"))
+            {
+                Console.WriteLine("Log - gobbo found: " + name);
+
+            }
             if (Target != null)
             {
                 Vector2D steeringForce = SB.Calculate();
                 Vector2D acceleration = steeringForce / Mass;
-                
+
                 Velocity += (acceleration * timeElapsed);
                 Velocity = Velocity.Truncate(MaxSpeed);
-                
+
                 Pos += (Velocity * timeElapsed);
-                
+
                 if (Velocity.LengthSquared() > 0.00000001)
                 {
                     Heading = Velocity.Normalize();
@@ -55,14 +62,7 @@ namespace SteeringCS.entity
                 Velocity *= 0;
             }
 
-            ahead = Pos + Velocity.Normalize();
-            foreach(Obstacle obstacle in MyWorld.obstacles)
-            {
-                if (DistanceBetweenPositions(ahead, obstacle.Pos) < obstacle.Radius)
-                {
-                    Console.WriteLine("Collision detected!");
-                }
-            }
+            //DetectCollision();
             
             // Allows re-entry on other side of form if entity leaves.
             if (this.Pos.X > MyWorld.Width)
@@ -80,20 +80,33 @@ namespace SteeringCS.entity
             }
             else if (this.Pos.Y < 0)
             {
-                this.Pos = new Vector2D(Pos.X, MyWorld.Height-1);
+                this.Pos = new Vector2D(Pos.X, MyWorld.Height - 1);
             }
         }
 
-        private bool lineIntersectsCircleAhead()
-        {
+        //public void DetectCollision()
+        //{
+        //    ahead = Pos + Velocity.Normalize();
+        //    foreach (Obstacle obstacle in MyWorld.obstacles)
+        //    {
+        //        if (lineIntersectsCircleAhead(obstacle))
+        //        {
+        //            //Console.WriteLine(name);
+        //            //Console.WriteLine("Collision detected!");
+        //        }
+        //    }
+        //}
 
-            return false;
-        }
+        //private bool lineIntersectsCircleAhead(Obstacle obstacle)
+        //{
+        //    // Optionally add ahead2 check.
+        //    return DistanceBetweenPositions(obstacle.Pos, ahead) <= obstacle.Radius;
+        //}
 
-        private double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)
-        {
-            return Math.Sqrt((pointA.X - pointB.X) * (pointA.X - pointB.X) + (pointA.Y - pointB.Y) * (pointA.Y - pointB.Y));
-        }
+        //private double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)
+        //{
+        //    return Math.Sqrt((pointA.X - pointB.X) * (pointA.X - pointB.X) + (pointA.Y - pointB.Y) * (pointA.Y - pointB.Y));
+        //}
 
         public override void Render(Graphics g)
         {
@@ -118,7 +131,6 @@ namespace SteeringCS.entity
         public double VelocityTweaker { get; set; }
         public double PanicDistance       { get; set; }
         public double PanicDistanceSq() => PanicDistance * PanicDistance;
-        private Vector2D ahead;
 
     }
 }

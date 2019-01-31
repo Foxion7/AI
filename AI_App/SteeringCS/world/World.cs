@@ -27,11 +27,11 @@ namespace SteeringCS
 
         private void populate()
         {
-            Target = new Vehicle(new Vector2D(100, 60), this);
+            Target = new Vehicle("Gobbo1", new Vector2D(100, 60), this);
             Target.VColor = Color.Green;
             Target.Pos = new Vector2D(100, 40);
 
-            Player = new Vehicle(new Vector2D(10, 10), this);
+            Player = new Vehicle("Player", new Vector2D(10, 10), this);
             Player.VColor = Color.Blue;
             Player.Target = Target;
             Player.Evader = Target;
@@ -54,14 +54,14 @@ namespace SteeringCS
 
         public void SpawnSeekers()
         {
-            var dummy = new Vehicle(new Vector2D(10, 10), this);
+            var dummy = new Vehicle("Gobbo2", new Vector2D(10, 10), this);
             dummy.SB = new SeekBehaviour<Vehicle>(dummy);
             dummy.VColor = Color.Aqua;
             seekers.Add(dummy);
             dummy.Evader = Player;
             dummy.Target = Player;
 
-            var purs = new Vehicle(new Vector2D(10, 10), this);
+            var purs = new Vehicle("Gobbo3", new Vector2D(10, 10), this);
             purs.SB = new PursuitBehaviour<Vehicle>(purs);
             purs.VColor = Color.Crimson;
             seekers.Add(purs);
@@ -69,7 +69,7 @@ namespace SteeringCS
             purs.Target = Player;
 
 
-            var gentleman = new Vehicle(new Vector2D(10, 10), this);
+            var gentleman = new Vehicle("Gobbo4", new Vector2D(10, 10), this);
             gentleman.SB = new PursuitAndArriveBehaviour<Vehicle>(gentleman);
             gentleman.VColor = Color.Purple;
             seekers.Add(gentleman);

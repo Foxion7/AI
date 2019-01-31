@@ -23,8 +23,10 @@ namespace SteeringCS.entity
             Mass = 10;
             MaxSpeed = 30;
             Velocity = new Vector2D();
-            SB = new ArriveBehaviour(this, ArriveBehaviour.Deceleration.fast);
+            //SB = new PursuitBehaviour(this);
+            //SB = new ArriveBehaviour(this, ArriveBehaviour.Deceleration.fast);
             //SB = new SeekBehaviour(this);
+            SB = new FleeBehaviour(this);
         }
 
         public override void Update(float timeElapsed)
@@ -53,6 +55,28 @@ namespace SteeringCS.entity
                     //Side = Heading.Perp();
                 }
             }
+
+            if (this.Pos.X > MyWorld.Width)
+            {
+                this.Pos.X = 0+1;
+            } else if (this.Pos.X < 0)
+            {
+                this.Pos.X = MyWorld.Width-1;
+            }
+
+            if (this.Pos.Y > MyWorld.Height)
+            {
+                this.Pos.Y = 0+1;
+            } else if (this.Pos.Y < 0)
+            {
+                this.Pos.Y = MyWorld.Height-1;
+            }
+        }
+
+        public double TargetDistanceSquared()
+        {
+
+            return 0;
         }
 
         public override string ToString()

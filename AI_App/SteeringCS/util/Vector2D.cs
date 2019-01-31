@@ -46,7 +46,10 @@ namespace SteeringCS
             => new Vector2D(this.X / value, this.Y /=value);
         
         public Vector2D Normalize()=> Divide(Length());
-        
+
+        public double DotProduct(Vector2D v)
+            => (this.X * v.X) + (this.Y * v.Y); 
+
         public Vector2D Truncate(double max)
         {
             if (Length() > max)

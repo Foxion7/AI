@@ -30,7 +30,8 @@ namespace SteeringCS
         {
             Target = new Creature(new Vector2D(100, 60), this);
             Target.VColor = Color.DarkRed;
-            Target.Pos = new Vector2D(100, 40);
+            Target.Pos = new Vector2D(200, 200);
+            //Target.Heading
           
             // Adds enemies.
             AddGoblins();
@@ -40,8 +41,8 @@ namespace SteeringCS
         {
             for (int i = 0; i < this.goblinAmount; i++)
             {
-                float startX = 10 + i * 10;
-                float startY = 10 + i * 10;
+                float startX = 50;
+                float startY = 10 + i * 20;
 
                 Creature goblin = new Creature(new Vector2D(startX, startY), this);
 

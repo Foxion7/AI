@@ -24,10 +24,12 @@ namespace SteeringCS.entity
             double leftCorner = Pos.X - Scale;
             double rightCorner = Pos.Y - Scale;
             double size = Scale * 2;
+            double lineLength = 2;
 
             Pen p = new Pen(VColor, 2);
             g.DrawEllipse(p, new Rectangle((int) leftCorner, (int) rightCorner, (int) size, (int) size));
-            g.DrawLine(p, (int) Pos.X, (int) Pos.Y, (int) Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+            g.DrawLine(p, (int) Pos.X, (int) Pos.Y, (int) Pos.X + (int)(Velocity.X * lineLength), (int)Pos.Y + (int)(Velocity.Y * lineLength));
+            
         }
     }
 }

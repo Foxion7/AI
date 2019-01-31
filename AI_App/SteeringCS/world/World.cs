@@ -29,7 +29,7 @@ namespace SteeringCS
         {
             Target = new Vehicle("Gobbo1", new Vector2D(100, 60), this);
             Target.VColor = Color.Green;
-            Target.Pos = new Vector2D(100, 40);
+            Target.SB = new WanderBehaviour<Vehicle>(Target);
 
             Player = new Vehicle("Player", new Vector2D(10, 10), this);
             Player.VColor = Color.Blue;
@@ -89,6 +89,7 @@ namespace SteeringCS
                 me.Update(timeElapsed);
             }  
             Player.Update(timeElapsed);
+            Target.Update(timeElapsed);
         }
 
         public void Render(Graphics g)

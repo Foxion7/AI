@@ -7,12 +7,11 @@ using SteeringCS.entity;
 
 namespace SteeringCS.behaviour
 {
-    public class PursuitBehaviour<TP> : SeekBehaviour<TP> where TP : MovingEntity, IPursuer
+    class PursuitAndArriveBehaviour<TA> : ArrivalBehaviour<TA> where TA : MovingEntity, IPursuer, IArriver
     {
-        public PursuitBehaviour(TP me) : base(me)
+        public PursuitAndArriveBehaviour(TA me) : base(me)
         {
         }
-
         public override Vector2D Calculate()
         {
             //if the evader is ahead and facing the agent then we can just seek
@@ -23,7 +22,7 @@ namespace SteeringCS.behaviour
             if ((toEvader.Dot(ME.Heading) > 0) &&
                 (relativeHeading < -0.95)) //acos(0.95)=18 degs
             {
-                return Seek(evader.Pos);
+                return Arrive(evader.Pos);
             }
 
             //Not considered ahead so we predict where the evader will be.
@@ -33,8 +32,7 @@ namespace SteeringCS.behaviour
             double lookAheadTime = toEvader.Length() /
                                    (ME.MaxSpeed + evader.Velocity.Length());
             //now seek to the predicted future position of the evader
-            return Seek(evader.Pos + evader.Velocity * lookAheadTime);
+            return Arrive(evader.Pos + evader.Velocity * lookAheadTime);
         }
-
     }
 }

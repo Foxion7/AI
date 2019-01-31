@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SteeringCS\AI_App.csproj" />
+    <ProjectReference Include="..\SteeringCS\SteeringCS.csproj" />
   </ItemGroup>
 
 </Project>

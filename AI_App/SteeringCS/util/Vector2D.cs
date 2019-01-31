@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,64 +9,59 @@ namespace SteeringCS
 {
    
     //Everything is pure in here.
-    public class Vector2D
+    public struct Vector2D
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-
-        public Vector2D() : this(0,0)
+        public override bool Equals(object obj)
         {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Vector2D other && Equals(other);
         }
 
-        public Vector2D(double x, double y)
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (X.GetHashCode() * 397) ^ Y.GetHashCode();
+            }
+        }
+
+        public double X { get; }
+        public double Y { get; }
+
+        public Vector2D(double x = 0, double y = 0)
         {
             X = x;
             Y = y;
         }
 
-        public double Length()
-            => Math.Sqrt(Math.Pow(X,2) + Math.Pow(Y,2));
-
-        public double LengthSquared()
-            => Math.Pow(X, 2) + Math.Pow(Y, 2);
-
-        public Vector2D Add(Vector2D v)
-            => new Vector2D(this.X + v.X, this.Y + v.Y);
-        
-
-        public Vector2D Sub(Vector2D v)
-            => new Vector2D(this.X - v.X, this.Y - v.Y);
-
-        public Vector2D Multiply(double value)
-            => new Vector2D(this.X * value, this.Y * value);
+        public static Vector2D operator + (Vector2D v, Vector2D w)
+            => new Vector2D(w.X + v.X, w.Y + v.Y);
 
 
-        public Vector2D Divide(double value)
-            => new Vector2D(this.X / value, this.Y /=value);
-        
-        public Vector2D Normalize()=> Divide(Length());
+        public static Vector2D operator - (Vector2D v, Vector2D w)
+            => new Vector2D(v.X - w.X, v.Y - w.Y);
 
-        public double DotProduct(Vector2D v)
-            => (this.X * v.X) + (this.Y * v.Y); 
+        public static Vector2D operator * ( Vector2D v, double value)
+            => new Vector2D(v.X * value, v.Y * value);
 
-        public Vector2D Truncate(double max)
+
+        public static Vector2D operator / (Vector2D v, double value)
+            => new Vector2D(v.X / value, v.Y / value);
+
+        public static bool operator ==(Vector2D v, Vector2D w)
+            => Math.Abs(v.X - w.X) < 0.1 && Math.Abs(v.Y - w.Y) < 0.1;
+
+        public static bool operator !=(Vector2D v, Vector2D w) 
+            => !(v == w);
+
+        public bool Equals(Vector2D other)
         {
-            if (Length() > max)
-            {
-                var normalized = this.Normalize();
-                return normalized.Multiply(max);
-            }
-            return this.Clone();
+            return this == other;
         }
-        
+
         public Vector2D Clone()
         {
             return new Vector2D(this.X, this.Y);
-        }
-
-        public Vector2D Perp()
-        {
-            return new Vector2D(-this.Y, this.X);
         }
 
         public override string ToString()
@@ -75,6 +69,4 @@ namespace SteeringCS
             return $"({X},{Y})";
         }
     }
-
-
 }

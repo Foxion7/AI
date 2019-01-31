@@ -7,32 +7,30 @@ using SteeringCS.entity;
 
 namespace SteeringCS.behaviour
 {
-    class FleeBehaviour : SteeringBehaviour
+    class FleeBehaviour<TF> : SteeringBehaviour<TF> where TF: MovingEntity, IFleer
     {
-        public FleeBehaviour(MovingEntity me) : base(me)
+        public FleeBehaviour(TF me) : base(me)
         {
         }
 
         public override Vector2D Calculate()
         {
-            const double PanicDistanceSq = 100.0 * 100.0;
-
-            if (TargetDistanceSq() > PanicDistanceSq)
-            {
-                // Return this to brake right outside of panicdistance.
-                //ME.Velocity = ME.Velocity.Multiply(0);
-
+            if (ME.Target == null)
                 return new Vector2D(0, 0);
-            }
-
-            Vector2D DesiredVelocity = ME.Pos.Sub(ME.Target.Pos).Multiply(ME.MaxSpeed).Normalize();
-            return (DesiredVelocity.Sub(ME.Velocity));
+            return Flee(ME.Target.Pos);
         }
 
-        private double TargetDistanceSq()
+        protected Vector2D Flee(Vector2D targetPos)
         {
-            var position = ME.Pos.Sub(ME.Target.Pos);
-            return(Math.Pow(position.Length(), 2));
+
+            var distance = (ME.Pos - targetPos);
+            if (ME.PanicDistanceSq() < distance.LengthSquared())
+            {
+                return new Vector2D(0, 0);
+            };
+            var desiredVelocity = distance.Normalize() * ME.MaxSpeed;
+            var neededForce = desiredVelocity - ME.Velocity;
+            return neededForce.Truncate(ME.MaxForce);
         }
     }
 }

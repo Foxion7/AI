@@ -9,15 +9,13 @@ using System.Threading.Tasks;
 
 namespace SteeringCS
 {
-    class World
+    public class World
     {
-        private List<MovingEntity> entities = new List<MovingEntity>();
-        public Creature Target { get; set; }
+        private List<MovingEntity> seekers = new List<MovingEntity>();
+        public Vehicle Target { get; set; }
+        public Vehicle Player { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        private Random rnd = new Random();
-
-        private int goblinAmount = 3;
 
         public World(int w, int h)
         {
@@ -28,44 +26,61 @@ namespace SteeringCS
 
         private void populate()
         {
-            Target = new Creature(new Vector2D(100, 60), this);
-            Target.VColor = Color.DarkRed;
-            Target.Pos = new Vector2D(200, 200);
-            //Target.Heading
-          
-            // Adds enemies.
-            AddGoblins();
+            Target = new Vehicle(new Vector2D(100, 60), this);
+            Target.VColor = Color.Green;
+            Target.Pos = new Vector2D(100, 40);
+
+            Player = new Vehicle(new Vector2D(10, 10), this);
+            Player.VColor = Color.Blue;
+            Player.Target = Target;
+            Player.Evader = Target;
+
         }
 
-        private void AddGoblins()
+        public void SpawnSeekers()
         {
-            for (int i = 0; i < this.goblinAmount; i++)
-            {
-                float startX = 50;
-                float startY = 10 + i * 20;
+            var dummy = new Vehicle(new Vector2D(10, 10), this);
+            dummy.SB = new SeekBehaviour<Vehicle>(dummy);
+            dummy.VColor = Color.Aqua;
+            seekers.Add(dummy);
+            dummy.Evader = Player;
+            dummy.Target = Player;
 
-                Creature goblin = new Creature(new Vector2D(startX, startY), this);
+            var purs = new Vehicle(new Vector2D(10, 10), this);
+            purs.SB = new PursuitBehaviour<Vehicle>(purs);
+            purs.VColor = Color.Crimson;
+            seekers.Add(purs);
+            purs.Evader = Player;
+            purs.Target = Player;
 
-                // Gives random color. Should probably limit it to greens.
-                goblin.VColor = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
 
-                entities.Add(goblin);
-                goblin.Target = Target;
-            }
+            var gentleman = new Vehicle(new Vector2D(10, 10), this);
+            gentleman.SB = new PursuitAndArriveBehaviour<Vehicle>(gentleman);
+            gentleman.VColor = Color.Purple;
+            seekers.Add(gentleman);
+            gentleman.Evader = Player;
+            gentleman.Target = Player;
         }
 
+        public void DestroySeekers()
+        {
+            seekers.Clear();
+            
+        }
         public void Update(float timeElapsed)
         {
-            foreach (MovingEntity me in entities)
+            foreach (MovingEntity me in seekers)
             {
                 me.Update(timeElapsed);
             }  
+            Player.Update(timeElapsed);
         }
 
         public void Render(Graphics g)
         {
-            entities.ForEach(e => e.Render(g));
+            seekers.ForEach(e => e.Render(g));
             Target.Render(g);
+            Player.Render(g);
         }
     }
 }

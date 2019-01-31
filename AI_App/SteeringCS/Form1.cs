@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SteeringCS.behaviour;
+using SteeringCS.entity;
 
 namespace SteeringCS
 {
@@ -25,7 +27,7 @@ namespace SteeringCS
 
             timer = new System.Timers.Timer();
             timer.Elapsed += Timer_Elapsed;
-            timer.Interval = 10;
+            timer.Interval = 20;
             timer.Enabled = true;
         }
 
@@ -42,7 +44,39 @@ namespace SteeringCS
         
         private void dbPanel1_MouseClick(object sender, MouseEventArgs e)
         {
-            world.Target.Pos = new Vector2D(e.X, e.Y);
+            if (e.Button == MouseButtons.Left)
+            {
+                world.Target.Pos = new Vector2D(e.X, e.Y);
+            }
+            else
+            {
+                world.Player.Pos = new Vector2D(e.X, e.Y);
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Z:
+                    world.Player.SB = new SeekBehaviour<Vehicle>(world.Player);
+                    break;
+                case Keys.X:
+                    world.Player.SB = new FleeBehaviour<Vehicle>(world.Player);
+                    break;
+                case Keys.C:
+                    world.Player.SB = new ArrivalBehaviour<Vehicle>(world.Player);
+                    break;
+                case Keys.V:
+                    world.Player.SB = new PursuitBehaviour<Vehicle>(world.Player);
+                    break;
+                case Keys.B:
+                    world.Player.SB = new PursuitAndArriveBehaviour<Vehicle>(world.Player);
+                    break;
+                case Keys.N:
+                    //world.Player.SB = new WanderBehaviour<Vehicle>(world.Player);
+                    break;
+            }
         }
     }
 }

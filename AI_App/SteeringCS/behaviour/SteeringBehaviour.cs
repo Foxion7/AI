@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace SteeringCS
 {
-    abstract class SteeringBehaviour
+    public abstract class SteeringBehaviour<TME> where TME : MovingEntity
     {
-        public MovingEntity ME { get; set; }
+        public TME ME { get; set; }
         public abstract Vector2D Calculate();
 
-        public SteeringBehaviour(MovingEntity me)
+        protected SteeringBehaviour(TME me)
         {
             ME = me;
         }

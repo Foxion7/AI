@@ -7,16 +7,26 @@ using System.Threading.Tasks;
 
 namespace SteeringCS.behaviour
 {
-    class SeekBehaviour : SteeringBehaviour
+    public class SeekBehaviour<TS> : SteeringBehaviour<TS> where TS: MovingEntity, ISeeker
     {
-        public SeekBehaviour(MovingEntity me) : base(me){}
+        public SeekBehaviour(TS me) : base(me)
+        {
+
+        }
 
         public override Vector2D Calculate()
         {
-            var me = ME as Creature;
-            var desiredVelocity = me?.Target.Pos.Sub(me.Pos).Normalize().Multiply(me.MaxSpeed);
-            var neededForce = desiredVelocity?.Sub(me?.Velocity);
-            return neededForce ?? new Vector2D(0,0);
+            if (ME.Target != null)
+                return Seek(ME.Target.Pos);
+            return new Vector2D(0, 0);
+        }
+
+        protected Vector2D Seek(Vector2D targetPos)
+        {
+            var desiredVelocity = (targetPos - ME.Pos);
+            desiredVelocity = desiredVelocity.Normalize() * ME.MaxSpeed;
+            var neededForce = desiredVelocity - ME.Velocity;
+            return neededForce.Truncate(ME.MaxForce);
         }
     }
 }

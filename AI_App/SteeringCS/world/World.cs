@@ -87,7 +87,7 @@ namespace SteeringCS
             {
                 me.Update(timeElapsed);
             }  
-            Target.Update(timeElapsed);
+            Player.Update(timeElapsed);
         }
 
         public void Render(Graphics g)

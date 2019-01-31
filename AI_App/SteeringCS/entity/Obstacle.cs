@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SteeringCS.entity
 {
-    class Obstacle : BaseGameEntity, IObstacle
+    public class Obstacle : BaseGameEntity, IObstacle
     {
         public Color VColor { get; set; }
         

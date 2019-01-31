@@ -36,22 +36,14 @@ namespace SteeringCS.entity
         {
             if (Target != null)
             {
-                //calculate the combined force from each steering behavior in the vehicle's list
                 Vector2D steeringForce = SB.Calculate();
-
-                //Acceleration = Force/Mass
                 Vector2D acceleration = steeringForce / Mass;
-
-                //update velocity
+                
                 Velocity += (acceleration * timeElapsed);
-
-                //make sure vehicle does not exceed maximum velocity
                 Velocity = Velocity.Truncate(MaxSpeed);
-
-                //update the position
+                
                 Pos += (Velocity * timeElapsed);
-
-                //update the heading if the vehicle has a non zero velocity
+                
                 if (Velocity.LengthSquared() > 0.00000001)
                 {
                     Heading = Velocity.Normalize();
@@ -62,6 +54,17 @@ namespace SteeringCS.entity
             {
                 Velocity *= 0;
             }
+
+            ahead = Pos + Velocity.Normalize();
+            foreach(Obstacle obstacle in MyWorld.obstacles)
+            {
+                if (DistanceBetweenPositions(ahead, obstacle.Pos) < obstacle.Radius)
+                {
+                    Console.WriteLine("Collision detected!");
+                }
+            }
+            
+            // Allows re-entry on other side of form if entity leaves.
             if (this.Pos.X > MyWorld.Width)
             {
                 this.Pos = new Vector2D(1, Pos.Y);
@@ -81,6 +84,17 @@ namespace SteeringCS.entity
             }
         }
 
+        private bool lineIntersectsCircleAhead()
+        {
+
+            return false;
+        }
+
+        private double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)
+        {
+            return Math.Sqrt((pointA.X - pointB.X) * (pointA.X - pointB.X) + (pointA.Y - pointB.Y) * (pointA.Y - pointB.Y));
+        }
+
         public override void Render(Graphics g)
         {
             double leftCorner = Pos.X - Scale;
@@ -89,7 +103,11 @@ namespace SteeringCS.entity
 
             Pen p = new Pen(VColor, 2);
             g.DrawEllipse(p, new Rectangle((int) leftCorner, (int) rightCorner, (int) size, (int) size));
-            g.DrawLine(p, (int) Pos.X, (int) Pos.Y, (int) Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+            //g.DrawLine(p, (int) Pos.X, (int) Pos.Y, (int) Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+            if(ahead != null)
+            {
+                g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X), (int)Pos.Y + (int)(Velocity.Y));
+            }
         }
 
         public BaseGameEntity Target      { get; set; }
@@ -100,6 +118,7 @@ namespace SteeringCS.entity
         public double VelocityTweaker { get; set; }
         public double PanicDistance       { get; set; }
         public double PanicDistanceSq() => PanicDistance * PanicDistance;
+        private Vector2D ahead;
 
     }
 }

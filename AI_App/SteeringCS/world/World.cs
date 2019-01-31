@@ -12,7 +12,7 @@ namespace SteeringCS
     public class World
     {
         private List<MovingEntity> seekers = new List<MovingEntity>();
-        private List<Obstacle> obstacles = new List<Obstacle>();
+        public List<Obstacle> obstacles = new List<Obstacle>();
         public Vehicle Target { get; set; }
         public Vehicle Player { get; set; }
         public int Width { get; set; }

@@ -36,15 +36,13 @@ namespace SteeringCS
 
         public static Vector2D operator + (Vector2D v, Vector2D w)
             => new Vector2D(w.X + v.X, w.Y + v.Y);
-
-
+        
         public static Vector2D operator - (Vector2D v, Vector2D w)
             => new Vector2D(v.X - w.X, v.Y - w.Y);
 
         public static Vector2D operator * ( Vector2D v, double value)
             => new Vector2D(v.X * value, v.Y * value);
-
-
+        
         public static Vector2D operator / (Vector2D v, double value)
             => new Vector2D(v.X / value, v.Y / value);
 

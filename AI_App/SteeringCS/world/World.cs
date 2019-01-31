@@ -13,8 +13,8 @@ namespace SteeringCS
     {
         private List<MovingEntity> seekers = new List<MovingEntity>();
         public List<Obstacle> obstacles = new List<Obstacle>();
-        public Vehicle Target { get; set; }
         public Vehicle Player { get; set; }
+        public Vehicle Target { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
 
@@ -27,14 +27,14 @@ namespace SteeringCS
 
         private void populate()
         {
-            Target = new Vehicle("Gobbo1", new Vector2D(100, 60), this);
-            Target.VColor = Color.Green;
-            Target.Pos = new Vector2D(100, 40);
+            Player = new Vehicle("Player", new Vector2D(100, 60), this);
+            Player.VColor = Color.Green;
+            Player.Pos = new Vector2D(100, 40);
 
-            Player = new Vehicle("Player", new Vector2D(10, 10), this);
-            Player.VColor = Color.Blue;
-            Player.Target = Target;
-            Player.Evader = Target;
+            Target = new Vehicle("Gobbo1", new Vector2D(10, 10), this);
+            Target.VColor = Color.Blue;
+            Target.Target = Player;
+            Target.Evader = Player;
 
             SpawnObstacles();
         }
@@ -49,7 +49,6 @@ namespace SteeringCS
 
             Obstacle obstacle3 = new Obstacle("obstacle3", 50, new Vector2D(250, 300), this);
             obstacles.Add(obstacle3);
-
         }
 
         public void SpawnSeekers()
@@ -58,23 +57,23 @@ namespace SteeringCS
             dummy.SB = new SeekBehaviour<Vehicle>(dummy);
             dummy.VColor = Color.Aqua;
             seekers.Add(dummy);
-            dummy.Evader = Player;
-            dummy.Target = Player;
+            dummy.Evader = Target;
+            dummy.Target = Target;
 
             var purs = new Vehicle("Gobbo3", new Vector2D(10, 10), this);
             purs.SB = new PursuitBehaviour<Vehicle>(purs);
             purs.VColor = Color.Crimson;
             seekers.Add(purs);
-            purs.Evader = Player;
-            purs.Target = Player;
+            purs.Evader = Target;
+            purs.Target = Target;
 
 
             var gentleman = new Vehicle("Gobbo4", new Vector2D(10, 10), this);
             gentleman.SB = new PursuitAndArriveBehaviour<Vehicle>(gentleman);
             gentleman.VColor = Color.Purple;
             seekers.Add(gentleman);
-            gentleman.Evader = Player;
-            gentleman.Target = Player;
+            gentleman.Evader = Target;
+            gentleman.Target = Target;
         }
 
         public void DestroySeekers()
@@ -88,15 +87,15 @@ namespace SteeringCS
             {
                 me.Update(timeElapsed);
             }  
-            Player.Update(timeElapsed);
+            Target.Update(timeElapsed);
         }
 
         public void Render(Graphics g)
         {
             seekers.ForEach(e => e.Render(g));
             obstacles.ForEach(e => e.Render(g));
-            Target.Render(g);
             Player.Render(g);
+            Target.Render(g);
         }
     }
 }

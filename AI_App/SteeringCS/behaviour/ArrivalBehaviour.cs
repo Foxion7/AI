@@ -23,6 +23,8 @@ namespace SteeringCS.behaviour
 
         public Vector2D Arrive(Vector2D targetPost)
         {
+            ME.DetectCollision();
+
             Vector2D toTarget = targetPost - ME.Pos;
 
             //calculate the distance to the target position

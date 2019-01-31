@@ -77,30 +77,6 @@ namespace SteeringCS.entity
             }
         }
 
-        //public void DetectCollision()
-        //{
-        //    ahead = Pos + Velocity.Normalize();
-        //    foreach (Obstacle obstacle in MyWorld.obstacles)
-        //    {
-        //        if (lineIntersectsCircleAhead(obstacle))
-        //        {
-        //            //Console.WriteLine(name);
-        //            //Console.WriteLine("Collision detected!");
-        //        }
-        //    }
-        //}
-
-        //private bool lineIntersectsCircleAhead(Obstacle obstacle)
-        //{
-        //    // Optionally add ahead2 check.
-        //    return DistanceBetweenPositions(obstacle.Pos, ahead) <= obstacle.Radius;
-        //}
-
-        //private double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)
-        //{
-        //    return Math.Sqrt((pointA.X - pointB.X) * (pointA.X - pointB.X) + (pointA.Y - pointB.Y) * (pointA.Y - pointB.Y));
-        //}
-
         public override void Render(Graphics g)
         {
             double leftCorner = Pos.X - Scale;
@@ -109,11 +85,7 @@ namespace SteeringCS.entity
 
             Pen p = new Pen(VColor, 2);
             g.DrawEllipse(p, new Rectangle((int) leftCorner, (int) rightCorner, (int) size, (int) size));
-            //g.DrawLine(p, (int) Pos.X, (int) Pos.Y, (int) Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
-            if(ahead != null)
-            {
-                g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X), (int)Pos.Y + (int)(Velocity.Y));
-            }
+            g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
         }
 
         public BaseGameEntity Target      { get; set; }

@@ -46,11 +46,11 @@ namespace SteeringCS
         {
             if (e.Button == MouseButtons.Left)
             {
-                world.Target.Pos = new Vector2D(e.X, e.Y);
+                world.Player.Pos = new Vector2D(e.X, e.Y);
             }
             else
             {
-                world.Player.Pos = new Vector2D(e.X, e.Y);
+                world.Target.Pos = new Vector2D(e.X, e.Y);
             }
         }
 
@@ -59,22 +59,22 @@ namespace SteeringCS
             switch (e.KeyCode)
             {
                 case Keys.Z:
-                    world.Player.SB = new SeekBehaviour<Vehicle>(world.Player);
+                    world.Target.SB = new SeekBehaviour<Vehicle>(world.Target);
                     break;
                 case Keys.X:
-                    world.Player.SB = new FleeBehaviour<Vehicle>(world.Player);
+                    world.Target.SB = new FleeBehaviour<Vehicle>(world.Target);
                     break;
                 case Keys.C:
-                    world.Player.SB = new ArrivalBehaviour<Vehicle>(world.Player);
+                    world.Target.SB = new ArrivalBehaviour<Vehicle>(world.Target);
                     break;
                 case Keys.V:
-                    world.Player.SB = new PursuitBehaviour<Vehicle>(world.Player);
+                    world.Target.SB = new PursuitBehaviour<Vehicle>(world.Target);
                     break;
                 case Keys.B:
-                    world.Player.SB = new PursuitAndArriveBehaviour<Vehicle>(world.Player);
+                    world.Target.SB = new PursuitAndArriveBehaviour<Vehicle>(world.Target);
                     break;
                 case Keys.N:
-                    //world.Player.SB = new WanderBehaviour<Vehicle>(world.Player);
+                    //world.Target2.SB = new WanderBehaviour<Vehicle>(world.Target2);
                     break;
             }
         }

@@ -31,20 +31,23 @@ namespace SteeringCS.entity
         public void DetectCollision()
         {
             ahead = Pos + Velocity.Normalize();
+
             foreach (Obstacle obstacle in MyWorld.obstacles)
             {
                 if (lineIntersectsCircleAhead(obstacle))
                 {
-                    Console.WriteLine("Collision detected!");
-                    Console.WriteLine(name + " collides with " + obstacle.name);
+                    Vector2D avoidanceForce = ahead - obstacle.Pos;
+                    avoidanceForce = avoidanceForce.Normalize() * 1000;
+                    Velocity += avoidanceForce;
                 }
             }
+
         }
 
         private bool lineIntersectsCircleAhead(Obstacle obstacle)
         {
             // Optionally add ahead2 check.
-            return DistanceBetweenPositions(obstacle.Pos, ahead) <= obstacle.Radius;
+            return DistanceBetweenPositions(new Vector2D(obstacle.Pos.X + obstacle.Radius, obstacle.Pos.Y + obstacle.Radius), Pos) <= obstacle.Radius + Velocity.Length();
         }
 
         private double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)

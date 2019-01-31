@@ -37,8 +37,18 @@ namespace SteeringCS.entity
             {
                 if (lineIntersectsCircleAhead(obstacle))
                 {
+                    Vector2D centerOfObstacle = new Vector2D(obstacle.Pos.X + obstacle.Radius, obstacle.Pos.Y + obstacle.Radius);
+                    double distanceX = (DistanceBetweenPositions(centerOfObstacle, Pos) - obstacle.Radius);
+                    if(distanceX < 0)
+                    {
+                        distanceX *= -1;
+                    }
+                    Console.WriteLine("distance: " + distanceX);
+
                     Vector2D avoidanceForce = ahead - obstacle.Pos;
-                    avoidanceForce = avoidanceForce.Normalize() * 1000;
+                    avoidanceForce = avoidanceForce.Normalize() * 50;
+                    Console.WriteLine("avoidanceForce: " + avoidanceForce);
+
                     Velocity += avoidanceForce;
                 }
             }
@@ -47,8 +57,9 @@ namespace SteeringCS.entity
 
         private bool lineIntersectsCircleAhead(Obstacle obstacle)
         {
-            // Optionally add ahead2 check.
-            return DistanceBetweenPositions(new Vector2D(obstacle.Pos.X + obstacle.Radius, obstacle.Pos.Y + obstacle.Radius), Pos) <= obstacle.Radius + Velocity.Length();
+            Vector2D centerOfObstacle = new Vector2D(obstacle.Pos.X + obstacle.Radius, obstacle.Pos.Y + obstacle.Radius);
+
+            return DistanceBetweenPositions(centerOfObstacle, Pos) <= obstacle.Radius + Velocity.Length();
         }
 
         private double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)

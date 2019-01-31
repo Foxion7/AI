@@ -22,8 +22,9 @@ namespace SteeringCS.entity
 
         protected MovingEntity(string name, Vector2D pos, World w) : base(pos, w)
         {
+            Pos = pos;
             Velocity = new Vector2D();
-            Heading = Velocity.Normalize();
+            Heading = new Vector2D(1,1);
             Side = Heading.Perp();
             this.name = name;
         }

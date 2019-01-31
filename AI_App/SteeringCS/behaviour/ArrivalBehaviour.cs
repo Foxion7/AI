@@ -28,29 +28,25 @@ namespace SteeringCS.behaviour
             Vector2D toTarget = targetPost - ME.Pos;
 
             //calculate the distance to the target position
-            double dist = toTarget.Length();
-            var decelerationTweaker = ME.DecelerationTweaker;
-            double velocityTweaker = ME.VelocityTweaker;
+            // Calculate the desired velocity
+            var desiredVelocity = targetPost - ME.Pos;
+            var distance = desiredVelocity.Length();
 
-            ME.Velocity = ME.Velocity * velocityTweaker;
+            // Check the distance to detect whether the character
+            // is inside the slowing area
+            if (distance < ME.SlowingRadius)
+            {
+                // Inside the slowing area
+                desiredVelocity = desiredVelocity.Truncate(ME.MaxSpeed) * (distance / ME.SlowingRadius);
+            }
+            else
+            {
+                // Outside the slowing area.
+                desiredVelocity = desiredVelocity.Truncate(ME.MaxSpeed);
+            }
 
-
-            double speed = dist / ((double)ME.Deceleration * decelerationTweaker);
-
-            speed = LimitToMaxSpeed(speed, ME.MaxSpeed);
-            Vector2D desiredVelocity = toTarget * (speed) / (dist);
-
+            // Set the steering based on this
             return (desiredVelocity - ME.Velocity).Truncate(ME.MaxForce);
         }
-
-        private double LimitToMaxSpeed(double current, double max)
-        {
-            if (current > max)
-            {
-                return max;
-            }
-            return current;
-        }
-
     }
 }

@@ -16,8 +16,6 @@ namespace SteeringCS.behaviour
 
         public override Vector2D Calculate()
         {
-            ME.DetectCollision();
-
             if (ME.Target != null)
                 return Seek(ME.Target.Pos);
             return new Vector2D(0, 0);
@@ -25,8 +23,7 @@ namespace SteeringCS.behaviour
 
         protected Vector2D Seek(Vector2D targetPos)
         {
-            var desiredVelocity = (targetPos - ME.Pos);
-            desiredVelocity = desiredVelocity.Normalize() * ME.MaxSpeed;
+            var desiredVelocity = (targetPos - ME.Pos).Normalize() * ME.MaxSpeed;
             var neededForce = desiredVelocity - ME.Velocity;
             return neededForce.Truncate(ME.MaxForce);
         }

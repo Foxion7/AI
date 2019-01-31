@@ -41,13 +41,13 @@ namespace SteeringCS
 
         public void SpawnObstacles()
         {
-            Obstacle obstacle1 = new Obstacle(50, new Vector2D(150, 150), this);
+            Obstacle obstacle1 = new Obstacle("obstacle1", 50, new Vector2D(150, 150), this);
             obstacles.Add(obstacle1);
 
-            Obstacle obstacle2 = new Obstacle(20, new Vector2D(400, 100), this);
+            Obstacle obstacle2 = new Obstacle("obstacle2", 20, new Vector2D(400, 100), this);
             obstacles.Add(obstacle2);
 
-            Obstacle obstacle3 = new Obstacle(50, new Vector2D(250, 300), this);
+            Obstacle obstacle3 = new Obstacle("obstacle3", 50, new Vector2D(250, 300), this);
             obstacles.Add(obstacle3);
 
         }

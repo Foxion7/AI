@@ -16,14 +16,16 @@ namespace SteeringCS.entity
         public float MaxSpeed    { get; set; }
         public float MaxForce    { get; set; }
         public float MaxTurnRate { get; set; }
+        public string name { get; set; }
         // Maybe turn this private
         public Vector2D ahead { get; set; }
 
-        protected MovingEntity(Vector2D pos, World w) : base(pos, w)
+        protected MovingEntity(string name, Vector2D pos, World w) : base(pos, w)
         {
             Velocity = new Vector2D();
             Heading = Velocity.Normalize();
             Side = Heading.Perp();
+            this.name = name;
         }
 
         public void DetectCollision()
@@ -33,8 +35,8 @@ namespace SteeringCS.entity
             {
                 if (lineIntersectsCircleAhead(obstacle))
                 {
-                    Console.WriteLine(name);
                     Console.WriteLine("Collision detected!");
+                    Console.WriteLine(name + " collides with " + obstacle.name);
                 }
             }
         }

@@ -16,6 +16,8 @@ namespace SteeringCS.behaviour
 
         public override Vector2D Calculate()
         {
+            ME.DetectCollision();
+
             if (ME.Target != null)
                 return Seek(ME.Target.Pos);
             return new Vector2D(0, 0);

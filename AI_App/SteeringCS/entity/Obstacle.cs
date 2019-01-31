@@ -11,9 +11,11 @@ namespace SteeringCS.entity
     public class Obstacle : BaseGameEntity, IObstacle
     {
         public Color VColor { get; set; }
+        public string name { get; set; }
         
-        public Obstacle(double radius, Vector2D pos, World w) : base(pos, w)
+        public Obstacle(string name, double radius, Vector2D pos, World w) : base(pos, w)
         {
+            this.name = name;
             Radius = radius;
             VColor = Color.Black;
         }

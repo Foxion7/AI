@@ -12,12 +12,11 @@ namespace SteeringCS.entity
     public class Vehicle : MovingEntity, IArriver, IPursuer, IEvader
     {
         public Color VColor { get; set; }
-        public string name { get; set; }
 
         public SteeringBehaviour<Vehicle> SB;
         private MovingEntity _target;
 
-        public Vehicle(string name, Vector2D pos, World w) : base(pos, w)
+        public Vehicle(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 5;
             MaxSpeed = 15;
@@ -31,16 +30,10 @@ namespace SteeringCS.entity
 
             Scale = 5;
             VColor = Color.Black;
-            this.name = name;
         }
 
         public override void Update(float timeElapsed)
         {
-            if (!name.Equals("Player"))
-            {
-                Console.WriteLine("Log - gobbo found: " + name);
-
-            }
             if (Target != null)
             {
                 Vector2D steeringForce = SB.Calculate();

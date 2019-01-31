@@ -35,10 +35,20 @@ namespace SteeringCS.behaviour
 
             double speed = dist / ((double)ME.Deceleration * decelerationTweaker);
 
-            speed = Math.Max(speed, ME.MaxSpeed);
+            speed = LimitToMaxSpeed(speed, ME.MaxSpeed);
             Vector2D desiredVelocity = toTarget * (speed) / (dist);
 
             return (desiredVelocity - ME.Velocity).Truncate(ME.MaxForce);
         }
+
+        private double LimitToMaxSpeed(double current, double max)
+        {
+            if (current > max)
+            {
+                return max;
+            }
+            return current;
+        }
+
     }
 }

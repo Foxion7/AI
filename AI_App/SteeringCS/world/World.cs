@@ -12,6 +12,7 @@ namespace SteeringCS
     public class World
     {
         private List<MovingEntity> seekers = new List<MovingEntity>();
+        private List<Obstacle> obstacles = new List<Obstacle>();
         public Vehicle Target { get; set; }
         public Vehicle Player { get; set; }
         public int Width { get; set; }
@@ -34,6 +35,20 @@ namespace SteeringCS
             Player.VColor = Color.Blue;
             Player.Target = Target;
             Player.Evader = Target;
+
+            SpawnObstacles();
+        }
+
+        public void SpawnObstacles()
+        {
+            Obstacle obstacle1 = new Obstacle(50, new Vector2D(150, 150), this);
+            obstacles.Add(obstacle1);
+
+            Obstacle obstacle2 = new Obstacle(20, new Vector2D(400, 100), this);
+            obstacles.Add(obstacle2);
+
+            Obstacle obstacle3 = new Obstacle(50, new Vector2D(250, 300), this);
+            obstacles.Add(obstacle3);
 
         }
 
@@ -79,6 +94,7 @@ namespace SteeringCS
         public void Render(Graphics g)
         {
             seekers.ForEach(e => e.Render(g));
+            obstacles.ForEach(e => e.Render(g));
             Target.Render(g);
             Player.Render(g);
         }

@@ -19,14 +19,12 @@ namespace SteeringCS.entity
         public Vehicle(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 5;
-            MaxSpeed = 15;
-            MaxForce = 50;
+            MaxSpeed = 20;
+            MaxForce = 20;
             PanicDistance = 100;
-            Deceleration = Deceleration.fast;
-            DecelerationTweaker = 5;
-            VelocityTweaker = 0.8;
             SB = new SeekBehaviour<Vehicle>(this);
             Velocity = new Vector2D(0, 0);
+            SlowingRadius = 100;
 
             Scale = 5;
             VColor = Color.Black;
@@ -56,8 +54,12 @@ namespace SteeringCS.entity
             }
 
             //DetectCollision();
-            
-            // Allows re-entry on other side of form if entity leaves.
+
+            WrapAround();
+        }
+        // Allows re-entry on other side of form if entity leaves.
+        private void WrapAround()
+        {
             if (this.Pos.X > MyWorld.Width)
             {
                 this.Pos = new Vector2D(1, Pos.Y);
@@ -65,8 +67,8 @@ namespace SteeringCS.entity
             else if (this.Pos.X < 0)
             {
                 this.Pos = new Vector2D(MyWorld.Width - 1, Pos.Y);
-
             }
+
             if (this.Pos.Y > MyWorld.Height)
             {
                 this.Pos = new Vector2D(Pos.X, 1);
@@ -119,11 +121,9 @@ namespace SteeringCS.entity
         public BaseGameEntity Target      { get; set; }
         public MovingEntity Evader        { get; set; }
         public MovingEntity Pursuer       { get; set; }
-        public Deceleration Deceleration   { get; set; }
-        public double DecelerationTweaker { get; set; }
-        public double VelocityTweaker { get; set; }
         public double PanicDistance       { get; set; }
         public double PanicDistanceSq() => PanicDistance * PanicDistance;
+        public double SlowingRadius { get; set; }
 
     }
 }

@@ -23,6 +23,7 @@ namespace SteeringCS.entity
             PanicDistance = 100;
             Deceleration = Deceleration.fast;
             DecelerationTweaker = 5;
+            VelocityTweaker = 0.8;
             SB = new SeekBehaviour<Vehicle>(this);
             Velocity = new Vector2D(0, 0);
 
@@ -96,6 +97,7 @@ namespace SteeringCS.entity
         public MovingEntity Pursuer       { get; set; }
         public Deceleration Deceleration   { get; set; }
         public double DecelerationTweaker { get; set; }
+        public double VelocityTweaker { get; set; }
         public double PanicDistance       { get; set; }
         public double PanicDistanceSq() => PanicDistance * PanicDistance;
 

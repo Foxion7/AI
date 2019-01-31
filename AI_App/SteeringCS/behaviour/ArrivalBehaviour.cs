@@ -12,9 +12,7 @@ namespace SteeringCS.behaviour
         public ArrivalBehaviour(TA me) : base(me)
         {
         }
-
-        private double velocityBreaks = 0.8;
-
+        
         public override Vector2D Calculate()
         {
             if (ME.Target == null)
@@ -30,12 +28,15 @@ namespace SteeringCS.behaviour
             //calculate the distance to the target position
             double dist = toTarget.Length();
             var decelerationTweaker = ME.DecelerationTweaker;
+            double velocityTweaker = ME.VelocityTweaker;
+
+            ME.Velocity = ME.Velocity * velocityTweaker;
+
 
             double speed = dist / ((double)ME.Deceleration * decelerationTweaker);
 
             speed = LimitToMaxSpeed(speed, ME.MaxSpeed);
             Vector2D desiredVelocity = toTarget * (speed) / (dist);
-            ME.Velocity = ME.Velocity * velocityBreaks;
 
             return (desiredVelocity - ME.Velocity).Truncate(ME.MaxForce);
         }

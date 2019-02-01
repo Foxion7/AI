@@ -97,12 +97,12 @@ namespace SteeringCS
 
         public void SpawnHobgoblin()
         {
-            var hobby = new Hobgoblin("Bloodbeard", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            hobby.SB = new SeekBehaviour(hobby);
-            hobby.VColor = Color.Black;
-            _hobgoblins.Add(hobby);
-            hobby.Evader = Target;
-            hobby.Target = Target;
+            var hobbyGobby = new Hobgoblin("Bloodbeard", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            hobbyGobby.PB = new SeekBehaviour(hobbyGobby);
+            hobbyGobby.VColor = Color.Black;
+            _hobgoblins.Add(hobbyGobby);
+            hobbyGobby.Evader = Target;
+            hobbyGobby.Target = Target;
         }
 
         public void DestroySeekers()
@@ -123,12 +123,27 @@ namespace SteeringCS
             }
             catch (Exception e)
             {
+                Console.WriteLine("Goblin exception: " + e.Message);
+            }
+            try
+            {
+                _hobgoblins.ForEach(hobgoblin =>
+                {
+                    hobgoblin.Update(timeElapsed);
+                    //enforceNonPenetrationConstraint(hobgoblin);
+                });
+                Controlled.Update(timeElapsed);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Hobgoblin exception: " + e.Message + " - stacktrace: " +  e.StackTrace);
             }
         }
 
         public void Render(Graphics g)
         {
             _goblins.ForEach(e => e.Render(g));
+            _hobgoblins.ForEach(e => e.Render(g));
             Obstacles.ForEach(e => e.Render(g));
             Target.Render(g);
             Controlled.Render(g);
@@ -142,6 +157,7 @@ namespace SteeringCS
         public void Reset()
         {
             _goblins = new List<MovingEntity>();
+            _hobgoblins = new List<MovingEntity>();
             Obstacles = new List<IObstacle>();
             populate();
         }

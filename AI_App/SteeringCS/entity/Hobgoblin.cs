@@ -12,33 +12,30 @@ namespace SteeringCS.entity
     public class Hobgoblin : MovingEntity, IPursuer, ISeeker, IArriver, IObstacleAvoider
     {
         public Color VColor { get; set; }
-        public ISteeringBehaviour<Hobgoblin> SB;
+        public ISteeringBehaviour<Hobgoblin> PB;
         public ISteeringBehaviour<Hobgoblin> FB;
         public ISteeringBehaviour<Hobgoblin> OA;
 
         public Hobgoblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 100;
-            MaxSpeed = 30;
+            MaxSpeed = 5;
             MaxForce = 50;
-            SeparationValue = 128;
-            CohesionValue = 4;
-            AlignmentValue = 1;
 
-            SB = new SeekBehaviour(this);
+
+            PB = new PursuitAndArriveBehaviour(this);
             OA = new ObstacleAvoidance(this);
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
 
-            Scale = 5;
+            Scale = 10;
             VColor = Color.Black;
         }
 
         public override void Update(float timeElapsed)
         {
-            Vector2D steeringForce = SB.Calculate() *2;
-            steeringForce += FB.Calculate();
+            Vector2D steeringForce = PB.Calculate() *2;
             steeringForce += OA.Calculate();
 
             steeringForce.Truncate(MaxForce);
@@ -61,21 +58,16 @@ namespace SteeringCS.entity
         {
             double leftCorner = Pos.X - Scale;
             double rightCorner = Pos.Y - Scale;
-            double size = Scale * 4;
+            double size = Scale * 2;
 
             Pen p = new Pen(VColor, 2);
             g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
             g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
         }
         
-        public double NeighborsRange { get; set; }
         public BaseGameEntity Target { get; set; }
         public double SlowingRadius { get; set; }
         public MovingEntity Evader { get; set; }
-        public int SeparationValue { get; set; }
-        public int CohesionValue { get; set; }
-        public int AlignmentValue { get; set; }
-        public double DetectionBoxLengthFactor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public List<IObstacle> Obstacles => MyWorld.getObstacles();
     }
 }

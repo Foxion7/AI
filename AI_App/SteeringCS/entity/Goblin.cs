@@ -19,7 +19,7 @@ namespace SteeringCS.entity
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 100;
-            MaxSpeed = 30;
+            MaxSpeed = 10;
             MaxForce = 50;
             SeparationValue = 128;
             CohesionValue = 4;
@@ -77,7 +77,6 @@ namespace SteeringCS.entity
         public int SeparationValue { get; set; }
         public int CohesionValue { get; set; }
         public int AlignmentValue { get; set; }
-        public double DetectionBoxLengthFactor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public List<IObstacle> Obstacles => MyWorld.getObstacles();
     }
 }

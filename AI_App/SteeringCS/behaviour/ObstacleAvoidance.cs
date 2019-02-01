@@ -25,9 +25,7 @@ namespace SteeringCS.behaviour
         public Vector2D Calculate()
         {
             Vector2D avoidanceForce = new Vector2D(0,0);
-
-            //ahead = ME.Pos + ME.Velocity.Normalize() * MAX_SEE_AHEAD;
-
+            
             double dynamic_length = ME.Velocity.Length() / ME.MaxSpeed;
             ahead = ME.Pos + ME.Velocity.Normalize() * dynamic_length;
 
@@ -53,7 +51,7 @@ namespace SteeringCS.behaviour
             
             for (int i = 0; i<ME.Obstacles.Count(); i++) {
                 IObstacle obstacle = ME.Obstacles[i];
-                Boolean collision = lineIntersectsCircleAhead(obstacle);
+                bool collision = lineIntersectsCircleAhead(obstacle);
  
                 if (collision && (mostThreatening == null || DistanceBetweenPositions(ME.Pos, obstacle.Center) < DistanceBetweenPositions(ME.Pos, mostThreatening.Center))) {
                     mostThreatening = obstacle;

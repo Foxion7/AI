@@ -8,7 +8,6 @@ namespace SteeringCS.Interfaces
 {
     interface IObstacleAvoider : IMover
     {
-        double DetectionBoxLengthFactor { get; set; }
         List<IObstacle> Obstacles { get; }
     }
 }

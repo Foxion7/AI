@@ -9,10 +9,10 @@ using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    public class PursuitBehaviour : ISteeringBehaviour<IPursuer>
+    public class PursuitAndArriveBehaviour : ISteeringBehaviour<IPursuer>
     {
         public IPursuer ME { get; set; }
-        public PursuitBehaviour(IPursuer me)
+        public PursuitAndArriveBehaviour(IPursuer me)
         {
             ME = me;
         }

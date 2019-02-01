@@ -16,7 +16,7 @@ namespace SteeringCS
     {
         World world;
         System.Timers.Timer timer;
-        Boolean paused = false;
+        bool paused = false;
 
         public const float timeDelta = 0.8f;
         
@@ -42,7 +42,7 @@ namespace SteeringCS
         {
             world.Render(e.Graphics);
         }
-        
+
         private void dbPanel1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -69,7 +69,7 @@ namespace SteeringCS
                     world.Controlled.SB = new ArrivalBehaviour(world.Controlled);
                     break;
                 case Keys.V:
-                    world.Controlled.SB = new PursuitBehaviour(world.Controlled);
+                    world.Controlled.SB = new PursuitAndArriveBehaviour(world.Controlled);
                     break;
                 case Keys.B:
                     world.Controlled.SB = new PursuitAndArriveBehaviour<Creature>(world.Controlled);
@@ -77,12 +77,22 @@ namespace SteeringCS
                 case Keys.N:
                     world.Controlled.SB = new WanderBehaviour(world.Controlled);
                     break;
+                case Keys.G:
+                    world.SpawnGoblins();
+                    break;
+                case Keys.H:
+                    world.SpawnHobgoblin();
+
+                    break;
+                case Keys.R:
+                    world.Reset();
+                    break;
                 case Keys.Space:
                     if (!paused)
                     {
                         paused = true;
                         pausedLabel.Visible = true;
-                        timer.Interval = Int32.MaxValue;
+                        timer.Interval = int.MaxValue;
                     }
                     else
                     {
@@ -91,23 +101,8 @@ namespace SteeringCS
                         timer.Interval = 20;
                     }
                     break;
-                case Keys.W:
-                    world.SpawnGoblins();
-                    break;
-                case Keys.R:
-                    world.Reset();
-                    break;
+
             }
-        }
-
-        private void goblinButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            world.SpawnGoblins();
-        }
-
-        private void hobgoblinButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            world.SpawnHobgoblin();
         }
     }
 }

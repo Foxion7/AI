@@ -2,7 +2,7 @@
 {
     public interface IObstacle : IEntity
     {
-        double Radius { get; }
-
+        double Radius { get; set; }
+        Vector2D Center { get; set; }
     }
 }

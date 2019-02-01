@@ -35,14 +35,14 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            Vector2D steeringForce = SB.Calculate();
-            var x = double.IsNaN(steeringForce.X) ? 0 : steeringForce.X;
-            var y = double.IsNaN(steeringForce.Y) ? 0 : steeringForce.Y;
-            steeringForce = new Vector2D(x, y);
-            Vector2D acceleration = steeringForce / Mass;
+            if(SB != null)
+            {
+                Vector2D steeringForce = SB.Calculate();
+                Vector2D acceleration = steeringForce / Mass;
 
-            Velocity += (acceleration * timeElapsed);
-            Velocity = Velocity.Truncate(MaxSpeed);
+                Velocity += (acceleration * timeElapsed);
+                Velocity = Velocity.Truncate(MaxSpeed);
+            }
 
             Pos += (Velocity * timeElapsed);
 

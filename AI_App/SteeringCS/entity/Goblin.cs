@@ -9,11 +9,12 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Goblin : MovingEntity, IFlocker, IPursuer, ISeeker, IArriver
+    public class Goblin : MovingEntity, IFlocker, IPursuer, ISeeker, IArriver, IObstacleAvoider
     {
         public Color VColor { get; set; }
         public ISteeringBehaviour<Goblin> SB;
         public ISteeringBehaviour<Goblin> FB;
+        public ISteeringBehaviour<Goblin> OA;
 
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -26,6 +27,7 @@ namespace SteeringCS.entity
 
             SB = new SeekBehaviour(this);
             FB = new FlockBehaviour(this);
+            OA = new ObstacleAvoidance(this);
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
@@ -36,9 +38,12 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            Vector2D steeringForce = SB.Calculate() *0.66;
-            steeringForce += FB.Calculate() *0.33;
+            Vector2D steeringForce = SB.Calculate() *2;
+            steeringForce += FB.Calculate();
+            steeringForce += OA.Calculate();
+
             steeringForce.Truncate(MaxForce);
+
             Vector2D acceleration = steeringForce / Mass;
 
             Velocity += (acceleration * timeElapsed);
@@ -50,6 +55,8 @@ namespace SteeringCS.entity
             {
                 Heading = Velocity.Normalize();
                 Side = Heading.Perp();
+                Console.WriteLine("Goblin " + this.Name + "'s speed is: " + Velocity.Length());
+
             }
             WrapAround();
         }
@@ -72,5 +79,7 @@ namespace SteeringCS.entity
         public int SeparationValue { get; set; }
         public int CohesionValue { get; set; }
         public int AlignmentValue { get; set; }
+        public double DetectionBoxLengthFactor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public List<IObstacle> Obstacles => MyWorld.getObstacles();
     }
 }

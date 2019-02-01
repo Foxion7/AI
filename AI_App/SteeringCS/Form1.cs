@@ -60,28 +60,28 @@ namespace SteeringCS
             switch (e.KeyCode)
             {
                 case Keys.Z:
-                    world.Controlled.SB = new SeekBehaviour<Vehicle>(world.Controlled);
+                    world.Controlled.SB = new SeekBehaviour(world.Controlled);
                     break;
                 case Keys.X:
-                    world.Controlled.SB = new FleeBehaviour<Vehicle>(world.Controlled);
+                    world.Controlled.SB = new FleeBehaviour(world.Controlled);
                     break;
                 case Keys.C:
-                    world.Controlled.SB = new ArrivalBehaviour<Vehicle>(world.Controlled);
+                    world.Controlled.SB = new ArrivalBehaviour(world.Controlled);
                     break;
                 case Keys.V:
-                    world.Controlled.SB = new PursuitBehaviour<Vehicle>(world.Controlled);
+                    world.Controlled.SB = new PursuitBehaviour(world.Controlled);
                     break;
                 case Keys.B:
                     world.Controlled.SB = new PursuitAndArriveBehaviour<Vehicle>(world.Controlled);
                     break;
                 case Keys.N:
-                    world.Controlled.SB = new WanderBehaviour<Vehicle>(world.Controlled);
+                    world.Controlled.SB = new WanderBehaviour(world.Controlled);
                     break;
                 case Keys.S:
                     if (!slowMotion)
                     {
                         slowMotion = true;
-                        timer.Interval = 200;
+                        timer.Interval = Int32.MaxValue;
                     }
                     else
                     {

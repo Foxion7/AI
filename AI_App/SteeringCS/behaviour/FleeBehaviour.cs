@@ -22,6 +22,7 @@ namespace SteeringCS.behaviour
 
         protected Vector2D Flee(Vector2D targetPos)
         {
+            ME.DetectCollision();
 
             var distance = (ME.Pos - targetPos);
             if (ME.PanicDistanceSq() < distance.LengthSquared())

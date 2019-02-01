@@ -17,7 +17,7 @@ namespace SteeringCS.entity
 
         public Vehicle(string name, Vector2D pos, World w) : base(name, pos, w)
         {
-            Mass = 10;
+            Mass = 100;
             MaxSpeed = 30;
             MaxForce = 30;
             PanicDistance = 100;
@@ -51,9 +51,6 @@ namespace SteeringCS.entity
                 Heading = Velocity.Normalize();
                 Side = Heading.Perp();
             }
-
-            //DetectCollision();
-
             WrapAround();
         }
         // Allows re-entry on other side of form if entity leaves.

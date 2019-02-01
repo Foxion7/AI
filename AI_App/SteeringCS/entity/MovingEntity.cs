@@ -17,8 +17,9 @@ namespace SteeringCS.entity
         public float MaxForce    { get; set; }
         public float MaxTurnRate { get; set; }
         public string name { get; set; }
-        // Maybe turn this private
-        public Vector2D ahead { get; set; }
+        double MAX_SEE_AHEAD = 50;
+        double MAX_AVOID_FORCE = 30;
+        private Vector2D ahead;
 
         protected MovingEntity(string name, Vector2D pos, World w) : base(pos, w)
         {
@@ -31,23 +32,14 @@ namespace SteeringCS.entity
 
         public void DetectCollision()
         {
-            ahead = Pos + Velocity.Normalize();
+            ahead = Pos + Velocity.Normalize() * MAX_SEE_AHEAD;
 
             foreach (Obstacle obstacle in MyWorld.obstacles)
             {
                 if (lineIntersectsCircleAhead(obstacle))
                 {
-                    Vector2D centerOfObstacle = new Vector2D(obstacle.Pos.X + obstacle.Radius, obstacle.Pos.Y + obstacle.Radius);
-                    double distanceX = (DistanceBetweenPositions(centerOfObstacle, Pos) - obstacle.Radius);
-                    if(distanceX < 0)
-                    {
-                        distanceX *= -1;
-                    }
-                    Console.WriteLine("distance: " + distanceX);
-
                     Vector2D avoidanceForce = ahead - obstacle.Pos;
-                    avoidanceForce = avoidanceForce.Normalize() * 50;
-                    Console.WriteLine("avoidanceForce: " + avoidanceForce);
+                    avoidanceForce = avoidanceForce.Normalize() * MAX_AVOID_FORCE;
 
                     Velocity += avoidanceForce;
                 }

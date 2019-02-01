@@ -142,9 +142,20 @@ namespace SteeringCS
             Target.Render(g);
         }
 
-        public IEnumerable<MovingEntity> getGoblinNeighbors(Goblin goblin, double neighborsRange)
+        public IEnumerable<MovingEntity> GetGoblinNeighbors(Goblin goblin, double neighborsRange)
         {
-            return _goblins.Where(g => !g.Equals(goblin));
+            return _goblins.Where(g =>
+            {
+                if(g.Equals(goblin))
+                    return false;
+                var x = g.Pos.X;
+                var y = g.Pos.Y;
+                var maxX = goblin.Pos.X + neighborsRange;
+                var minX = goblin.Pos.X - neighborsRange;
+                var maxY = goblin.Pos.X + neighborsRange;
+                var minY = goblin.Pos.X - neighborsRange;
+                return x > minX && x < maxX && y > minY && y < maxY;
+            });
         }
 
         public void Reset()

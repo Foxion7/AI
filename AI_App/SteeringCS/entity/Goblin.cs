@@ -123,7 +123,7 @@ namespace SteeringCS.entity
             return closestHobgoblin;
         }
 
-        public IEnumerable<IMover> Neighbors => MyWorld.getGoblinNeighbors(this, NeighborsRange);
+        public IEnumerable<IMover> Neighbors => MyWorld.GetGoblinNeighbors(this, NeighborsRange);
         public double NeighborsRange { get; set; }
         public BaseGameEntity Target { get; set; }
         public double SlowingRadius { get; set; }

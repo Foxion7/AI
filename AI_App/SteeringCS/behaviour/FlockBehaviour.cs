@@ -21,16 +21,7 @@ namespace SteeringCS.behaviour
 
         public Vector2D Calculate()
         {
-            var group = ME.Neighbors.Where(gob =>
-            {
-                var x = gob.Pos.X;
-                var y = gob.Pos.Y;
-                var maxX = ME.Pos.X + ME.NeighborsRange;
-                var minX = ME.Pos.X - ME.NeighborsRange;
-                var maxY = ME.Pos.X + ME.NeighborsRange;
-                var minY = ME.Pos.X - ME.NeighborsRange;
-                return x > minX && x < maxX && y > minY && y < maxY;
-            });
+            var group = ME.Neighbors;
             var groupL= group as List<IMover> ?? group.ToList();
             if (!groupL.Any())
                 return new Vector2D();

@@ -1,6 +1,6 @@
-﻿namespace SteeringCS.behaviour
+﻿namespace SteeringCS.Interfaces
 {
-    public interface IFleer 
+    public interface IFleer : IMover
     {
         BaseGameEntity Target { get; }
 

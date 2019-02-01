@@ -60,14 +60,14 @@ namespace SteeringCS
         public void SpawnGoblins()
         {
             var dummy = new Goblin("dummy", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            dummy.SB = new SeekBehaviour<Goblin>(dummy);
+            dummy.SB = new SeekBehaviour(dummy);
             dummy.VColor = Color.Aqua;
             goblins.Add(dummy);
             dummy.Evader = Target;
             dummy.Target = Target;
 
             var purs = new Goblin("hunter", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            purs.SB = new PursuitBehaviour<Goblin>(purs);
+            purs.SB = new PursuitBehaviour(purs);
             purs.VColor = Color.Crimson;
             goblins.Add(purs);
             purs.Evader = Target;

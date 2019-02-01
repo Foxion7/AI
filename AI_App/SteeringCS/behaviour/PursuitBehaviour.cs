@@ -4,17 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.entity;
+using SteeringCS.Interfaces;
 using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    public class PursuitBehaviour<TP> : SteeringBehaviour<TP> where TP : MovingEntity, IPursuer
+    public class PursuitBehaviour : ISteeringBehaviour<IPursuer>
     {
-        public PursuitBehaviour(TP me) : base(me)
+        public IPursuer ME { get; set; }
+        public PursuitBehaviour(IPursuer me)
         {
+            ME = me;
         }
 
-        public override Vector2D Calculate()
+
+        public Vector2D Calculate()
         {
             if (ME.Evader == null)
                 return new Vector2D();

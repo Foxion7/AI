@@ -1,8 +1,8 @@
 ﻿using SteeringCS.entity;
 
-namespace SteeringCS.behaviour
+namespace SteeringCS.Interfaces
 {
-    public interface IPursuer 
+    public interface IPursuer : IMover
     {
         MovingEntity Evader { get; }
     }

@@ -1,8 +1,9 @@
 ﻿using System.Drawing;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS
 {
-    public abstract class BaseGameEntity
+    public abstract class BaseGameEntity : IEntity
     {
         public Vector2D Pos { get; set; }
         public float Scale { get; set; }

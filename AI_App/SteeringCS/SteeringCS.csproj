@@ -58,17 +58,19 @@
     <Compile Include="behaviour\FlockBehaviour.cs" />
     <Compile Include="behaviour\PursuitAndArriveBehaviour.cs" />
     <Compile Include="entity\Goblin.cs" />
+    <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Interfaces\IMover.cs" />
     <Compile Include="entity\Obstacle.cs" />
-    <Compile Include="IEntity\IEvader.cs" />
-    <Compile Include="IEntity\IGrouper.cs" />
-    <Compile Include="IEntity\IFlocker.cs" />
-    <Compile Include="IEntity\IObstacle.cs" />
-    <Compile Include="IEntity\IPursuer.cs" />
+    <Compile Include="Interfaces\IEvader.cs" />
+    <Compile Include="Interfaces\IGrouper.cs" />
+    <Compile Include="Interfaces\IFlocker.cs" />
+    <Compile Include="Interfaces\IObstacle.cs" />
+    <Compile Include="Interfaces\IPursuer.cs" />
     <Compile Include="behaviour\PursuitBehaviour.cs" />
-    <Compile Include="IEntity\IFleer.cs" />
-    <Compile Include="IEntity\ISeeker.cs" />
-    <Compile Include="IEntity\IWanderer.cs" />
-    <Compile Include="IEntity\IArriver.cs" />
+    <Compile Include="Interfaces\IFleer.cs" />
+    <Compile Include="Interfaces\ISeeker.cs" />
+    <Compile Include="Interfaces\IWanderer.cs" />
+    <Compile Include="Interfaces\IArriver.cs" />
     <Compile Include="behaviour\WanderBehaviour.cs" />
     <Compile Include="entity\BaseGameEntity.cs" />
     <Compile Include="behaviour\SeekBehaviour.cs" />
@@ -85,7 +87,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="behaviour\SteeringBehaviour.cs" />
+    <Compile Include="behaviour\ISteeringBehaviour.cs" />
     <Compile Include="util\Cell.cs" />
     <Compile Include="util\CellSpacePartition.cs" />
     <Compile Include="_behaviourStatic\staticBehaviours.cs" />

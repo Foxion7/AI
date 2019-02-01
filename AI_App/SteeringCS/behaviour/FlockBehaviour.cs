@@ -5,21 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SteeringCS.entity;
-using SteeringCS.IEntity;
+using SteeringCS.Interfaces;
 using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    class FlockBehaviour<TF> : SteeringBehaviour<TF> where TF: MovingEntity, IFlocker
+    class FlockBehaviour : ISteeringBehaviour<IFlocker> 
     {
-        public FlockBehaviour(TF me) : base(me)
+        public IFlocker ME { get; set; }
+        public FlockBehaviour(IFlocker me)
         {
+            ME = me;
         }
 
-        public override Vector2D Calculate()
+
+        public Vector2D Calculate()
         {
             var group = ME.Neighbors;
-            var groupL= group as List<MovingEntity> ?? group.ToList();
+            var groupL= group as List<IMover> ?? group.ToList();
             if (!groupL.Any())
                 return new Vector2D();
 

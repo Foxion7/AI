@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.behaviour;
-using SteeringCS.IEntity;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
@@ -13,7 +13,7 @@ namespace SteeringCS.entity
     {
         public Color VColor { get; set; }
 
-        public SteeringBehaviour<Vehicle> SB;
+        public ISteeringBehaviour<Vehicle> SB;
 
         public Vehicle(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -21,7 +21,7 @@ namespace SteeringCS.entity
             MaxSpeed = 30;
             MaxForce = 50;
             PanicDistance = 100;
-            SB = new SeekBehaviour<Vehicle>(this);
+            SB = new SeekBehaviour(this);
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 300;
 

@@ -4,19 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.entity;
-using SteeringCS.IEntity;
+using SteeringCS.Interfaces;
 using static SteeringCS.behaviour.StaticBehaviours;
 
 
 namespace SteeringCS.behaviour
 {
-    class EvadeBehaviour<TE> : SteeringBehaviour<TE> where TE : MovingEntity, IEvader
+    class EvadeBehaviour : ISteeringBehaviour<IEvader>
     {
-        public EvadeBehaviour(TE me) : base(me)
+        public IEvader ME { get; set; }
+        public EvadeBehaviour(IEvader me)
         {
+            ME = me;
         }
 
-        public override Vector2D Calculate()
+
+        public Vector2D Calculate()
         {
             if (ME.Pursuer == null)
                 return new Vector2D();

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.behaviour;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public abstract class MovingEntity : BaseGameEntity
+    public abstract class MovingEntity : BaseGameEntity, IMover
     {
         public Vector2D Velocity { get; set; }
         public Vector2D Heading { get; set; }

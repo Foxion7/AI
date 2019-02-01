@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace SteeringCS.behaviour
+﻿namespace SteeringCS.Interfaces
 {
-    public interface IArriver
+    public interface IArriver : IMover
     {
         BaseGameEntity Target { get; }
         double SlowingRadius  { get; }

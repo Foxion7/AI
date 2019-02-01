@@ -4,18 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.entity;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS.behaviour
 {
     //nog niet geimplementeerd
-    class WanderBehaviour<TM> : SteeringBehaviour<TM> where TM : MovingEntity, IWanderer
+    class WanderBehaviour: ISteeringBehaviour<IWanderer>
     {
+        public IWanderer ME { get; set; }
         private Random _rnd = new Random();
-        public WanderBehaviour(TM me) : base(me)
+        public WanderBehaviour(IWanderer me)
         {
+            ME = me;
         }
 
-        public override Vector2D Calculate()
+        public Vector2D Calculate()
         {
             var heading = ME.Heading;
             var dist = heading * ME.WanderDistance;

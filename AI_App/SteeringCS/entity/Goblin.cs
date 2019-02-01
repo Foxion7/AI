@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.behaviour;
-using SteeringCS.IEntity;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
     public class Goblin : MovingEntity, IFlocker, IPursuer, ISeeker, IArriver
     {
         public Color VColor { get; set; }
-        public SteeringBehaviour<Goblin> SB;
-        public SteeringBehaviour<Goblin> FB;
+        public ISteeringBehaviour<Goblin> SB;
+        public ISteeringBehaviour<Goblin> FB;
 
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -24,8 +24,8 @@ namespace SteeringCS.entity
             CohesionValue = 4;
             AlignmentValue = 1;
 
-            SB = new SeekBehaviour<Goblin>(this);
-            FB = new FlockBehaviour<Goblin>(this);
+            SB = new SeekBehaviour(this);
+            FB = new FlockBehaviour(this);
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
@@ -36,8 +36,8 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            Vector2D steeringForce = SB.Calculate() *2;
-            steeringForce += FB.Calculate();
+            Vector2D steeringForce = SB.Calculate() *0.66;
+            steeringForce += FB.Calculate() *0.33;
             steeringForce.Truncate(MaxForce);
             Vector2D acceleration = steeringForce / Mass;
 
@@ -64,7 +64,7 @@ namespace SteeringCS.entity
             g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
         }
 
-        public IEnumerable<MovingEntity> Neighbors => MyWorld.getGoblinNeighbors(this, NeighborsRange);
+        public IEnumerable<IMover> Neighbors => MyWorld.getGoblinNeighbors(this, NeighborsRange);
         public double NeighborsRange { get; set; }
         public BaseGameEntity Target { get; set; }
         public double SlowingRadius { get; set; }

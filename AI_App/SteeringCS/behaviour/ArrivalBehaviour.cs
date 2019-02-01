@@ -4,17 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.entity;
+using SteeringCS.Interfaces;
 using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    public class ArrivalBehaviour<TA> : SteeringBehaviour<TA> where TA : MovingEntity, IArriver
+    public class ArrivalBehaviour : ISteeringBehaviour<IArriver>
     {
-        public ArrivalBehaviour(TA me) : base(me)
+        public IArriver ME { get; set; }
+        public ArrivalBehaviour(IArriver me)
         {
+            ME = me;
         }
-        
-        public override Vector2D Calculate()
+
+
+        public Vector2D Calculate()
         {
             if (ME.Target == null)
                 return new Vector2D();

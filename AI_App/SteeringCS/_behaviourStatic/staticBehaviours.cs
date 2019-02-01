@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SteeringCS.entity;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS.behaviour
 {
     public static class StaticBehaviours
     {
-        public static Vector2D Seek(Vector2D targetPos, MovingEntity me)
+        public static Vector2D Seek(Vector2D targetPos, IMover me)
         {
             var toTarget = targetPos - me.Pos;
             if (toTarget.LengthSquared() < 0.1)
@@ -17,7 +17,7 @@ namespace SteeringCS.behaviour
             return neededForce.Truncate(me.MaxForce);
         }
 
-        public static Vector2D Flee(Vector2D targetPos, MovingEntity me, double panicDistanceSq)
+        public static Vector2D Flee(Vector2D targetPos, IMover me, double panicDistanceSq)
         {
 
             var distance = (me.Pos - targetPos);
@@ -30,7 +30,7 @@ namespace SteeringCS.behaviour
             return neededForce.Truncate(me.MaxForce);
         }
 
-        public static Vector2D Arrive(Vector2D targetPost, MovingEntity me, double slowingRadius)
+        public static Vector2D Arrive(Vector2D targetPost, IMover me, double slowingRadius)
         {
             Vector2D toTarget = targetPost - me.Pos;
             if (toTarget.LengthSquared() < 0.1)
@@ -58,19 +58,7 @@ namespace SteeringCS.behaviour
             return (desiredVelocity - me.Velocity).Truncate(me.MaxForce);
         }
 
-        public static Vector2D Separation(List<BaseGameEntity> neighbors, MovingEntity me)
-        {
-            var force = neighbors.Aggregate(new Vector2D(), (steeringForce, neighbor) =>
-            {
-                Vector2D toAgent = me.Pos - neighbor.Pos;
-                if (Math.Abs(toAgent.Length()) > 0.1)
-                    steeringForce += toAgent.Normalize() / toAgent.Length();
-                return steeringForce;
-            });
-
-            return force;
-        }
-        public static Vector2D Separation(List<MovingEntity> neighbors, MovingEntity me)
+        public static Vector2D Separation(IEnumerable<IEntity> neighbors, IMover me)
         {
             var force = neighbors.Aggregate(new Vector2D(), (steeringForce, neighbor) =>
             {
@@ -83,38 +71,27 @@ namespace SteeringCS.behaviour
             return force;
         }
 
-        public static Vector2D Alignment(List<MovingEntity> neighbors)
+        public static Vector2D Alignment(IEnumerable<IMover> neighbors)
         {
             Vector2D sum = new Vector2D();
             var count = 0;
-            neighbors.ForEach(neighbor =>
+            foreach (var neighbor in neighbors)
             {
                 sum += neighbor.Heading;
                 count++;
-            });
+            }
             return sum / count;
         }
 
-        public static Vector2D Cohesion(List<BaseGameEntity> neighbors, MovingEntity me)
+        public static Vector2D Cohesion(IEnumerable<IEntity> neighbors, IMover me)
         {
             Vector2D centerOfMass = new Vector2D();
             var count = 0;
-            neighbors.ForEach(neighbor =>
+            foreach (var neighbor in neighbors)
             {
                 centerOfMass += neighbor.Pos;
                 count++;
-            });
-            return Seek(centerOfMass / count, me);
-        }
-        public static Vector2D Cohesion(List<MovingEntity> neighbors, MovingEntity me)
-        {
-            Vector2D centerOfMass = new Vector2D();
-            var count = 0;
-            neighbors.ForEach(neighbor =>
-            {
-                centerOfMass += neighbor.Pos;
-                count++;
-            });
+            }
             return Seek(centerOfMass / count, me);
         }
     }

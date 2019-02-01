@@ -55,8 +55,6 @@ namespace SteeringCS.entity
             {
                 Heading = Velocity.Normalize();
                 Side = Heading.Perp();
-                Console.WriteLine("Goblin " + this.name + "'s speed is: " + Velocity.Length());
-
             }
             WrapAround();
         }

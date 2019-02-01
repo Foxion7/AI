@@ -17,7 +17,7 @@ namespace SteeringCS
         private List<MovingEntity> _hobgoblins = new List<MovingEntity>();
         public List<IObstacle> Obstacles = new List<IObstacle>();
         public Creature Target { get; set; }
-        public Creature Controlled { get; set; }
+        //public Creature Controlled { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public List<Color> goblinColors { get; }
@@ -39,8 +39,8 @@ namespace SteeringCS
         private void populate()
         {
             Target = new Creature("Player", new Vector2D(600, 600), this);
-            Target.VColor = Color.Green;
-            Target.Pos = new Vector2D(100, 40);
+            Target.VColor = Color.Blue;
+            Target.Pos = new Vector2D(500, 300);
             
             SpawnObstacles();
         }
@@ -50,7 +50,7 @@ namespace SteeringCS
             Obstacle obstacle1 = new Obstacle("obstacle1", 20, new Vector2D(150, 150), this);
             Obstacles.Add(obstacle1);
 
-            Obstacle obstacle2 = new Obstacle("obstacle2", 20, new Vector2D(400, 100), this);
+            Obstacle obstacle2 = new Obstacle("obstacle2", 40, new Vector2D(400, 100), this);
             Obstacles.Add(obstacle2);
 
             Obstacle obstacle3 = new Obstacle("obstacle3", 20, new Vector2D(250, 300), this);
@@ -130,6 +130,8 @@ namespace SteeringCS
             {
                 Console.WriteLine("Hobgoblin exception: " + e.Message + " - stacktrace: " +  e.StackTrace);
             }
+            Target.Update(timeElapsed);
+            Console.WriteLine();
         }
 
         public void Render(Graphics g)
@@ -161,6 +163,16 @@ namespace SteeringCS
         public List<IObstacle> getObstacles()
         {
             return Obstacles;
+        }
+        
+        public List<MovingEntity> getHobgoblins()
+        {
+            return _hobgoblins;
+        }
+        
+        public List<MovingEntity> getGoblins()
+        {
+            return _goblins;
         }
     }
 }

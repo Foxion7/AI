@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SteeringCS.behaviour;
 using SteeringCS.entity;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS
 {
@@ -17,6 +18,7 @@ namespace SteeringCS
         World world;
         System.Timers.Timer timer;
         bool paused = false;
+        ISteeringBehaviour<IMover> behaviour;
 
         public const float timeDelta = 0.8f;
         
@@ -56,29 +58,28 @@ namespace SteeringCS
             switch (e.KeyCode)
             {
                 case Keys.Z:
-                    world.Controlled.SB = new SeekBehaviour(world.Controlled);
+                    world.Target.SB = new SeekBehaviour(world.Target);
                     break;
                 case Keys.X:
-                    world.Controlled.SB = new FleeBehaviour(world.Controlled);
+                    world.Target.SB = new FleeBehaviour(world.Target);
                     break;
                 case Keys.C:
-                    world.Controlled.SB = new ArrivalBehaviour(world.Controlled);
+                    world.Target.SB = new ArrivalBehaviour(world.Target);
                     break;
                 case Keys.V:
-                    world.Controlled.SB = new PursuitAndArriveBehaviour(world.Controlled);
+                    world.Target.SB = new PursuitAndArriveBehaviour(world.Target);
                     break;
                 case Keys.B:
-                    world.Controlled.SB = new PursuitAndArriveBehaviour<Creature>(world.Controlled);
+                    world.Target.SB = new PursuitAndArriveBehaviour<Creature>(world.Target);
                     break;
                 case Keys.N:
-                    world.Controlled.SB = new WanderBehaviour(world.Controlled);
+                    world.Target.SB = new WanderBehaviour(world.Target);
                     break;
                 case Keys.G:
                     world.SpawnGoblins();
                     break;
                 case Keys.H:
                     world.SpawnHobgoblin();
-
                     break;
                 case Keys.R:
                     world.Reset();
@@ -100,5 +101,23 @@ namespace SteeringCS
 
             }
         }
+
+        //public void SetGoblinBehaviour(ISteeringBehaviour<IMover> behaviour)
+        //{
+        //    foreach (Goblin goblin in world.getGoblins())
+        //    {
+        //        goblin.UB = behaviour;
+        //        goblin.UB.ME = goblin;
+        //    }
+        //}
+
+        //public void SetGoblinBehaviour(ISteeringBehaviour<Goblin> behaviour)
+        //{
+        //    foreach (Goblin goblin in world.getGoblins())
+        //    {
+        //        goblin.UB = behaviour;
+        //        goblin.UB.ME = goblin;
+        //    }
+        //}
     }
 }

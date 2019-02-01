@@ -19,8 +19,8 @@ namespace SteeringCS.entity
         public Hobgoblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 100;
-            MaxSpeed = 5;
-            MaxForce = 50;
+            MaxSpeed = 1;
+            MaxForce = 40;
 
 
             PB = new PursuitAndArriveBehaviour(this);

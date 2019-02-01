@@ -11,7 +11,7 @@ namespace SteeringCS.behaviour
 {
     class ObstacleAvoidance : ISteeringBehaviour<IObstacleAvoider>
     {
-        public double MAX_SEE_AHEAD = 50;
+        public double MAX_SEE_AHEAD = 25;
         public double MAX_AVOID_FORCE = 250;
         public Vector2D ahead;
         public Vector2D ahead2;
@@ -53,7 +53,7 @@ namespace SteeringCS.behaviour
                 IObstacle obstacle = ME.Obstacles[i];
                 bool collision = lineIntersectsCircleAhead(obstacle);
  
-                if (collision && (mostThreatening == null || DistanceBetweenPositions(ME.Pos, obstacle.Center) < DistanceBetweenPositions(ME.Pos, mostThreatening.Center))) {
+                if (collision && (mostThreatening == null || VectorMath.DistanceBetweenPositions(ME.Pos, obstacle.Center) < VectorMath.DistanceBetweenPositions(ME.Pos, mostThreatening.Center))) {
                     mostThreatening = obstacle;
                 }
             }
@@ -62,7 +62,7 @@ namespace SteeringCS.behaviour
 
         private bool lineIntersectsCircleAhead(IObstacle obstacle)
         {
-            return DistanceBetweenPositions(obstacle.Center, ahead) <= obstacle.Radius + ME.Velocity.Length() || DistanceBetweenPositions(obstacle.Center, ahead2) <= obstacle.Radius + ME.Velocity.Length();
+            return VectorMath.DistanceBetweenPositions(obstacle.Center, ahead) <= obstacle.Radius || VectorMath.DistanceBetweenPositions(obstacle.Center, ahead2) <= obstacle.Radius;
         }
 
         private double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)

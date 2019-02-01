@@ -41,13 +41,7 @@ namespace SteeringCS
             Target = new Creature("Player", new Vector2D(600, 600), this);
             Target.VColor = Color.Green;
             Target.Pos = new Vector2D(100, 40);
-
-            Controlled = new Creature("Stupid Shit", new Vector2D(100,100), this);
-            Controlled.VColor = Color.Blue;
-            Controlled.Evader  = Target;
-            Controlled.Pursuer = Target;
-            Controlled.Target  = Target;
-
+            
             SpawnObstacles();
         }
 
@@ -119,7 +113,6 @@ namespace SteeringCS
                     goblin.Update(timeElapsed);
                     enforceNonPenetrationConstraint(goblin);
                 });
-                Controlled.Update(timeElapsed);
             }
             catch (Exception e)
             {
@@ -132,7 +125,6 @@ namespace SteeringCS
                     hobgoblin.Update(timeElapsed);
                     //enforceNonPenetrationConstraint(hobgoblin);
                 });
-                Controlled.Update(timeElapsed);
             }
             catch (Exception e)
             {
@@ -146,7 +138,6 @@ namespace SteeringCS
             _hobgoblins.ForEach(e => e.Render(g));
             Obstacles.ForEach(e => e.Render(g));
             Target.Render(g);
-            Controlled.Render(g);
         }
 
         public IEnumerable<MovingEntity> getGoblinNeighbors(Goblin goblin, double neighborsRange)

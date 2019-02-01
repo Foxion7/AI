@@ -49,10 +49,6 @@ namespace SteeringCS
             {
                 world.Target.Pos = new Vector2D(e.X, e.Y);
             }
-            else
-            {
-                world.Controlled.Pos = new Vector2D(e.X, e.Y);
-            }
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)

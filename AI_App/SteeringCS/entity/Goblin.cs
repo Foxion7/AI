@@ -32,7 +32,7 @@ namespace SteeringCS.entity
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
 
-            Scale = 5;
+            Scale = 4;
             VColor = Color.Black;
         }
 

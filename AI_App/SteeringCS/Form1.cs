@@ -72,7 +72,7 @@ namespace SteeringCS
                     world.Controlled.SB = new PursuitBehaviour(world.Controlled);
                     break;
                 case Keys.B:
-                    world.Controlled.SB = new PursuitAndArriveBehaviour<Vehicle>(world.Controlled);
+                    world.Controlled.SB = new PursuitAndArriveBehaviour<Creature>(world.Controlled);
                     break;
                 case Keys.N:
                     world.Controlled.SB = new WanderBehaviour(world.Controlled);
@@ -98,6 +98,16 @@ namespace SteeringCS
                     world.Reset();
                     break;
             }
+        }
+
+        private void goblinButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            world.SpawnGoblins();
+        }
+
+        private void hobgoblinButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            world.SpawnHobgoblin();
         }
     }
 }

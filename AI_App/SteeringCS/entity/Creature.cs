@@ -9,13 +9,13 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Vehicle : MovingEntity, IArriver, IPursuer, IEvader, IWanderer, ISeeker, IFleer
+    public class Creature : MovingEntity, IArriver, IPursuer, IEvader, IWanderer, ISeeker, IFleer
     {
         public Color VColor { get; set; }
 
-        public ISteeringBehaviour<Vehicle> SB;
+        public ISteeringBehaviour<Creature> SB;
 
-        public Vehicle(string name, Vector2D pos, World w) : base(name, pos, w)
+        public Creature(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 10;
             MaxSpeed = 30;

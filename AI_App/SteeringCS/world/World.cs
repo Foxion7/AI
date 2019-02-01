@@ -14,26 +14,35 @@ namespace SteeringCS
     {
         private Random _rnd = new Random();
         private List<MovingEntity> _goblins = new List<MovingEntity>();
+        private List<MovingEntity> _hobgoblins = new List<MovingEntity>();
         public List<IObstacle> Obstacles = new List<IObstacle>();
-        public Vehicle Target { get; set; }
-        public Vehicle Controlled { get; set; }
+        public Creature Target { get; set; }
+        public Creature Controlled { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public List<Color> goblinColors { get; }
 
         public World(int w, int h)
         {
             Width = w;
             Height = h;
+
+            goblinColors = new List<Color>();
+            goblinColors.Add(Color.Green);
+            goblinColors.Add(Color.ForestGreen);
+            goblinColors.Add(Color.DarkOliveGreen);
+            goblinColors.Add(Color.DarkGreen);
+
             populate();
         }
 
         private void populate()
         {
-            Target = new Vehicle("Target", new Vector2D(600, 600), this);
+            Target = new Creature("Player", new Vector2D(600, 600), this);
             Target.VColor = Color.Green;
             Target.Pos = new Vector2D(100, 40);
 
-            Controlled = new Vehicle("Target", new Vector2D(100,100), this);
+            Controlled = new Creature("Stupid Shit", new Vector2D(100,100), this);
             Controlled.VColor = Color.Blue;
             Controlled.Evader  = Target;
             Controlled.Pursuer = Target;
@@ -60,17 +69,20 @@ namespace SteeringCS
 
         public void SpawnGoblins()
         {
+            Random r = new Random();
+            int rInt = r.Next(0, goblinColors.Count());
+
             var dummy = new Goblin("dummy", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
             dummy.SB = new SeekBehaviour(dummy);
-            dummy.VColor = Color.Aqua;
+            dummy.VColor = goblinColors[rInt];
             _goblins.Add(dummy);
             dummy.Evader = Target;
             dummy.Target = Target;
 
             //var purs = new Goblin("hunter", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            //purs.SB = new PursuitBehaviour<Goblin>(purs);
+            //purs.SB = new PursuitBehaviour(purs);
             //purs.VColor = Color.Crimson;
-            //goblins.Add(purs);
+            //_goblins.Add(purs);
             //purs.Evader = Target;
             //purs.Target = Target;
 
@@ -78,9 +90,19 @@ namespace SteeringCS
             //var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
             //gentleman.SB = new PursuitAndArriveBehaviour<Goblin>(gentleman);
             //gentleman.VColor = Color.Purple;
-            //goblins.Add(gentleman);
+            //_goblins.Add(gentleman);
             //gentleman.Evader = Target;
             //gentleman.Target = Target;
+        }
+
+        public void SpawnHobgoblin()
+        {
+            var hobby = new Hobgoblin("Bloodbeard", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            hobby.SB = new SeekBehaviour(hobby);
+            hobby.VColor = Color.Black;
+            _hobgoblins.Add(hobby);
+            hobby.Evader = Target;
+            hobby.Target = Target;
         }
 
         public void DestroySeekers()

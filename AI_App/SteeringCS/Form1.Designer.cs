@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.dbPanel1 = new SteeringCS.DBPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -38,18 +37,10 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.pausedLabel = new System.Windows.Forms.Label();
+            this.goblinButton = new System.Windows.Forms.Button();
+            this.hobgoblinButton = new System.Windows.Forms.Button();
+            this.dbPanel1 = new SteeringCS.DBPanel();
             this.SuspendLayout();
-            // 
-            // dbPanel1
-            // 
-            this.dbPanel1.BackColor = System.Drawing.Color.White;
-            this.dbPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.dbPanel1.Location = new System.Drawing.Point(0, 0);
-            this.dbPanel1.Name = "dbPanel1";
-            this.dbPanel1.Size = new System.Drawing.Size(996, 571);
-            this.dbPanel1.TabIndex = 0;
-            this.dbPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.dbPanel1_Paint);
-            this.dbPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dbPanel1_MouseClick);
             // 
             // label1
             // 
@@ -110,26 +101,59 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(1002, 241);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(87, 13);
+            this.label7.Size = new System.Drawing.Size(111, 13);
             this.label7.TabIndex = 7;
-            this.label7.Text = "S = Pause / Play";
+            this.label7.Text = "Space = Pause / Play";
             // 
             // pausedLabel
             // 
             this.pausedLabel.AutoSize = true;
             this.pausedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pausedLabel.Location = new System.Drawing.Point(1020, 516);
+            this.pausedLabel.Location = new System.Drawing.Point(1019, 401);
             this.pausedLabel.Name = "pausedLabel";
             this.pausedLabel.Size = new System.Drawing.Size(132, 31);
             this.pausedLabel.TabIndex = 8;
             this.pausedLabel.Text = "PAUSED";
             this.pausedLabel.Visible = false;
             // 
+            // goblinButton
+            // 
+            this.goblinButton.Location = new System.Drawing.Point(1009, 529);
+            this.goblinButton.Name = "goblinButton";
+            this.goblinButton.Size = new System.Drawing.Size(153, 42);
+            this.goblinButton.TabIndex = 9;
+            this.goblinButton.Text = "Add Goblin";
+            this.goblinButton.UseVisualStyleBackColor = true;
+            this.goblinButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.goblinButton_MouseClick);
+            // 
+            // hobgoblinButton
+            // 
+            this.hobgoblinButton.Location = new System.Drawing.Point(1009, 481);
+            this.hobgoblinButton.Name = "hobgoblinButton";
+            this.hobgoblinButton.Size = new System.Drawing.Size(153, 42);
+            this.hobgoblinButton.TabIndex = 10;
+            this.hobgoblinButton.Text = "Add Hobgoblin";
+            this.hobgoblinButton.UseVisualStyleBackColor = true;
+            this.hobgoblinButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.hobgoblinButton_MouseClick);
+            // 
+            // dbPanel1
+            // 
+            this.dbPanel1.BackColor = System.Drawing.Color.White;
+            this.dbPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.dbPanel1.Location = new System.Drawing.Point(0, 0);
+            this.dbPanel1.Name = "dbPanel1";
+            this.dbPanel1.Size = new System.Drawing.Size(996, 571);
+            this.dbPanel1.TabIndex = 0;
+            this.dbPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.dbPanel1_Paint);
+            this.dbPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dbPanel1_MouseClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1174, 591);
+            this.Controls.Add(this.hobgoblinButton);
+            this.Controls.Add(this.goblinButton);
             this.Controls.Add(this.pausedLabel);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
@@ -160,6 +184,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label pausedLabel;
+        private System.Windows.Forms.Button goblinButton;
+        private System.Windows.Forms.Button hobgoblinButton;
     }
 }
 

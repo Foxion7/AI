@@ -57,7 +57,6 @@ namespace SteeringCS.behaviour
  
                 if (collision && (mostThreatening == null || DistanceBetweenPositions(ME.Pos, obstacle.Center) < DistanceBetweenPositions(ME.Pos, mostThreatening.Center))) {
                     mostThreatening = obstacle;
-                    Console.WriteLine("Collision found with " + obstacle.Name);
                 }
             }
             return mostThreatening;

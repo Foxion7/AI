@@ -58,6 +58,7 @@
     <Compile Include="behaviour\FlockBehaviour.cs" />
     <Compile Include="behaviour\ObstacleAvoidance.cs" />
     <Compile Include="behaviour\PursuitAndArriveBehaviour.cs" />
+    <Compile Include="entity\Hobgoblin.cs" />
     <Compile Include="entity\Goblin.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\IMover.cs" />
@@ -80,7 +81,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="entity\MovingEntity.cs" />
-    <Compile Include="entity\Vehicle.cs" />
+    <Compile Include="entity\Creature.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

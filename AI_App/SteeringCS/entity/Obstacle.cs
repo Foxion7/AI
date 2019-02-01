@@ -30,13 +30,12 @@ namespace SteeringCS.entity
 
         public override void Render(Graphics g)
         {
-            double leftCorner = Pos.X + Radius;
-            double rightCorner = Pos.Y + Radius;
             double size = Radius * 2;
 
+            Brush b = new SolidBrush(ColorTranslator.FromHtml("#77797a"));
+
             Pen p = new Pen(VColor, 2);
-            g.DrawEllipse(p, new Rectangle((int)Pos.X, (int)Pos.Y, (int)size, (int)size));
-            g.DrawRectangle(p, (int)leftCorner, (int)rightCorner, 3, 3);
+            g.FillEllipse(b, new Rectangle((int)Pos.X, (int)Pos.Y, (int)size, (int)size));
         }
     }
 }

@@ -9,14 +9,14 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Goblin : MovingEntity, IFlocker, IPursuer, ISeeker, IArriver, IObstacleAvoider
+    public class Hobgoblin : MovingEntity, IPursuer, ISeeker, IArriver, IObstacleAvoider
     {
         public Color VColor { get; set; }
-        public ISteeringBehaviour<Goblin> SB;
-        public ISteeringBehaviour<Goblin> FB;
-        public ISteeringBehaviour<Goblin> OA;
+        public ISteeringBehaviour<Hobgoblin> SB;
+        public ISteeringBehaviour<Hobgoblin> FB;
+        public ISteeringBehaviour<Hobgoblin> OA;
 
-        public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
+        public Hobgoblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 100;
             MaxSpeed = 30;
@@ -26,7 +26,6 @@ namespace SteeringCS.entity
             AlignmentValue = 1;
 
             SB = new SeekBehaviour(this);
-            FB = new FlockBehaviour(this);
             OA = new ObstacleAvoidance(this);
 
             Velocity = new Vector2D(0, 0);
@@ -62,14 +61,13 @@ namespace SteeringCS.entity
         {
             double leftCorner = Pos.X - Scale;
             double rightCorner = Pos.Y - Scale;
-            double size = Scale * 2;
+            double size = Scale * 4;
 
             Pen p = new Pen(VColor, 2);
             g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
             g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
         }
-
-        public IEnumerable<IMover> Neighbors => MyWorld.getGoblinNeighbors(this, NeighborsRange);
+        
         public double NeighborsRange { get; set; }
         public BaseGameEntity Target { get; set; }
         public double SlowingRadius { get; set; }

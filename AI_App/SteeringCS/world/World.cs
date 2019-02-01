@@ -14,7 +14,7 @@ namespace SteeringCS
     {
         private Random _rnd = new Random();
         private List<MovingEntity> _goblins = new List<MovingEntity>();
-        public List<Obstacle> Obstacles = new List<Obstacle>();
+        public List<IObstacle> Obstacles = new List<IObstacle>();
         public Vehicle Target { get; set; }
         public Vehicle Controlled { get; set; }
         public int Width { get; set; }
@@ -120,7 +120,7 @@ namespace SteeringCS
         public void Reset()
         {
             _goblins = new List<MovingEntity>();
-            Obstacles = new List<Obstacle>();
+            Obstacles = new List<IObstacle>();
             populate();
         }
 
@@ -129,7 +129,7 @@ namespace SteeringCS
             //zie pagina 125 van het boek. Mischien een idee om te implementeren
         }
 
-        public IEnumerable<Obstacle> getObstacles()
+        public List<IObstacle> getObstacles()
         {
             return Obstacles;
         }

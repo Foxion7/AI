@@ -107,9 +107,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(1002, 241);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(135, 13);
+            this.label7.Size = new System.Drawing.Size(87, 13);
             this.label7.TabIndex = 7;
-            this.label7.Text = "S = Slow down / Speed up";
+            this.label7.Text = "S = Pause / Play";
             // 
             // Form1
             // 

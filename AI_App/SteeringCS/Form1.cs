@@ -47,11 +47,11 @@ namespace SteeringCS
         {
             if (e.Button == MouseButtons.Left)
             {
-                world.Player.Pos = new Vector2D(e.X, e.Y);
+                world.Target.Pos = new Vector2D(e.X, e.Y);
             }
             else
             {
-                world.Target.Pos = new Vector2D(e.X, e.Y);
+                world.Controlled.Pos = new Vector2D(e.X, e.Y);
             }
         }
 
@@ -60,22 +60,22 @@ namespace SteeringCS
             switch (e.KeyCode)
             {
                 case Keys.Z:
-                    world.Target.SB = new SeekBehaviour<Vehicle>(world.Target);
+                    world.Controlled.SB = new SeekBehaviour<Vehicle>(world.Controlled);
                     break;
                 case Keys.X:
-                    world.Target.SB = new FleeBehaviour<Vehicle>(world.Target);
+                    world.Controlled.SB = new FleeBehaviour<Vehicle>(world.Controlled);
                     break;
                 case Keys.C:
-                    world.Target.SB = new ArrivalBehaviour<Vehicle>(world.Target);
+                    world.Controlled.SB = new ArrivalBehaviour<Vehicle>(world.Controlled);
                     break;
                 case Keys.V:
-                    world.Target.SB = new PursuitBehaviour<Vehicle>(world.Target);
+                    world.Controlled.SB = new PursuitBehaviour<Vehicle>(world.Controlled);
                     break;
                 case Keys.B:
-                    world.Target.SB = new PursuitAndArriveBehaviour<Vehicle>(world.Target);
+                    world.Controlled.SB = new PursuitAndArriveBehaviour<Vehicle>(world.Controlled);
                     break;
                 case Keys.N:
-                    //world.Target2.SB = new WanderBehaviour<Vehicle>(world.Target2);
+                    world.Controlled.SB = new WanderBehaviour<Vehicle>(world.Controlled);
                     break;
                 case Keys.S:
                     if (!slowMotion)
@@ -88,6 +88,12 @@ namespace SteeringCS
                         slowMotion = false;
                         timer.Interval = 20;
                     }
+                    break;
+                case Keys.W:
+                    world.SpawnGoblins();
+                    break;
+                case Keys.R:
+                    world.Reset();
                     break;
             }
         }

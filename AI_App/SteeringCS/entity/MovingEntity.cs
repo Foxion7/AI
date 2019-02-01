@@ -47,6 +47,28 @@ namespace SteeringCS.entity
 
         }
 
+        // Allows re-entry on other side of form if entity leaves.
+        protected void WrapAround()
+        {
+            if (this.Pos.X > MyWorld.Width)
+            {
+                this.Pos = new Vector2D(1, Pos.Y);
+            }
+            else if (this.Pos.X < 0)
+            {
+                this.Pos = new Vector2D(MyWorld.Width - 1, Pos.Y);
+            }
+
+            if (this.Pos.Y > MyWorld.Height)
+            {
+                this.Pos = new Vector2D(Pos.X, 1);
+            }
+            else if (this.Pos.Y < 0)
+            {
+                this.Pos = new Vector2D(Pos.X, MyWorld.Height - 1);
+            }
+        }
+
         private bool lineIntersectsCircleAhead(Obstacle obstacle)
         {
             Vector2D centerOfObstacle = new Vector2D(obstacle.Pos.X + obstacle.Radius, obstacle.Pos.Y + obstacle.Radius);

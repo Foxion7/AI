@@ -98,9 +98,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(1002, 208);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(81, 13);
+            this.label6.Size = new System.Drawing.Size(113, 13);
             this.label6.TabIndex = 6;
-            this.label6.Text = "N = [unfinished]";
+            this.label6.Text = "N = WanderBehaviour";
             // 
             // label7
             // 

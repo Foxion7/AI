@@ -8,8 +8,12 @@ using SteeringCS.entity;
 
 namespace SteeringCS.IEntity
 {
-    public interface IEvader : IFleer
+    public interface IEvader
     {
         MovingEntity Pursuer { get; }
+        double PanicDistance { get; }
+        //to avoid having to calculate the sqroot we use to panicDistance squared and the vector length squared
+        double PanicDistanceSq();
+
     }
 }

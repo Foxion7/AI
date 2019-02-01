@@ -20,16 +20,21 @@ namespace SteeringCS.behaviour
             var heading = ME.Heading;
             var dist = heading * ME.WanderDistance;
             var wanderTarget = (heading * ME.WanderRadius) + dist;
-
-
+            
             var x = _rnd.NextDouble() * (10 + 10) - 10;
             var y = _rnd.NextDouble() * (10 + 10) - 10;
-            var jitterDistance = new Vector2D(x,y).Normalize() * ME.WanderJitter;
-            var newWanderTarget = wanderTarget + jitterDistance;
-            var neededForce = newWanderTarget.Normalize() * ME.MaxForce;
-            return (neededForce - ME.Velocity).Truncate(ME.MaxForce);
+            Vector2D jitterDistance;
+            if (Math.Abs(x) > 0.01 && Math.Abs(y) > 0.01)
+            {
+                jitterDistance = new Vector2D(x, y).Normalize() * ME.WanderJitter;
+            }
+            else
+            {
+                jitterDistance = new Vector2D(x+0.1, y+0.1);
+            }
 
-
+            var newWanderTarget = wanderTarget + jitterDistance;;
+            return (newWanderTarget - ME.Velocity).Truncate(ME.MaxForce);
         }
 
     }

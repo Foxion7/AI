@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
@@ -16,18 +17,10 @@ namespace SteeringCS.behaviour
 
         public override Vector2D Calculate()
         {
-            if (ME.Target != null)
-                return Seek(ME.Target.Pos);
-            return new Vector2D(0, 0);
-        }
+            if (ME.Target == null)
+                return new Vector2D(0, 0);
+            return Seek(ME.Target.Pos, ME);
 
-        protected Vector2D Seek(Vector2D targetPos)
-        {
-            ME.DetectCollision();
-
-            var desiredVelocity = (targetPos - ME.Pos).Normalize() * ME.MaxSpeed;
-            var neededForce = desiredVelocity - ME.Velocity;
-            return neededForce.Truncate(ME.MaxForce);
         }
     }
 }

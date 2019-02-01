@@ -4,16 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.entity;
+using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    class PursuitAndArriveBehaviour<TA> : ArrivalBehaviour<TA> where TA : MovingEntity, IPursuer, IArriver
+    class PursuitAndArriveBehaviour<TA> : SteeringBehaviour<TA> where TA : MovingEntity, IPursuer, IArriver
     {
         public PursuitAndArriveBehaviour(TA me) : base(me)
         {
         }
         public override Vector2D Calculate()
         {
+            if (ME.Evader == null)
+                return new Vector2D();
+
             //if the evader is ahead and facing the agent then we can just seek
             //for the evader's current position.
             var evader = ME.Evader;
@@ -22,17 +26,15 @@ namespace SteeringCS.behaviour
             if ((toEvader.Dot(ME.Heading) > 0) &&
                 (relativeHeading < -0.95)) //acos(0.95)=18 degs
             {
-                return Arrive(evader.Pos);
+                return Arrive(ME.Target.Pos, ME, ME.SlowingRadius);
             }
 
-            //Not considered ahead so we predict where the evader will be.
-            //the look-ahead time is proportional to the distance between the evader
-            //and the pursuer; and is inversely proportional to the sum of the
-            //agents' velocities
+            //the quotiënt between the distance and the maximum speeds will serve to the determine
+            //how far into the future we look
             double lookAheadTime = toEvader.Length() /
                                    (ME.MaxSpeed + evader.Velocity.Length());
-            //now seek to the predicted future position of the evader
-            return Arrive(evader.Pos + evader.Velocity * lookAheadTime);
+
+            return Arrive(evader.Pos + evader.Velocity * lookAheadTime, ME, ME.SlowingRadius);
         }
     }
 }

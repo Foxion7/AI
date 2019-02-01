@@ -11,10 +11,11 @@ namespace SteeringCS
 {
     public class World
     {
-        private List<MovingEntity> seekers = new List<MovingEntity>();
+        private Random _rnd = new Random();
+        private List<MovingEntity> goblins = new List<MovingEntity>();
         public List<Obstacle> obstacles = new List<Obstacle>();
-        public Vehicle Player { get; set; }
         public Vehicle Target { get; set; }
+        public Vehicle Controlled { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
 
@@ -27,75 +28,105 @@ namespace SteeringCS
 
         private void populate()
         {
-            Player = new Vehicle("Player", new Vector2D(100, 60), this);
-            Player.VColor = Color.Green;
-            Player.Pos = new Vector2D(100, 40);
+            Target = new Vehicle("Target", new Vector2D(600, 600), this);
+            Target.VColor = Color.Green;
+            Target.Pos = new Vector2D(100, 40);
 
-            Target = new Vehicle("Gobbo1", new Vector2D(10, 10), this);
-            Target.VColor = Color.Blue;
-            Target.Target = Player;
-            Target.Evader = Player;
+            Controlled = new Vehicle("Target", new Vector2D(100,100), this);
+            Controlled.VColor = Color.Blue;
+            Controlled.Evader  = Target;
+            Controlled.Pursuer = Target;
+            Controlled.Target  = Target;
 
             SpawnObstacles();
         }
 
         public void SpawnObstacles()
         {
-            Obstacle obstacle1 = new Obstacle("obstacle1", 50, new Vector2D(150, 150), this);
+            Obstacle obstacle1 = new Obstacle("obstacle1", 20, new Vector2D(150, 150), this);
             obstacles.Add(obstacle1);
 
             Obstacle obstacle2 = new Obstacle("obstacle2", 20, new Vector2D(400, 100), this);
             obstacles.Add(obstacle2);
 
-            Obstacle obstacle3 = new Obstacle("obstacle3", 50, new Vector2D(250, 300), this);
+            Obstacle obstacle3 = new Obstacle("obstacle3", 20, new Vector2D(250, 300), this);
             obstacles.Add(obstacle3);
+
+            Obstacle obstacle4 = new Obstacle("obstacle3", 20, new Vector2D(600, 500), this);
+            obstacles.Add(obstacle4);
+
         }
 
-        public void SpawnSeekers()
+        public void SpawnGoblins()
         {
-            var dummy = new Vehicle("Gobbo2", new Vector2D(10, 10), this);
-            dummy.SB = new SeekBehaviour<Vehicle>(dummy);
+            var dummy = new Goblin("dummy", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            dummy.SB = new SeekBehaviour<Goblin>(dummy);
             dummy.VColor = Color.Aqua;
-            seekers.Add(dummy);
+            goblins.Add(dummy);
             dummy.Evader = Target;
             dummy.Target = Target;
 
-            var purs = new Vehicle("Gobbo3", new Vector2D(10, 10), this);
-            purs.SB = new PursuitBehaviour<Vehicle>(purs);
+            var purs = new Goblin("hunter", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            purs.SB = new PursuitBehaviour<Goblin>(purs);
             purs.VColor = Color.Crimson;
-            seekers.Add(purs);
+            goblins.Add(purs);
             purs.Evader = Target;
             purs.Target = Target;
 
 
-            var gentleman = new Vehicle("Gobbo4", new Vector2D(10, 10), this);
-            gentleman.SB = new PursuitAndArriveBehaviour<Vehicle>(gentleman);
+            var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            gentleman.SB = new PursuitAndArriveBehaviour<Goblin>(gentleman);
             gentleman.VColor = Color.Purple;
-            seekers.Add(gentleman);
+            goblins.Add(gentleman);
             gentleman.Evader = Target;
             gentleman.Target = Target;
         }
 
         public void DestroySeekers()
         {
-            seekers.Clear();
+            goblins.Clear();
             
         }
         public void Update(float timeElapsed)
         {
-            foreach (MovingEntity me in seekers)
+            try
             {
-                me.Update(timeElapsed);
-            }  
-            Target.Update(timeElapsed);
+                goblins.ForEach(goblin =>
+                {
+                    goblin.Update(timeElapsed);
+                    enforceNonPenetrationConstraint(goblin);
+                });
+                Controlled.Update(timeElapsed);
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         public void Render(Graphics g)
         {
-            seekers.ForEach(e => e.Render(g));
+            goblins.ForEach(e => e.Render(g));
             obstacles.ForEach(e => e.Render(g));
-            Player.Render(g);
             Target.Render(g);
+            Controlled.Render(g);
         }
+
+        public IEnumerable<MovingEntity> getGoblinNeighbors(Goblin goblin, double neighborsRange)
+        {
+            return goblins.Where(g => !g.Equals(goblin));
+        }
+
+        public void Reset()
+        {
+            goblins = new List<MovingEntity>();
+            obstacles = new List<Obstacle>();
+            populate();
+        }
+
+        private void enforceNonPenetrationConstraint(BaseGameEntity current)
+        {
+            //zie pagina 125 van het boek. Mischien een idee om te implementeren
+        }
+
     }
 }

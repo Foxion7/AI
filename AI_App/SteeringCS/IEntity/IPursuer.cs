@@ -2,7 +2,7 @@
 
 namespace SteeringCS.behaviour
 {
-    public interface IPursuer : ISeeker 
+    public interface IPursuer 
     {
         MovingEntity Evader { get; }
     }

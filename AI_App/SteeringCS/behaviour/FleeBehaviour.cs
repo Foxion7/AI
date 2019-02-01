@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.entity;
+using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
@@ -17,21 +18,7 @@ namespace SteeringCS.behaviour
         {
             if (ME.Target == null)
                 return new Vector2D(0, 0);
-            return Flee(ME.Target.Pos);
-        }
-
-        protected Vector2D Flee(Vector2D targetPos)
-        {
-            ME.DetectCollision();
-
-            var distance = (ME.Pos - targetPos);
-            if (ME.PanicDistanceSq() < distance.LengthSquared())
-            {
-                return new Vector2D(0, 0);
-            };
-            var desiredVelocity = distance.Normalize() * ME.MaxSpeed;
-            var neededForce = desiredVelocity - ME.Velocity;
-            return neededForce.Truncate(ME.MaxForce);
+            return Flee(ME.Target.Pos, ME, ME.PanicDistance);
         }
     }
 }

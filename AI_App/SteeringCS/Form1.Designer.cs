@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.dbPanel1 = new SteeringCS.DBPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -36,11 +37,13 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.pausedLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // dbPanel1
             // 
             this.dbPanel1.BackColor = System.Drawing.Color.White;
+            this.dbPanel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.dbPanel1.Location = new System.Drawing.Point(0, 0);
             this.dbPanel1.Name = "dbPanel1";
             this.dbPanel1.Size = new System.Drawing.Size(996, 571);
@@ -111,11 +114,23 @@
             this.label7.TabIndex = 7;
             this.label7.Text = "S = Pause / Play";
             // 
+            // pausedLabel
+            // 
+            this.pausedLabel.AutoSize = true;
+            this.pausedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.pausedLabel.Location = new System.Drawing.Point(1020, 516);
+            this.pausedLabel.Name = "pausedLabel";
+            this.pausedLabel.Size = new System.Drawing.Size(132, 31);
+            this.pausedLabel.TabIndex = 8;
+            this.pausedLabel.Text = "PAUSED";
+            this.pausedLabel.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1174, 570);
+            this.ClientSize = new System.Drawing.Size(1174, 591);
+            this.Controls.Add(this.pausedLabel);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -124,8 +139,10 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dbPanel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Steering";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Gobbo Slayer";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -142,6 +159,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label pausedLabel;
     }
 }
 

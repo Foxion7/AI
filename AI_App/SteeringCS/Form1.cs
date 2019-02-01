@@ -16,7 +16,7 @@ namespace SteeringCS
     {
         World world;
         System.Timers.Timer timer;
-        Boolean slowMotion = false;
+        Boolean paused = false;
 
         public const float timeDelta = 0.8f;
         
@@ -77,15 +77,17 @@ namespace SteeringCS
                 case Keys.N:
                     world.Controlled.SB = new WanderBehaviour(world.Controlled);
                     break;
-                case Keys.S:
-                    if (!slowMotion)
+                case Keys.Space:
+                    if (!paused)
                     {
-                        slowMotion = true;
+                        paused = true;
+                        pausedLabel.Visible = true;
                         timer.Interval = Int32.MaxValue;
                     }
                     else
                     {
-                        slowMotion = false;
+                        paused = false;
+                        pausedLabel.Visible = false;
                         timer.Interval = 20;
                     }
                     break;

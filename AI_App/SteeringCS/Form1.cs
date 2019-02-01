@@ -81,7 +81,7 @@ namespace SteeringCS
                     if (!slowMotion)
                     {
                         slowMotion = true;
-                        timer.Interval = 200;
+                        timer.Interval = Int32.MaxValue;
                     }
                     else
                     {

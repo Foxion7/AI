@@ -52,7 +52,7 @@ namespace SteeringCS
             Obstacle obstacle3 = new Obstacle("obstacle3", 20, new Vector2D(250, 300), this);
             obstacles.Add(obstacle3);
 
-            Obstacle obstacle4 = new Obstacle("obstacle3", 20, new Vector2D(600, 500), this);
+            Obstacle obstacle4 = new Obstacle("obstacle4", 20, new Vector2D(600, 500), this);
             obstacles.Add(obstacle4);
 
         }
@@ -66,20 +66,20 @@ namespace SteeringCS
             dummy.Evader = Target;
             dummy.Target = Target;
 
-            var purs = new Goblin("hunter", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            purs.SB = new PursuitBehaviour<Goblin>(purs);
-            purs.VColor = Color.Crimson;
-            goblins.Add(purs);
-            purs.Evader = Target;
-            purs.Target = Target;
+            //var purs = new Goblin("hunter", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            //purs.SB = new PursuitBehaviour<Goblin>(purs);
+            //purs.VColor = Color.Crimson;
+            //goblins.Add(purs);
+            //purs.Evader = Target;
+            //purs.Target = Target;
 
 
-            var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            gentleman.SB = new PursuitAndArriveBehaviour<Goblin>(gentleman);
-            gentleman.VColor = Color.Purple;
-            goblins.Add(gentleman);
-            gentleman.Evader = Target;
-            gentleman.Target = Target;
+            //var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            //gentleman.SB = new PursuitAndArriveBehaviour<Goblin>(gentleman);
+            //gentleman.VColor = Color.Purple;
+            //goblins.Add(gentleman);
+            //gentleman.Evader = Target;
+            //gentleman.Target = Target;
         }
 
         public void DestroySeekers()

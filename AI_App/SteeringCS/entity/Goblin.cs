@@ -9,11 +9,12 @@ using SteeringCS.IEntity;
 
 namespace SteeringCS.entity
 {
-    public class Goblin : MovingEntity, IFlocker, IPursuer, ISeeker, IArriver
+    public class Goblin : MovingEntity, IFlocker, IPursuer, ISeeker, IArriver, IObstacleAvoidance
     {
         public Color VColor { get; set; }
         public SteeringBehaviour<Goblin> SB;
         public SteeringBehaviour<Goblin> FB;
+        public SteeringBehaviour<Goblin> OA;
 
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -26,6 +27,7 @@ namespace SteeringCS.entity
 
             SB = new SeekBehaviour<Goblin>(this);
             FB = new FlockBehaviour<Goblin>(this);
+            OA = new ObstacleAvoidance<Goblin>(this);
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
@@ -38,7 +40,10 @@ namespace SteeringCS.entity
         {
             Vector2D steeringForce = SB.Calculate() *2;
             steeringForce += FB.Calculate();
+            steeringForce += OA.Calculate();
+
             steeringForce.Truncate(MaxForce);
+
             Vector2D acceleration = steeringForce / Mass;
 
             Velocity += (acceleration * timeElapsed);
@@ -50,6 +55,8 @@ namespace SteeringCS.entity
             {
                 Heading = Velocity.Normalize();
                 Side = Heading.Perp();
+                Console.WriteLine("Goblin " + this.name + "'s speed is: " + Velocity.Length());
+
             }
             WrapAround();
         }
@@ -72,5 +79,6 @@ namespace SteeringCS.entity
         public int SeparationValue { get; set; }
         public int CohesionValue { get; set; }
         public int AlignmentValue { get; set; }
+        public double detectionboxLengthFactor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

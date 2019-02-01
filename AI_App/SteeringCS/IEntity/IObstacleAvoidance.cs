@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace SteeringCS.IEntity
 {
-    public interface IObstacle
+    interface IObstacleAvoidance
     {
-        double Radius { get; }
-
+        double detectionboxLengthFactor { get; set; }
     }
 }

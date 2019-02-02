@@ -40,6 +40,7 @@
             this.dbPanel1 = new SteeringCS.DBPanel();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -54,7 +55,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1002, 56);
+            this.label2.Location = new System.Drawing.Point(1002, 31);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(93, 13);
             this.label2.TabIndex = 2;
@@ -63,7 +64,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1002, 93);
+            this.label3.Location = new System.Drawing.Point(1002, 44);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(103, 13);
             this.label3.TabIndex = 3;
@@ -72,7 +73,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1002, 133);
+            this.label4.Location = new System.Drawing.Point(1002, 57);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(106, 13);
             this.label4.TabIndex = 4;
@@ -81,7 +82,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1002, 171);
+            this.label5.Location = new System.Drawing.Point(1002, 70);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(152, 13);
             this.label5.TabIndex = 5;
@@ -90,7 +91,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(1002, 208);
+            this.label6.Location = new System.Drawing.Point(1002, 83);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(113, 13);
             this.label6.TabIndex = 6;
@@ -148,11 +149,22 @@
             this.label9.TabIndex = 12;
             this.label9.Text = "G = Add Goblin";
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(1003, 96);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(141, 13);
+            this.label10.TabIndex = 13;
+            this.label10.Text = "T = Switch triangles / circles";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1174, 591);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.pausedLabel);
@@ -187,6 +199,7 @@
         private System.Windows.Forms.Label pausedLabel;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
     }
 }
 

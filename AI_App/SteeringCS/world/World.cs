@@ -21,11 +21,13 @@ namespace SteeringCS
         public int Width { get; set; }
         public int Height { get; set; }
         public List<Color> goblinColors { get; }
+        public bool TriangleMode { get; set; }
 
         public World(int w, int h)
         {
             Width = w;
             Height = h;
+            TriangleMode = false;
 
             goblinColors = new List<Color>();
             goblinColors.Add(Color.Green);
@@ -66,27 +68,27 @@ namespace SteeringCS
             Random r = new Random();
             int rInt = r.Next(0, goblinColors.Count());
 
-            var dummy = new Goblin("dummy", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            dummy.SB = new SeekBehaviour(dummy);
-            dummy.VColor = goblinColors[rInt];
-            _goblins.Add(dummy);
-            dummy.Evader = Target;
-            dummy.Target = Target;
+            //var dummy = new Goblin("dummy", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            //dummy.SB = new ArrivalBehaviour(dummy);
+            //dummy.VColor = goblinColors[rInt];
+            //_goblins.Add(dummy);
+            //dummy.Evader = Target;
+            //dummy.Target = Target;
 
             //var purs = new Goblin("hunter", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
             //purs.SB = new PursuitBehaviour(purs);
-            //purs.VColor = Color.Crimson;
+            //purs.VColor = goblinColors[rInt];
             //_goblins.Add(purs);
             //purs.Evader = Target;
             //purs.Target = Target;
 
 
-            //var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            //gentleman.SB = new PursuitAndArriveBehaviour<Goblin>(gentleman);
-            //gentleman.VColor = Color.Purple;
-            //_goblins.Add(gentleman);
-            //gentleman.Evader = Target;
-            //gentleman.Target = Target;
+            var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            gentleman.SB = new PursuitAndArriveBehaviour<Goblin>(gentleman);
+            gentleman.VColor = goblinColors[rInt];
+            _goblins.Add(gentleman);
+            gentleman.Evader = Target;
+            gentleman.Target = Target;
         }
 
         public void SpawnHobgoblin()
@@ -116,7 +118,7 @@ namespace SteeringCS
             }
             catch (Exception e)
             {
-                Console.WriteLine("Goblin exception: " + e.Message);
+                Console.WriteLine("Goblin exception: " + e.Message + " stacktrace: " + e.StackTrace);
             }
             try
             {
@@ -128,7 +130,7 @@ namespace SteeringCS
             }
             catch (Exception e)
             {
-                Console.WriteLine("Hobgoblin exception: " + e.Message + " - stacktrace: " +  e.StackTrace);
+                Console.WriteLine("Hobgoblin exception: " + e.Message + " stacktrace: " +  e.StackTrace);
             }
             Target.Update(timeElapsed);
             Console.WriteLine();

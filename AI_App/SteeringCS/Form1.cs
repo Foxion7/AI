@@ -57,23 +57,23 @@ namespace SteeringCS
         {
             switch (e.KeyCode)
             {
-                case Keys.Z:
-                    world.Target.SB = new SeekBehaviour(world.Target);
-                    break;
-                case Keys.X:
-                    world.Target.SB = new FleeBehaviour(world.Target);
-                    break;
-                case Keys.C:
-                    world.Target.SB = new ArrivalBehaviour(world.Target);
-                    break;
-                case Keys.V:
-                    world.Target.SB = new PursuitAndArriveBehaviour(world.Target);
-                    break;
-                case Keys.B:
-                    world.Target.SB = new PursuitAndArriveBehaviour<Creature>(world.Target);
-                    break;
-                case Keys.N:
-                    world.Target.SB = new WanderBehaviour(world.Target);
+                //case Keys.Z:
+                //    world.Target.SB = new SeekBehaviour(world.Target);
+                //    break;
+                //case Keys.X:
+                //    world.Target.SB = new FleeBehaviour(world.Target);
+                //    break;
+                //case Keys.C:
+                //    world.Target.SB = new ArrivalBehaviour(world.Target);
+                //    break;
+                //case Keys.V:
+                //    world.Target.SB = new PursuitAndArriveBehaviour(world.Target);
+                //    break;
+                //case Keys.B:
+                //    world.Target.SB = new PursuitAndArriveBehaviour<Creature>(world.Target);
+                //    break;
+                case Keys.T:
+                    world.TriangleMode = !world.TriangleMode;
                     break;
                 case Keys.G:
                     world.SpawnGoblins();
@@ -101,23 +101,5 @@ namespace SteeringCS
 
             }
         }
-
-        //public void SetGoblinBehaviour(ISteeringBehaviour<IMover> behaviour)
-        //{
-        //    foreach (Goblin goblin in world.getGoblins())
-        //    {
-        //        goblin.UB = behaviour;
-        //        goblin.UB.ME = goblin;
-        //    }
-        //}
-
-        //public void SetGoblinBehaviour(ISteeringBehaviour<Goblin> behaviour)
-        //{
-        //    foreach (Goblin goblin in world.getGoblins())
-        //    {
-        //        goblin.UB = behaviour;
-        //        goblin.UB.ME = goblin;
-        //    }
-        //}
     }
 }

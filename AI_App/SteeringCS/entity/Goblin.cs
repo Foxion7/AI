@@ -9,20 +9,43 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Goblin : MovingEntity, IFlocker, IFollower, IPursuer, ISeeker, IArriver, IObstacleAvoider
+    public class Goblin : MovingEntity, IFlocker, IFollower, IArriver, IObstacleAvoider
     {
         public Color VColor { get; set; }
+        public double BraveryLimit { get; set; }
 
-        public ISteeringBehaviour<Goblin> SB;
-        public ISteeringBehaviour<Goblin> FB;
-        public ISteeringBehaviour<Goblin> OA;
+        //grouping behaviour
+        public IEnumerable<IMover> Neighbors => MyWorld.GetGoblinNeighbors(this, NeighborsRange);
+        public double NeighborsRange { get; set; }
+
+        //following behaviour
+        public MovingEntity Leader { get; set; }
+        public int FollowValue { get; set; }
+        public int AvoidValue { get; set; }
+
+        //flocking behaviour
+        public int SeparationValue { get; set; }
+        public int CohesionValue { get; set; }
+        public int AlignmentValue { get; set; }
+
+        //arriving behaviour
+        public BaseGameEntity Target { get; set; }
+        public double SlowingRadius { get; set; }
+
+        //obstacle avoidance behaviour
+        public List<IObstacle> Obstacles => MyWorld.getObstacles();
+
+        //the SteeringBehaviours
+        public ISteeringBehaviour<Goblin> SB; //the aggrasive anti non goblin behaviour
+        public ISteeringBehaviour<Goblin> FB; //the grouping behaviour
+        public ISteeringBehaviour<Goblin> OA; //the don't get hit by obstacles behaviour
 
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 100;
             MaxSpeed = 10;
             MaxForce = 50;
-            SeparationValue = 128;
+            SeparationValue = 256;
             CohesionValue = 4;
             AlignmentValue = 1;
 
@@ -63,7 +86,7 @@ namespace SteeringCS.entity
 
             Vector2D steeringForce = new Vector2D(0, 0);
 
-            steeringForce = SB.Calculate() * 2;
+            steeringForce += SB.Calculate() * 2;
             steeringForce += FB.Calculate();
             steeringForce += OA.Calculate() * 0.5;
             steeringForce.Truncate(MaxForce);
@@ -134,20 +157,5 @@ namespace SteeringCS.entity
             return closestHobgoblin;
         }
 
-        public IEnumerable<IMover> Neighbors => MyWorld.GetGoblinNeighbors(this, NeighborsRange);
-        public double NeighborsRange { get; set; }
-        public BaseGameEntity Target { get; set; }
-        public double SlowingRadius { get; set; }
-        public double BraveryLimit { get; set; }
-        public MovingEntity Evader { get; set; }
-        public int SeparationValue { get; set; }
-        public int CohesionValue { get; set; }
-        public int AlignmentValue { get; set; }
-        public List<IObstacle> Obstacles => MyWorld.getObstacles();
-
-        public MovingEntity Leader { get; set; }
-        double IFollower.SeparationValue { get; }
-        public double FollowValue { get; set; }
-        public double AvoidValue { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SteeringCS.entity;
 using SteeringCS.Interfaces;
 using static SteeringCS.behaviour.StaticBehaviours;
 
@@ -28,14 +27,5 @@ namespace SteeringCS.behaviour
             var separationForce = Separation(groupL, ME) * ME.SeparationValue;
             return (arriveForce + separationForce).Truncate(ME.MaxForce);
         }
-    }
-
-    public interface IFollower : IGrouper<IMover>
-    {
-        MovingEntity Leader { get; }
-        double SlowingRadius { get; }
-        double SeparationValue { get; }
-        double FollowValue { get; }
-        double AvoidValue { get; }
     }
 }

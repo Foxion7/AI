@@ -56,21 +56,10 @@ namespace SteeringCS
         {
             switch (e.KeyCode)
             {
-                //case Keys.Z:
-                //    world.Target.SB = new SeekBehaviour(world.Target);
-                //    break;
-                //case Keys.X:
-                //    world.Target.SB = new FleeBehaviour(world.Target);
-                //    break;
-                //case Keys.C:
-                //    world.Target.SB = new ArrivalBehaviour(world.Target);
-                //    break;
-                //case Keys.V:
-                //    world.Target.SB = new PursuitAndArriveBehaviour(world.Target);
-                //    break;
-                //case Keys.B:
-                //    world.Target.SB = new PursuitAndArriveBehaviour<Creature>(world.Target);
-                //    break;
+
+                case Keys.N:
+                    world.Target.SB = new WanderBehaviour(world.Target);
+                    break;
                 case Keys.T:
                     world.TriangleModeActive = !world.TriangleModeActive;
                     break;

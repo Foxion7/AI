@@ -63,7 +63,7 @@ namespace SteeringCS.entity
 
             Vector2D steeringForce = new Vector2D(0, 0);
 
-            steeringForce = SB.Calculate() * 20;
+            steeringForce = SB.Calculate() * 2;
             steeringForce += FB.Calculate();
             steeringForce += OA.Calculate() * 0.5;
             steeringForce.Truncate(MaxForce);
@@ -92,7 +92,7 @@ namespace SteeringCS.entity
             Pen p = new Pen(VColor, 2);
             Pen r = new Pen(Color.Red, 2);
             
-            if (MyWorld.TriangleMode)
+            if (MyWorld.TriangleModeActive)
             {
                 // Draws triangle.
                 // Left lat
@@ -109,8 +109,12 @@ namespace SteeringCS.entity
                 // Draws circle.
                 g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
             }
-            // Velocity
-            g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+
+            if (MyWorld.VelocityVisible)
+            {
+                // Velocity
+                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+            }
         }
 
         public Hobgoblin GetClosestHobgoblin()

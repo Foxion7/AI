@@ -23,13 +23,15 @@ namespace SteeringCS
         public int Width { get; set; }
         public int Height { get; set; }
         public List<Color> goblinColors { get; }
-        public bool TriangleMode { get; set; }
+        public bool TriangleModeActive { get; set; }
+        public bool VelocityVisible { get; set; }
 
         public World(int w, int h)
         {
             Width = w;
             Height = h;
-            TriangleMode = false;
+            TriangleModeActive = false;
+            VelocityVisible = true;
 
             _goblinSpace = new CellSpacePartition<MovingEntity>(w,h,20,20);
             _goblins = new List<MovingEntity>();
@@ -138,7 +140,6 @@ namespace SteeringCS
                 Console.WriteLine("Hobgoblin exception: " + e.Message + " stacktrace: " +  e.StackTrace);
             }
             Target.Update(timeElapsed);
-            Console.WriteLine();
         }
 
         public void Render(Graphics g)

@@ -19,7 +19,7 @@ namespace SteeringCS.entity
         public Hobgoblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 100;
-            MaxSpeed = 1;
+            MaxSpeed = 5;
             MaxForce = 40;
 
 
@@ -61,8 +61,9 @@ namespace SteeringCS.entity
             double size = Scale * 2;
 
             Pen p = new Pen(VColor, 2);
+            Pen r = new Pen(Color.Red, 2);
 
-            if (MyWorld.TriangleMode)
+            if (MyWorld.TriangleModeActive)
             {
                 // Draws triangle.
                 // Left lat
@@ -79,7 +80,11 @@ namespace SteeringCS.entity
                 // Draws circle.
                 g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
             }
-            g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+
+            if (MyWorld.VelocityVisible)
+            { 
+                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+            }
         }
         
         public BaseGameEntity Target { get; set; }

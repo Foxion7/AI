@@ -11,7 +11,7 @@ namespace SteeringCS.behaviour
 {
     class ObstacleAvoidance : ISteeringBehaviour<IObstacleAvoider>
     {
-        public double MAX_SEE_AHEAD = 25;
+        public double MAX_SEE_AHEAD = 50;
         public double MAX_AVOID_FORCE = 250;
         public Vector2D ahead;
         public Vector2D ahead2;

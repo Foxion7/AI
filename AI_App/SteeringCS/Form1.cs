@@ -72,7 +72,10 @@ namespace SteeringCS
                 //    world.Target.SB = new PursuitAndArriveBehaviour<Creature>(world.Target);
                 //    break;
                 case Keys.T:
-                    world.TriangleMode = !world.TriangleMode;
+                    world.TriangleModeActive = !world.TriangleModeActive;
+                    break;
+                case Keys.V:
+                    world.VelocityVisible = !world.VelocityVisible;
                     break;
                 case Keys.G:
                     world.SpawnGoblins();

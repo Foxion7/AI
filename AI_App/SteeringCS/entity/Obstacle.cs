@@ -32,10 +32,11 @@ namespace SteeringCS.entity
         {
             double size = Radius * 2;
 
-            Brush b = new SolidBrush(ColorTranslator.FromHtml("#77797a"));
+            //Brush b = new SolidBrush(ColorTranslator.FromHtml("#77797a"));
+            //g.FillEllipse(b, new Rectangle((int)Pos.X, (int)Pos.Y, (int)size, (int)size));
 
             Pen p = new Pen(VColor, 2);
-            g.FillEllipse(b, new Rectangle((int)Pos.X, (int)Pos.Y, (int)size, (int)size));
+            g.DrawEllipse(p, new Rectangle((int)Pos.X, (int)Pos.Y, (int)size, (int)size));
         }
     }
 }

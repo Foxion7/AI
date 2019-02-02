@@ -56,6 +56,7 @@
     <Compile Include="behaviour\EvadeBehaviour.cs" />
     <Compile Include="behaviour\FleeBehaviour.cs" />
     <Compile Include="behaviour\FlockBehaviour.cs" />
+    <Compile Include="Interfaces\IFollower.cs" />
     <Compile Include="behaviour\LeaderFollowingBehaviour.cs" />
     <Compile Include="behaviour\ObstacleAvoidance.cs" />
     <Compile Include="behaviour\PursuitAndArriveBehaviour.cs" />

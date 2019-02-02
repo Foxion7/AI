@@ -91,9 +91,8 @@ namespace SteeringCS
 
             var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
             gentleman.VColor = goblinColors[rInt];
-            _goblins.Add(gentleman);
-            gentleman.Evader = Target;
             gentleman.Target = Target;
+            _goblins.Add(gentleman);
         }
 
         public void SpawnHobgoblin()

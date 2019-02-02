@@ -50,9 +50,9 @@ namespace SteeringCS.entity
             Mass = 50;
             MaxSpeed = 10;
             MaxForce = 50;
-            SeparationValue = 256;
+            SeparationValue = 128;
             CohesionValue = 4;
-            AlignmentValue = 1;
+            AlignmentValue = 8;
 
             FollowValue = 20;
             AvoidValue = 20;
@@ -65,7 +65,7 @@ namespace SteeringCS.entity
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
             BraveryLimit = 100;
-
+            NeighborsRange = 100;
             Scale = 4;
             VColor = Color.Black;
         }

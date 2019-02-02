@@ -106,7 +106,7 @@ namespace SteeringCS.util
             //area
             var topLeft = searcherPos - new Vector2D(QueryRadius, QueryRadius);
             var bottomRight = searcherPos + new Vector2D(QueryRadius, QueryRadius);
-            var queryBox = new Box(topLeft, bottomRight);
+            var queryBox = new InvertedBox(topLeft, bottomRight);
 
             //iterate through each cell and test to see if its bounding box overlaps
             //with the query box. If it does and it also contains entities then

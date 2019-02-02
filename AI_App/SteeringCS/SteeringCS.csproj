@@ -97,7 +97,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="behaviour\ISteeringBehaviour.cs" />
-    <Compile Include="util\Box.cs" />
+    <Compile Include="util\InvertedBox.cs" />
     <Compile Include="util\Cell.cs" />
     <Compile Include="util\CellSpacePartition.cs" />
     <Compile Include="_behaviourStatic\staticBehaviours.cs" />

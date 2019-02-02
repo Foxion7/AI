@@ -34,7 +34,7 @@ namespace SteeringCS
             TriangleModeActive = false;
             VelocityVisible = false;
 
-            _goblinSpace = new CellSpacePartition<MovingEntity>(w,h,20,20);
+            _goblinSpace = new CellSpacePartition<MovingEntity>(w,h,5,5);
             _goblins = new List<MovingEntity>();
             goblinColors = new List<Color>();
             goblinColors.Add(Color.Green);

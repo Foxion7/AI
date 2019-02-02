@@ -9,12 +9,12 @@ namespace SteeringCS
         public List<T> Members;
 
         //the cell's bounding box
-        public Box boundingBox;
+        public InvertedBox boundingBox;
 
         public Cell(Vector2D topleft, Vector2D botright)
         {
             Members = new List<T>();
-            boundingBox = new Box(topleft, botright);
+            boundingBox = new InvertedBox(topleft, botright);
         }
     };
 }

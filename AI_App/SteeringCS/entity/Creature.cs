@@ -9,25 +9,26 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Creature : MovingEntity, IArriver, IPursuer, IEvader, IWanderer, ISeeker, IFleer
+    public class Creature : MovingEntity, IArriver, IPursuer, IEvader, IWanderer, ISeeker, IFleer, IObstacleAvoider
     {
         public Color VColor { get; set; }
 
         public ISteeringBehaviour<Creature> SB;
+        public ISteeringBehaviour<Creature> OA;
 
         public Creature(string name, Vector2D pos, World w) : base(name, pos, w)
         {
-            Mass = 10;
-            MaxSpeed = 30;
+            Mass = 100;
+            MaxSpeed = 10;
             MaxForce = 50;
             PanicDistance = 100;
-            SB = new SeekBehaviour(this);
+            OA = new ObstacleAvoidance(this);
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 300;
 
-            WanderRadius = 1;
+            WanderRadius = 20;
             WanderDistance = 0;
-            WanderJitter = 1;
+            WanderJitter = 40;
 
             Scale = 5;
             VColor = Color.Black;
@@ -35,15 +36,20 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            if(SB != null)
+            Vector2D steeringForce = new Vector2D();
+            if (SB != null)
             {
-                Vector2D steeringForce = SB.Calculate();
-                Vector2D acceleration = steeringForce / Mass;
-
-                Velocity += (acceleration * timeElapsed);
-                Velocity = Velocity.Truncate(MaxSpeed);
+                steeringForce += SB.Calculate()*0.33;
+            }
+            if (OA != null)
+            {
+                steeringForce += OA.Calculate()*0.66;
             }
 
+            Vector2D acceleration = steeringForce / Mass;
+
+            Velocity += (acceleration * timeElapsed);
+            Velocity = Velocity.Truncate(MaxSpeed);
             Pos += (Velocity * timeElapsed);
 
             if (Velocity.LengthSquared() > 0.00000001)
@@ -74,5 +80,6 @@ namespace SteeringCS.entity
         public double WanderJitter { get; set; }
         public double WanderRadius { get; set; }
         public double WanderDistance { get; set; }
+        public List<IObstacle> Obstacles => MyWorld.getObstacles();
     }
 }

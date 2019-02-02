@@ -80,7 +80,7 @@ namespace SteeringCS.entity
 
             Velocity += (acceleration * timeElapsed);
             Velocity = Velocity.Truncate(MaxSpeed);
-
+            var oldPos = Pos;
             Pos += (Velocity * timeElapsed);
 
             if (Velocity.LengthSquared() > 0.00000001)
@@ -89,6 +89,7 @@ namespace SteeringCS.entity
                 Side = Heading.Perp();
             }
             WrapAround();
+            MyWorld.ReposGoblin(this, oldPos);
         }
         public override void Render(Graphics g)
         {

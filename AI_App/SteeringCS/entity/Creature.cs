@@ -9,7 +9,7 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Creature : MovingEntity, IArriver, IPursuer, IEvader, IWanderer, ISeeker, IFleer, IObstacleAvoider
+    public class Creature : MovingEntity, IArriver, IPursuer, IEvader, IWanderer, ISeeker, IFleer, IObstacleAvoider, IWallAvoider
     {
         public Color VColor { get; set; }
 
@@ -81,5 +81,7 @@ namespace SteeringCS.entity
         public double WanderRadius { get; set; }
         public double WanderDistance { get; set; }
         public List<IObstacle> Obstacles => MyWorld.getObstacles();
+
+        public List<IWall> Walls => MyWorld.getWalls();
     }
 }

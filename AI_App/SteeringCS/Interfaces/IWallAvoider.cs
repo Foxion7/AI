@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace SteeringCS.Interfaces
 {
-    interface IWallAvoider: IMover
+    interface IWallAvoider : IMover
     {
         List<IWall> Walls { get; }
+
     }
 }

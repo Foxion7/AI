@@ -32,7 +32,7 @@ namespace SteeringCS
             Width = w;
             Height = h;
             TriangleModeActive = false;
-            VelocityVisible = true;
+            VelocityVisible = false;
 
             _goblinSpace = new CellSpacePartition<MovingEntity>(w,h,20,20);
             _goblins = new List<MovingEntity>();
@@ -75,6 +75,9 @@ namespace SteeringCS
         {
             Wall wall1 = new Wall("wall1", 20, Height-2, new Vector2D(Width * 0.85, 0), this);
             Walls.Add(wall1);
+
+            Wall wall2 = new Wall("wall2", Width * 0.129, 20, new Vector2D(Width * 0.85+20, 0), this);
+            Walls.Add(wall2);
         }
 
         public void SpawnGoblins()
@@ -180,6 +183,11 @@ namespace SteeringCS
         public List<IObstacle> getObstacles()
         {
             return Obstacles;
+        }
+
+        public List<IWall> getWalls()
+        {
+            return Walls;
         }
         
         public List<MovingEntity> getHobgoblins()

@@ -26,9 +26,7 @@ namespace SteeringCS.behaviour
         {
             Vector2D avoidanceForce = new Vector2D(0,0);
             
-            double dynamic_length = ME.Velocity.Length() / ME.MaxSpeed;
-            ahead = ME.Pos + ME.Velocity.Normalize() * dynamic_length;
-
+            ahead = ME.Pos + ME.Velocity.Normalize() * MAX_SEE_AHEAD;
             ahead2 = ME.Pos + ME.Velocity.Normalize() * MAX_SEE_AHEAD * 0.5;
 
             IObstacle mostThreatening = findMostThreateningObstacle();

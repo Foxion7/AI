@@ -9,7 +9,7 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Goblin : MovingEntity, IFlocker, IFollower, IArriver, IObstacleAvoider
+    public class Goblin : MovingEntity, IFlocker, IFollower, IArriver, IObstacleAvoider, IWallAvoider
     {
         public Color VColor { get; set; }
         public double BraveryLimit { get; set; }
@@ -35,14 +35,19 @@ namespace SteeringCS.entity
         //obstacle avoidance behaviour
         public List<IObstacle> Obstacles => MyWorld.getObstacles();
 
+        //wall avoidance behaviour
+        public List<IWall> Walls => MyWorld.getWalls();
+
+
         //the SteeringBehaviours
-        public ISteeringBehaviour<Goblin> SB; //the aggrasive anti non goblin behaviour
+        public ISteeringBehaviour<Goblin> SB; //the aggressive anti non goblin behaviour
         public ISteeringBehaviour<Goblin> FB; //the grouping behaviour
         public ISteeringBehaviour<Goblin> OA; //the don't get hit by obstacles behaviour
+        public ISteeringBehaviour<Goblin> WA; //the don't get hit by walls behaviour
 
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
-            Mass = 100;
+            Mass = 50;
             MaxSpeed = 10;
             MaxForce = 50;
             SeparationValue = 256;
@@ -55,6 +60,7 @@ namespace SteeringCS.entity
             SB = new ArrivalBehaviour(this);
             FB = new FlockBehaviour(this);
             OA = new ObstacleAvoidance(this);
+            WA = new WallAvoidance(this);
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
@@ -89,6 +95,7 @@ namespace SteeringCS.entity
             steeringForce += SB.Calculate() * 2;
             steeringForce += FB.Calculate();
             steeringForce += OA.Calculate() * 0.5;
+            steeringForce += WA.Calculate();
             steeringForce.Truncate(MaxForce);
 
             Vector2D acceleration = steeringForce / Mass;
@@ -114,7 +121,10 @@ namespace SteeringCS.entity
             double size = Scale * 2;
             Pen p = new Pen(VColor, 2);
             Pen r = new Pen(Color.Red, 2);
-            
+
+
+
+
             if (MyWorld.TriangleModeActive)
             {
                 // Draws triangle.
@@ -135,8 +145,18 @@ namespace SteeringCS.entity
 
             if (MyWorld.VelocityVisible)
             {
+                // Wall avoidance lines.
+                double MAX_SEE_AHEAD = 15;
+                Vector2D center = Pos + Velocity.Normalize() * MAX_SEE_AHEAD;
+                Vector2D leftSensor = new Vector2D(Pos.X + ((Side.X - Heading.X) * -MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y) * -MAX_SEE_AHEAD /2));
+                Vector2D rightSensor = new Vector2D(Pos.X + ((Side.X - Heading.X * -1) * MAX_SEE_AHEAD/2), Pos.Y + ((Side.Y - Heading.Y * -1) * MAX_SEE_AHEAD / 2));
+
+                g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)center.X, (int)center.Y);
+                g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)leftSensor.X, (int)leftSensor.Y);
+                g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)rightSensor.X, (int)rightSensor.Y);
+
                 // Velocity
-                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+                //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
             }
         }
 

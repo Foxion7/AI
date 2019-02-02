@@ -26,22 +26,16 @@ namespace SteeringCS.entity
             CohesionValue = 4;
             AlignmentValue = 1;
 
-            // Uncomment dit later misschien.
-            //if (MyWorld.getHobgoblins().Any())
-            //{
-            //    Leader = GetClosestHobgoblin();
-            //}
             FollowValue = 20;
             AvoidValue = 20;
 
             SB = new ArrivalBehaviour(this);
             FB = new FlockBehaviour(this);
-            //FB = new LeaderFollowingBehaviour(this);
             OA = new ObstacleAvoidance(this);
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
-            BraveryLimit = 200;
+            BraveryLimit = 100;
 
             Scale = 4;
             VColor = Color.Black;
@@ -51,7 +45,6 @@ namespace SteeringCS.entity
         {
             if (MyWorld.getHobgoblins().Any())
             {
-                //Leader = GetClosestHobgoblin();
                 Hobgoblin closestHobgoblin = GetClosestHobgoblin();
 
                 double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(MyWorld.Target.Pos, closestHobgoblin.Pos);
@@ -65,7 +58,6 @@ namespace SteeringCS.entity
                 {
                     // If leader is near player, attacks.
                     Target = MyWorld.Target;
-
                 }
             }
 
@@ -91,6 +83,7 @@ namespace SteeringCS.entity
             WrapAround();
             MyWorld.ReposGoblin(this, oldPos);
         }
+
         public override void Render(Graphics g)
         {
             double leftCorner = Pos.X - Scale;
@@ -134,7 +127,6 @@ namespace SteeringCS.entity
                     closestDistance = distance;
                 }
             }
-
             return closestHobgoblin;
         }
 

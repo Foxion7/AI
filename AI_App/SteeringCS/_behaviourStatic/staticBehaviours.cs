@@ -19,7 +19,6 @@ namespace SteeringCS.behaviour
 
         public static Vector2D Flee(Vector2D targetPos, IMover me, double panicDistanceSq)
         {
-
             var distance = (me.Pos - targetPos);
             if (panicDistanceSq < distance.LengthSquared() || distance.LengthSquared() < 0.1)
             {
@@ -32,6 +31,7 @@ namespace SteeringCS.behaviour
 
         public static Vector2D Arrive(Vector2D targetPost, IMover me, double slowingRadius)
         {
+
             Vector2D toTarget = targetPost - me.Pos;
             if (toTarget.LengthSquared() < 0.1)
                 return new Vector2D();
@@ -41,14 +41,20 @@ namespace SteeringCS.behaviour
             var desiredVelocity = targetPost - me.Pos;
             var distance = desiredVelocity.Length();
 
-            // Check the distance to detect whether the character
-            // is inside the slowing area
-            if (distance < slowingRadius)
+            // Slows when in slowingradius. Stops if in direct contact with target.
+            if (distance < 15)
             {
-                // Inside the slowing area
+                desiredVelocity = new Vector2D(0, 0);
+            }
+            else if (distance < slowingRadius / 2)
+            {
+                desiredVelocity = desiredVelocity.Truncate(me.MaxSpeed) * (distance / slowingRadius) * 0.2;
+            }
+            else  if (distance < slowingRadius)
+            {
                 desiredVelocity = desiredVelocity.Truncate(me.MaxSpeed) * (distance / slowingRadius);
             }
-            else
+            else 
             {
                 // Outside the slowing area.
                 desiredVelocity = desiredVelocity.Truncate(me.MaxSpeed);

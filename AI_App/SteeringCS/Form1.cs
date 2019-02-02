@@ -18,7 +18,6 @@ namespace SteeringCS
         World world;
         System.Timers.Timer timer;
         bool paused = false;
-        ISteeringBehaviour<IMover> behaviour;
 
         public const float timeDelta = 0.8f;
         

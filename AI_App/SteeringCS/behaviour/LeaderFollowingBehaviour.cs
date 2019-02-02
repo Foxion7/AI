@@ -9,7 +9,7 @@ namespace SteeringCS.behaviour
     public class LeaderFollowingBehaviour : ISteeringBehaviour<IFollower>
     {
         public IFollower ME { get; set; }
-        private const double LEADER_BEHIND_DIST = 30;
+        private const double LeaderBehindDist = 30;
         public LeaderFollowingBehaviour(IFollower me)
         {
             ME = me;
@@ -21,18 +21,19 @@ namespace SteeringCS.behaviour
 
             var tv = ME.Leader.Velocity * -1;
             if(!tv.LenghtIsZero())
-                tv = tv.Normalize() * LEADER_BEHIND_DIST;
+                tv = tv.Normalize() * LeaderBehindDist;
             var behind = ME.Leader.Pos + tv;
 
-            var seekForce = Seek(behind, ME) * ME.FollowValue;
+            var arriveForce = Arrive(behind, ME, ME.SlowingRadius) * ME.FollowValue;
             var separationForce = Separation(groupL, ME) * ME.SeparationValue;
-            return (seekForce + separationForce).Truncate(ME.MaxForce);
+            return (arriveForce + separationForce).Truncate(ME.MaxForce);
         }
     }
 
     public interface IFollower : IGrouper<IMover>
     {
         MovingEntity Leader { get; }
+        double SlowingRadius { get; }
         double SeparationValue { get; }
         double FollowValue { get; }
         double AvoidValue { get; }

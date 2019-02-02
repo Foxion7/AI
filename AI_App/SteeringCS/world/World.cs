@@ -90,7 +90,6 @@ namespace SteeringCS
 
 
             var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            gentleman.SB = new PursuitAndArriveBehaviour<Goblin>(gentleman);
             gentleman.VColor = goblinColors[rInt];
             _goblins.Add(gentleman);
             gentleman.Evader = Target;

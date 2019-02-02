@@ -35,7 +35,7 @@ namespace SteeringCS
 
         public static double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)
         {
-            return Math.Sqrt((pointA.X - pointB.X) * (pointA.X - pointB.X) + (pointA.Y - pointB.Y) * (pointA.Y - pointB.Y));
+            return (pointA-pointB).Length();
         }
 
         public static double Dot(this Vector2D v, Vector2D w)

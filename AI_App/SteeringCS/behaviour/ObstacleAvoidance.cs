@@ -11,8 +11,8 @@ namespace SteeringCS.behaviour
 {
     class ObstacleAvoidance : ISteeringBehaviour<IObstacleAvoider>
     {
-        public double MAX_SEE_AHEAD = 50;
-        public double MAX_AVOID_FORCE = 250;
+        public double MAX_SEE_AHEAD = 15;
+        public double MAX_AVOID_FORCE = 100;
         public Vector2D ahead;
         public Vector2D ahead2;
         public IObstacleAvoider ME { get; set; }
@@ -38,7 +38,7 @@ namespace SteeringCS.behaviour
                 avoidanceForce = new Vector2D(ahead.X - mostThreatening.Center.X, ahead.Y - mostThreatening.Center.Y);
                 avoidanceForce = avoidanceForce.Normalize();
 
-                avoidanceForce = avoidanceForce * MAX_AVOID_FORCE;
+                avoidanceForce = avoidanceForce * (MAX_AVOID_FORCE * ME.Velocity.Length());
             } else
             {
                 avoidanceForce = avoidanceForce * 0;

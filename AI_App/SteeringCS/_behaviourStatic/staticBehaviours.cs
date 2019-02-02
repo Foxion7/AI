@@ -48,7 +48,7 @@ namespace SteeringCS.behaviour
             }
             else if (distance < slowingRadius / 2)
             {
-                desiredVelocity = desiredVelocity.Truncate(me.MaxSpeed) * (distance / slowingRadius) * 0.2;
+                desiredVelocity = desiredVelocity.Truncate(me.MaxSpeed) * (distance / slowingRadius) * 0.5;
             }
             else  if (distance < slowingRadius)
             {

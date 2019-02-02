@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SteeringCS.util;
 
 namespace SteeringCS
 {
@@ -8,13 +9,12 @@ namespace SteeringCS
         public List<T> Members;
 
         //the cell's bounding box
-        public Vector2D TopLeft;
-        public Vector2D BottomRight;
+        public Box boundingBox;
 
         public Cell(Vector2D topleft, Vector2D botright)
         {
-            TopLeft = topleft;
-            BottomRight = botright;
+            Members = new List<T>();
+            boundingBox = new Box(topleft, botright);
         }
     };
 }

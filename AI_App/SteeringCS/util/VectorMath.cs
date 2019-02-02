@@ -31,6 +31,7 @@ namespace SteeringCS
             }
             return v.Clone();
         }
+        
 
         public static double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)
         {

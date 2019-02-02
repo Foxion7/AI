@@ -7,13 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.Interfaces;
+using SteeringCS.util;
 
 namespace SteeringCS
 {
     public class World
     {
         private Random _rnd = new Random();
-        private List<MovingEntity> _goblins = new List<MovingEntity>();
+        private List<MovingEntity> _goblins;
+        private CellSpacePartition<MovingEntity> _goblinSpace;
         private List<MovingEntity> _hobgoblins = new List<MovingEntity>();
         public List<IObstacle> Obstacles = new List<IObstacle>();
         public Creature Target { get; set; }
@@ -27,6 +29,8 @@ namespace SteeringCS
             Width = w;
             Height = h;
 
+            _goblinSpace = new CellSpacePartition<MovingEntity>(w,h,20,20);
+            _goblins = new List<MovingEntity>();
             goblinColors = new List<Color>();
             goblinColors.Add(Color.Green);
             goblinColors.Add(Color.ForestGreen);
@@ -103,6 +107,7 @@ namespace SteeringCS
         {
             _goblins.Clear();
             
+
         }
         public void Update(float timeElapsed)
         {
@@ -144,23 +149,13 @@ namespace SteeringCS
 
         public IEnumerable<MovingEntity> GetGoblinNeighbors(Goblin goblin, double neighborsRange)
         {
-            return _goblins.Where(g =>
-            {
-                if(g.Equals(goblin))
-                    return false;
-                var x = g.Pos.X;
-                var y = g.Pos.Y;
-                var maxX = goblin.Pos.X + neighborsRange;
-                var minX = goblin.Pos.X - neighborsRange;
-                var maxY = goblin.Pos.X + neighborsRange;
-                var minY = goblin.Pos.X - neighborsRange;
-                return x > minX && x < maxX && y > minY && y < maxY;
-            });
+            return _goblinSpace.CalculateNeighbors(goblin.Pos, neighborsRange);
         }
 
         public void Reset()
         {
             _goblins = new List<MovingEntity>();
+            _goblinSpace.EmptyCells();
             _hobgoblins = new List<MovingEntity>();
             Obstacles = new List<IObstacle>();
             populate();
@@ -180,10 +175,10 @@ namespace SteeringCS
         {
             return _hobgoblins;
         }
-        
-        public List<MovingEntity> getGoblins()
+
+        public void ReposGoblin(Goblin g, Vector2D oldPos)
         {
-            return _goblins;
+            _goblinSpace.UpdateEntity(g, oldPos);
         }
     }
 }

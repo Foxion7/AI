@@ -18,6 +18,7 @@ namespace SteeringCS
         private CellSpacePartition<MovingEntity> _goblinSpace;
         private List<MovingEntity> _hobgoblins = new List<MovingEntity>();
         public List<IObstacle> Obstacles = new List<IObstacle>();
+        public List<IWall> Walls = new List<IWall>();
         public Creature Target { get; set; }
         //public Creature Controlled { get; set; }
         public int Width { get; set; }
@@ -51,6 +52,7 @@ namespace SteeringCS
             Target.Pos = new Vector2D(500, 300);
             
             SpawnObstacles();
+            SpawnWalls();
         }
 
         public void SpawnObstacles()
@@ -66,7 +68,13 @@ namespace SteeringCS
 
             Obstacle obstacle4 = new Obstacle("obstacle4", 20, new Vector2D(600, 500), this);
             Obstacles.Add(obstacle4);
+        }
 
+
+        public void SpawnWalls()
+        {
+            Wall wall1 = new Wall("wall1", 20, Height-2, new Vector2D(Width * 0.85, 0), this);
+            Walls.Add(wall1);
         }
 
         public void SpawnGoblins()
@@ -146,6 +154,7 @@ namespace SteeringCS
             _goblins.ForEach(e => e.Render(g));
             _hobgoblins.ForEach(e => e.Render(g));
             Obstacles.ForEach(e => e.Render(g));
+            Walls.ForEach(e => e.Render(g));
             Target.Render(g);
         }
 
@@ -160,6 +169,7 @@ namespace SteeringCS
             _goblinSpace.EmptyCells();
             _hobgoblins = new List<MovingEntity>();
             Obstacles = new List<IObstacle>();
+            Walls = new List<IWall>();
             populate();
         }
 

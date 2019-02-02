@@ -61,6 +61,7 @@
     <Compile Include="behaviour\PursuitAndArriveBehaviour.cs" />
     <Compile Include="entity\Hobgoblin.cs" />
     <Compile Include="entity\Goblin.cs" />
+    <Compile Include="entity\Wall.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\IMover.cs" />
     <Compile Include="entity\Obstacle.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="behaviour\PursuitBehaviour.cs" />
     <Compile Include="Interfaces\IFleer.cs" />
     <Compile Include="Interfaces\ISeeker.cs" />
+    <Compile Include="Interfaces\IWall.cs" />
     <Compile Include="Interfaces\IWanderer.cs" />
     <Compile Include="Interfaces\IArriver.cs" />
     <Compile Include="behaviour\WanderBehaviour.cs" />

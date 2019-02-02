@@ -28,7 +28,6 @@ namespace SteeringCS.behaviour
             
             ahead = ME.Pos + ME.Velocity.Normalize() * MAX_SEE_AHEAD;
             ahead2 = ME.Pos + ME.Velocity.Normalize() * MAX_SEE_AHEAD * 0.5;
-
             IObstacle mostThreatening = findMostThreateningObstacle();
             
             if (mostThreatening != null)

@@ -9,11 +9,12 @@ namespace SteeringCS.behaviour
 {
     class WallAvoidance : ISteeringBehaviour<IWallAvoider>
     {
-        public double MAX_SEE_AHEAD = 15;
-        public double MAX_AVOID_FORCE = 100;
+        public double MAX_SEE_AHEAD = 10;
+        public double MAX_AVOID_FORCE = 50;
         public Vector2D leftSensor;
         public Vector2D centerSensor;
         public Vector2D rightSensor;
+        private Vector2D affectedSensor;
         public IWallAvoider ME { get; set; }
 
         public WallAvoidance(IWallAvoider me)
@@ -29,7 +30,19 @@ namespace SteeringCS.behaviour
             leftSensor = new Vector2D(ME.Pos.X + ((ME.Side.X - ME.Heading.X) * -MAX_SEE_AHEAD / 2), ME.Pos.Y + ((ME.Side.Y - ME.Heading.Y) * -MAX_SEE_AHEAD / 2));
             rightSensor = new Vector2D(ME.Pos.X + ((ME.Side.X - ME.Heading.X * -1) * MAX_SEE_AHEAD / 2), ME.Pos.Y + ((ME.Side.Y - ME.Heading.Y * -1) * MAX_SEE_AHEAD / 2));
 
-            IWall ClosestWall = GetClosestWall();
+            IWall mostThreatening = GetClosestWall();
+
+            if (mostThreatening != null)
+            {
+                avoidanceForce = new Vector2D(affectedSensor.X * -1 + ME.Side.X, affectedSensor.Y * -1 + ME.Side.Y);
+                avoidanceForce = avoidanceForce.Normalize();
+
+                avoidanceForce = avoidanceForce * (MAX_AVOID_FORCE * ME.Velocity.Length());
+            }
+            else
+            {
+                avoidanceForce = avoidanceForce * 0;
+            }
 
             return avoidanceForce;
         }
@@ -45,7 +58,6 @@ namespace SteeringCS.behaviour
 
                 if (collision && (mostThreatening == null || VectorMath.DistanceBetweenPositions(ME.Pos, wall.Center) < VectorMath.DistanceBetweenPositions(ME.Pos, mostThreatening.Center)))
                 {
-                    Console.WriteLine("Collision!");
                     mostThreatening = wall;
                 }
             }
@@ -54,14 +66,27 @@ namespace SteeringCS.behaviour
 
         private bool findSensorCollision(IWall wall)
         {
-            return SensorWithinWall(wall, leftSensor) || SensorWithinWall(wall, centerSensor) || SensorWithinWall(wall, rightSensor);
+            if(SensorWithinWall(wall, leftSensor))
+            {
+                affectedSensor = leftSensor;
+                return true;
+            }
+            if(SensorWithinWall(wall, rightSensor))
+            {
+                affectedSensor = leftSensor;
+                return true;
+            }
+            if(SensorWithinWall(wall, centerSensor))
+            {
+                affectedSensor = leftSensor;
+                return true;
+            }
+            return false;
         }
 
         private bool SensorWithinWall(IWall wall, Vector2D sensor)
         {
             Vector2D topLeft = new Vector2D(wall.Pos.X, wall.Pos.Y);
-            //Vector2D topRight = new Vector2D(wall.Pos.X + wall.Width, wall.Pos.Y);
-            //Vector2D bottomLeft = new Vector2D(wall.Pos.X, wall.Pos.Y + wall.Height);
             Vector2D bottomRight = new Vector2D(wall.Pos.X + wall.Width, wall.Pos.Y + wall.Height);
 
             return 

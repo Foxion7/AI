@@ -50,9 +50,9 @@ namespace SteeringCS.entity
             Mass = 50;
             MaxSpeed = 10;
             MaxForce = 50;
-            SeparationValue = 128;
-            CohesionValue = 4;
-            AlignmentValue = 8;
+            SeparationValue = 1;
+            CohesionValue = 1;
+            AlignmentValue = 1;
 
             FollowValue = 20;
             AvoidValue = 20;
@@ -65,7 +65,7 @@ namespace SteeringCS.entity
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
             BraveryLimit = 100;
-            NeighborsRange = 100;
+            NeighborsRange = 200;
             Scale = 4;
             VColor = Color.Black;
         }
@@ -92,17 +92,21 @@ namespace SteeringCS.entity
 
             Vector2D steeringForce = new Vector2D(0, 0);
 
-            steeringForce += SB.Calculate() * 2;
-            steeringForce += FB.Calculate();
-            steeringForce += OA.Calculate() * 0.5;
-            steeringForce += WA.Calculate();
+            if(SB != null)
+                steeringForce += SB.Calculate();
+            if (FB != null)
+                steeringForce += FB.Calculate()*2;
+            if (OA != null)
+                steeringForce += OA.Calculate();
+            if (WA != null)
+                steeringForce += WA.Calculate();
             steeringForce.Truncate(MaxForce);
 
             Vector2D acceleration = steeringForce / Mass;
 
             Velocity += (acceleration * timeElapsed);
             Velocity = Velocity.Truncate(MaxSpeed);
-            var oldPos = Pos;
+            OldPos = Pos;
             Pos += (Velocity * timeElapsed);
 
             if (Velocity.LengthSquared() > 0.00000001)
@@ -111,7 +115,6 @@ namespace SteeringCS.entity
                 Side = Heading.Perp();
             }
             WrapAround();
-            MyWorld.ReposGoblin(this, oldPos);
         }
 
         public override void Render(Graphics g)

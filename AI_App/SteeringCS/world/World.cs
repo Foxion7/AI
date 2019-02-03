@@ -104,6 +104,7 @@ namespace SteeringCS
             gentleman.VColor = goblinColors[rInt];
             gentleman.Target = Target;
             _goblins.Add(gentleman);
+            _goblinSpace.Add(gentleman);
         }
 
         public void SpawnHobgoblin()
@@ -126,9 +127,10 @@ namespace SteeringCS
         {
             try
             {
-                _goblins.ForEach(goblin =>
+                _goblins.ToList().ForEach(goblin =>
                 {
                     goblin.Update(timeElapsed);
+                    _goblinSpace.UpdateEntity(goblin, goblin.OldPos);
                     enforceNonPenetrationConstraint(goblin);
                 });
             }
@@ -141,7 +143,7 @@ namespace SteeringCS
                 _hobgoblins.ForEach(hobgoblin =>
                 {
                     hobgoblin.Update(timeElapsed);
-                    //enforceNonPenetrationConstraint(hobgoblin);
+                    enforceNonPenetrationConstraint(hobgoblin);
                 });
             }
             catch (Exception e)
@@ -153,7 +155,7 @@ namespace SteeringCS
 
         public void Render(Graphics g)
         {
-            _goblins.ForEach(e => e.Render(g));
+            _goblins.ToList().ForEach(e => e.Render(g));
             _hobgoblins.ForEach(e => e.Render(g));
             Obstacles.ForEach(e => e.Render(g));
             Walls.ForEach(e => e.Render(g));
@@ -162,7 +164,7 @@ namespace SteeringCS
 
         public IEnumerable<MovingEntity> GetGoblinNeighbors(Goblin goblin, double neighborsRange)
         {
-            return _goblinSpace.CalculateNeighbors(goblin.Pos, neighborsRange);
+            return _goblinSpace.CalculateNeighbors(goblin.Pos, neighborsRange).ToList();
         }
 
         public void Reset()
@@ -193,11 +195,6 @@ namespace SteeringCS
         public List<MovingEntity> getHobgoblins()
         {
             return _hobgoblins;
-        }
-
-        public void ReposGoblin(Goblin g, Vector2D oldPos)
-        {
-            _goblinSpace.UpdateEntity(g, oldPos);
         }
     }
 }

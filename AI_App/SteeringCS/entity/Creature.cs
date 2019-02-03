@@ -26,7 +26,7 @@ namespace SteeringCS.entity
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 300;
 
-            WanderRadius = 20;
+            WanderRadius = 50;
             WanderDistance = 0;
             WanderJitter = 40;
 

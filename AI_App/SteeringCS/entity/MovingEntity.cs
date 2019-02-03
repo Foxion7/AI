@@ -17,6 +17,7 @@ namespace SteeringCS.entity
         public float MaxSpeed    { get; set; }
         public float MaxForce    { get; set; }
         public float MaxTurnRate { get; set; }
+        public Vector2D OldPos { get; set; }
 
 
         protected MovingEntity(string name, Vector2D pos, World w) : base(name, pos, w)

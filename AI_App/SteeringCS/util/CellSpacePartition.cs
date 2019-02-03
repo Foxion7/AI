@@ -102,6 +102,7 @@ namespace SteeringCS.util
         //next, and end methods to iterate through the vector.
         public IEnumerable<T> CalculateNeighbors(Vector2D searcherPos, double QueryRadius)
         {
+
             //create the query box that is the bounding box of the target's query
             //area
             var topLeft = searcherPos - new Vector2D(QueryRadius, QueryRadius);
@@ -111,21 +112,30 @@ namespace SteeringCS.util
             //iterate through each cell and test to see if its bounding box overlaps
             //with the query box. If it does and it also contains entities then
             //make further proximity tests.
-            foreach (Cell<T> curCell in _cells)
+            var cells = _cells.ToList();
+            var i = 0;
+            while(i < cells.Count)
             {
+                var members = cells[i].Members.ToList();
                 //test to see if this cell contains members and if it overlaps the
                 //query box
-                if (curCell.boundingBox.Overlap(queryBox) && curCell.Members.Any())
+                if (cells[i].boundingBox.Overlap(queryBox) && members.Any())
                 {
+                    int j = 0;
                     //add any entities found within query radius to the neighbor list
-                    foreach (var target in curCell.Members)
+                    while(j < members.Count)
                     {
-                        if ((target.Pos - searcherPos).LengthSquared() < QueryRadius * QueryRadius)
+                        var target = members[j];
+                        if (target != null && (target.Pos - searcherPos).LengthSquared() < QueryRadius * QueryRadius)
                         {
                             yield return target;
                         }
+
+                        j++;
                     }
                 }
+
+                i++;
             }
         }
 

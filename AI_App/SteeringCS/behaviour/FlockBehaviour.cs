@@ -21,15 +21,14 @@ namespace SteeringCS.behaviour
 
         public Vector2D Calculate()
         {
-            var group = ME.Neighbors;
-            var groupL= group as List<IMover> ?? group.ToList();
-            if (!groupL.Any())
+            var group = ME.Neighbors.ToList();
+            if (group.Count <= 1)
                 return new Vector2D();
 
 
-            var separationForce =  Separation(groupL, ME) * ME.SeparationValue;
-            var alignmentForce = Alignment(groupL)        * ME.AlignmentValue;
-            var cohesionForce = Cohesion(groupL, ME)      * ME.CohesionValue;
+            var separationForce =  Separation(group, ME) * ME.SeparationValue;
+            var alignmentForce = Alignment(group)        * ME.AlignmentValue;
+            var cohesionForce = Cohesion(group, ME)      * ME.CohesionValue;
             return (separationForce + alignmentForce + cohesionForce).Truncate(ME.MaxForce);
         }
     }

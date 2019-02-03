@@ -46,10 +46,6 @@ namespace SteeringCS.behaviour
             {
                 desiredVelocity = new Vector2D(0, 0);
             }
-            else if (distance < slowingRadius / 2)
-            {
-                desiredVelocity = desiredVelocity.Truncate(me.MaxSpeed) * (distance / slowingRadius) * 0.5;
-            }
             else  if (distance < slowingRadius)
             {
                 desiredVelocity = desiredVelocity.Truncate(me.MaxSpeed) * (distance / slowingRadius);
@@ -69,7 +65,7 @@ namespace SteeringCS.behaviour
             var force = neighbors.Aggregate(new Vector2D(), (steeringForce, neighbor) =>
             {
                 Vector2D toAgent = me.Pos - neighbor.Pos;
-                if(Math.Abs(toAgent.Length()) > 0.1)
+                if(Math.Abs(toAgent.LengthSquared()) > 0.1)
                     steeringForce += toAgent.Normalize() / toAgent.Length();
                 return steeringForce;
             });

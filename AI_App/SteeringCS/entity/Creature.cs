@@ -5,29 +5,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.behaviour;
-using SteeringCS.IEntity;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Vehicle : MovingEntity, IArriver, IPursuer, IEvader, IWanderer
+    public class Creature : MovingEntity, IArriver, IPursuer, IEvader, IWanderer, ISeeker, IFleer, IObstacleAvoider, IWallAvoider
     {
         public Color VColor { get; set; }
 
-        public SteeringBehaviour<Vehicle> SB;
+        public ISteeringBehaviour<Creature> SB;
+        public ISteeringBehaviour<Creature> OA;
 
-        public Vehicle(string name, Vector2D pos, World w) : base(name, pos, w)
+        public Creature(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 100;
-            MaxSpeed = 30;
-            MaxForce = 30;
+            MaxSpeed = 10;
+            MaxForce = 50;
             PanicDistance = 100;
-            SB = new SeekBehaviour<Vehicle>(this);
+            OA = new ObstacleAvoidance(this);
             Velocity = new Vector2D(0, 0);
-            SlowingRadius = 100;
+            SlowingRadius = 300;
 
-            WanderRadius = 1;
+            WanderRadius = 50;
             WanderDistance = 0;
-            WanderJitter = 1;
+            WanderJitter = 40;
 
             Scale = 5;
             VColor = Color.Black;
@@ -35,15 +36,20 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            Vector2D steeringForce = SB.Calculate();
-            var x = double.IsNaN(steeringForce.X) ? 0 : steeringForce.X;
-            var y = double.IsNaN(steeringForce.Y) ? 0 : steeringForce.Y;
-            steeringForce = new Vector2D(x, y);
+            Vector2D steeringForce = new Vector2D();
+            if (SB != null)
+            {
+                steeringForce += SB.Calculate()*0.33;
+            }
+            if (OA != null)
+            {
+                steeringForce += OA.Calculate()*0.66;
+            }
+
             Vector2D acceleration = steeringForce / Mass;
 
             Velocity += (acceleration * timeElapsed);
             Velocity = Velocity.Truncate(MaxSpeed);
-
             Pos += (Velocity * timeElapsed);
 
             if (Velocity.LengthSquared() > 0.00000001)
@@ -52,27 +58,6 @@ namespace SteeringCS.entity
                 Side = Heading.Perp();
             }
             WrapAround();
-        }
-        // Allows re-entry on other side of form if entity leaves.
-        private void WrapAround()
-        {
-            if (this.Pos.X > MyWorld.Width)
-            {
-                this.Pos = new Vector2D(1, Pos.Y);
-            }
-            else if (this.Pos.X < 0)
-            {
-                this.Pos = new Vector2D(MyWorld.Width - 1, Pos.Y);
-            }
-
-            if (this.Pos.Y > MyWorld.Height)
-            {
-                this.Pos = new Vector2D(Pos.X, 1);
-            }
-            else if (this.Pos.Y < 0)
-            {
-                this.Pos = new Vector2D(Pos.X, MyWorld.Height - 1);
-            }
         }
 
         public override void Render(Graphics g)
@@ -95,5 +80,8 @@ namespace SteeringCS.entity
         public double WanderJitter { get; set; }
         public double WanderRadius { get; set; }
         public double WanderDistance { get; set; }
+        public List<IObstacle> Obstacles => MyWorld.getObstacles();
+
+        public List<IWall> Walls => MyWorld.getWalls();
     }
 }

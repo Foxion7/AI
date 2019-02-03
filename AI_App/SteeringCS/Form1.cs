@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SteeringCS.behaviour;
 using SteeringCS.entity;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS
 {
@@ -16,7 +17,7 @@ namespace SteeringCS
     {
         World world;
         System.Timers.Timer timer;
-        Boolean slowMotion = false;
+        bool paused = false;
 
         public const float timeDelta = 0.8f;
         
@@ -42,14 +43,10 @@ namespace SteeringCS
         {
             world.Render(e.Graphics);
         }
-        
+
         private void dbPanel1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
-            {
-                world.Player.Pos = new Vector2D(e.X, e.Y);
-            }
-            else
             {
                 world.Target.Pos = new Vector2D(e.X, e.Y);
             }
@@ -59,36 +56,40 @@ namespace SteeringCS
         {
             switch (e.KeyCode)
             {
-                case Keys.Z:
-                    world.Target.SB = new SeekBehaviour<Vehicle>(world.Target);
+
+                case Keys.N:
+                    world.Target.SB = new WanderBehaviour(world.Target);
                     break;
-                case Keys.X:
-                    world.Target.SB = new FleeBehaviour<Vehicle>(world.Target);
-                    break;
-                case Keys.C:
-                    world.Target.SB = new ArrivalBehaviour<Vehicle>(world.Target);
+                case Keys.T:
+                    world.TriangleModeActive = !world.TriangleModeActive;
                     break;
                 case Keys.V:
-                    world.Target.SB = new PursuitBehaviour<Vehicle>(world.Target);
+                    world.VelocityVisible = !world.VelocityVisible;
                     break;
-                case Keys.B:
-                    world.Target.SB = new PursuitAndArriveBehaviour<Vehicle>(world.Target);
+                case Keys.G:
+                    world.SpawnGoblins();
                     break;
-                case Keys.N:
-                    //world.Target2.SB = new WanderBehaviour<Vehicle>(world.Target2);
+                case Keys.H:
+                    world.SpawnHobgoblin();
                     break;
-                case Keys.S:
-                    if (!slowMotion)
+                case Keys.R:
+                    world.Reset();
+                    break;
+                case Keys.Space:
+                    if (!paused)
                     {
-                        slowMotion = true;
-                        timer.Interval = 200;
+                        paused = true;
+                        pausedLabel.Visible = true;
+                        timer.Interval = int.MaxValue;
                     }
                     else
                     {
-                        slowMotion = false;
+                        paused = false;
+                        pausedLabel.Visible = false;
                         timer.Interval = 20;
                     }
                     break;
+
             }
         }
     }

@@ -19,6 +19,8 @@ namespace SteeringCS
         public static Vector2D Perp(this Vector2D v)
             => new Vector2D(v.Y, -v.X);
 
+        public static bool LenghtIsZero(this Vector2D v)
+            => !(Math.Abs(v.X) > 0 || Math.Abs(v.Y) > 0);
 
         public static Vector2D Truncate(this Vector2D v, double max)
         {
@@ -28,6 +30,12 @@ namespace SteeringCS
                 return normalized * max;
             }
             return v.Clone();
+        }
+        
+
+        public static double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)
+        {
+            return (pointA-pointB).Length();
         }
 
         public static double Dot(this Vector2D v, Vector2D w)

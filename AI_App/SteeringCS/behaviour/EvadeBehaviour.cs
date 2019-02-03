@@ -4,33 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.entity;
-using SteeringCS.IEntity;
+using SteeringCS.Interfaces;
+using static SteeringCS.behaviour.StaticBehaviours;
+
 
 namespace SteeringCS.behaviour
 {
-    class EvadeBehaviour<TE> : FleeBehaviour<TE> where TE : MovingEntity, IEvader
+    class EvadeBehaviour : ISteeringBehaviour<IEvader>
     {
-        public EvadeBehaviour(TE me) : base(me)
+        public IEvader ME { get; set; }
+        public EvadeBehaviour(IEvader me)
         {
+            ME = me;
         }
 
-        public override Vector2D Calculate()
+
+        public Vector2D Calculate()
         {
             if (ME.Pursuer == null)
                 return new Vector2D();
 
-            /* Not necessary to include the check for facing direction this time */
             var pursuer = ME.Pursuer;
             var pursuerPos = ME.Pursuer.Pos;
             Vector2D toPursuer = pursuerPos - ME.Pos;
 
-            //the look-ahead time is proportional to the distance between the pursuer
-            //and the evader; and is inversely proportional to the sum of the
-            //agents' velocities
+            //the quotiënt between the distance and the maximum speeds will serve to the determine
+            //how far into the future we look
             double lookAheadTime = toPursuer.Length() /
                                    (ME.MaxSpeed + pursuer.Velocity.Length());
-            //now flee away from predicted future position of the pursuer
-            return Flee(pursuerPos + pursuer.Velocity * lookAheadTime);
+
+            return Flee(pursuerPos + pursuer.Velocity * lookAheadTime, ME, ME.PanicDistanceSq());
         }
     }
 }

@@ -6,96 +6,195 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SteeringCS.Interfaces;
+using SteeringCS.util;
 
 namespace SteeringCS
 {
     public class World
     {
-        private List<MovingEntity> seekers = new List<MovingEntity>();
-        public List<Obstacle> obstacles = new List<Obstacle>();
-        public Vehicle Player { get; set; }
-        public Vehicle Target { get; set; }
+        private Random _rnd = new Random();
+        private List<MovingEntity> _goblins;
+        private CellSpacePartition<MovingEntity> _goblinSpace;
+        private List<MovingEntity> _hobgoblins = new List<MovingEntity>();
+        public List<IObstacle> Obstacles = new List<IObstacle>();
+        public List<IWall> Walls = new List<IWall>();
+        public Creature Target { get; set; }
+        //public Creature Controlled { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public List<Color> goblinColors { get; }
+        public bool TriangleModeActive { get; set; }
+        public bool VelocityVisible { get; set; }
 
         public World(int w, int h)
         {
             Width = w;
             Height = h;
+            TriangleModeActive = false;
+            VelocityVisible = false;
+
+            _goblinSpace = new CellSpacePartition<MovingEntity>(w,h,5,5);
+            _goblins = new List<MovingEntity>();
+            goblinColors = new List<Color>();
+            goblinColors.Add(Color.Green);
+            goblinColors.Add(Color.ForestGreen);
+            goblinColors.Add(Color.DarkOliveGreen);
+            goblinColors.Add(Color.DarkGreen);
+
             populate();
         }
 
         private void populate()
         {
-            Player = new Vehicle("Player", new Vector2D(100, 60), this);
-            Player.VColor = Color.Green;
-            Player.Pos = new Vector2D(100, 40);
-
-            Target = new Vehicle("Gobbo1", new Vector2D(10, 10), this);
+            Target = new Creature("Player", new Vector2D(600, 600), this);
             Target.VColor = Color.Blue;
-            Target.Target = Player;
-            Target.Evader = Player;
-
+            Target.Pos = new Vector2D(500, 300);
+            
             SpawnObstacles();
+            SpawnWalls();
         }
 
         public void SpawnObstacles()
         {
-            Obstacle obstacle1 = new Obstacle("obstacle1", 50, new Vector2D(150, 150), this);
-            obstacles.Add(obstacle1);
+            Obstacle obstacle1 = new Obstacle("obstacle1", 20, new Vector2D(150, 150), this);
+            Obstacles.Add(obstacle1);
 
-            Obstacle obstacle2 = new Obstacle("obstacle2", 20, new Vector2D(400, 100), this);
-            obstacles.Add(obstacle2);
+            Obstacle obstacle2 = new Obstacle("obstacle2", 40, new Vector2D(400, 100), this);
+            Obstacles.Add(obstacle2);
 
-            Obstacle obstacle3 = new Obstacle("obstacle3", 50, new Vector2D(250, 300), this);
-            obstacles.Add(obstacle3);
+            Obstacle obstacle3 = new Obstacle("obstacle3", 20, new Vector2D(250, 300), this);
+            Obstacles.Add(obstacle3);
+
+            Obstacle obstacle4 = new Obstacle("obstacle4", 20, new Vector2D(600, 500), this);
+            Obstacles.Add(obstacle4);
         }
 
-        public void SpawnSeekers()
+
+        public void SpawnWalls()
         {
-            var dummy = new Vehicle("Gobbo2", new Vector2D(10, 10), this);
-            dummy.SB = new SeekBehaviour<Vehicle>(dummy);
-            dummy.VColor = Color.Aqua;
-            seekers.Add(dummy);
-            dummy.Evader = Target;
-            dummy.Target = Target;
+            Wall wall1 = new Wall("wall1", 20, Height-2, new Vector2D(Width * 0.85, 0), this);
+            Walls.Add(wall1);
 
-            var purs = new Vehicle("Gobbo3", new Vector2D(10, 10), this);
-            purs.SB = new PursuitBehaviour<Vehicle>(purs);
-            purs.VColor = Color.Crimson;
-            seekers.Add(purs);
-            purs.Evader = Target;
-            purs.Target = Target;
+            Wall wall2 = new Wall("wall2", Width * 0.129, 20, new Vector2D(Width * 0.85+20, 0), this);
+            Walls.Add(wall2);
+        }
+
+        public void SpawnGoblins()
+        {
+            Random r = new Random();
+            int rInt = r.Next(0, goblinColors.Count());
+
+            //var dummy = new Goblin("dummy", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            //dummy.SB = new ArrivalBehaviour(dummy);
+            //dummy.VColor = goblinColors[rInt];
+            //_goblins.Add(dummy);
+            //dummy.Evader = Target;
+            //dummy.Target = Target;
+
+            //var purs = new Goblin("hunter", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            //purs.SB = new PursuitBehaviour(purs);
+            //purs.VColor = goblinColors[rInt];
+            //_goblins.Add(purs);
+            //purs.Evader = Target;
+            //purs.Target = Target;
 
 
-            var gentleman = new Vehicle("Gobbo4", new Vector2D(10, 10), this);
-            gentleman.SB = new PursuitAndArriveBehaviour<Vehicle>(gentleman);
-            gentleman.VColor = Color.Purple;
-            seekers.Add(gentleman);
-            gentleman.Evader = Target;
+            var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            gentleman.VColor = goblinColors[rInt];
             gentleman.Target = Target;
+            _goblins.Add(gentleman);
+            _goblinSpace.Add(gentleman);
+        }
+
+        public void SpawnHobgoblin()
+        {
+            var hobbyGobby = new Hobgoblin("Bloodbeard", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            hobbyGobby.PB = new SeekBehaviour(hobbyGobby);
+            hobbyGobby.VColor = Color.Black;
+            _hobgoblins.Add(hobbyGobby);
+            hobbyGobby.Evader = Target;
+            hobbyGobby.Target = Target;
         }
 
         public void DestroySeekers()
         {
-            seekers.Clear();
+            _goblins.Clear();
             
+
         }
         public void Update(float timeElapsed)
         {
-            foreach (MovingEntity me in seekers)
+            try
             {
-                me.Update(timeElapsed);
-            }  
+                _goblins.ToList().ForEach(goblin =>
+                {
+                    goblin.Update(timeElapsed);
+                    _goblinSpace.UpdateEntity(goblin, goblin.OldPos);
+                    enforceNonPenetrationConstraint(goblin);
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Goblin exception: " + e.Message + " stacktrace: " + e.StackTrace);
+            }
+            try
+            {
+                _hobgoblins.ForEach(hobgoblin =>
+                {
+                    hobgoblin.Update(timeElapsed);
+                    enforceNonPenetrationConstraint(hobgoblin);
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Hobgoblin exception: " + e.Message + " stacktrace: " +  e.StackTrace);
+            }
             Target.Update(timeElapsed);
         }
 
         public void Render(Graphics g)
         {
-            seekers.ForEach(e => e.Render(g));
-            obstacles.ForEach(e => e.Render(g));
-            Player.Render(g);
+            _goblins.ToList().ForEach(e => e.Render(g));
+            _hobgoblins.ForEach(e => e.Render(g));
+            Obstacles.ForEach(e => e.Render(g));
+            Walls.ForEach(e => e.Render(g));
             Target.Render(g);
+        }
+
+        public IEnumerable<MovingEntity> GetGoblinNeighbors(Goblin goblin, double neighborsRange)
+        {
+            return _goblinSpace.CalculateNeighbors(goblin.Pos, neighborsRange).ToList();
+        }
+
+        public void Reset()
+        {
+            _goblins = new List<MovingEntity>();
+            _goblinSpace.EmptyCells();
+            _hobgoblins = new List<MovingEntity>();
+            Obstacles = new List<IObstacle>();
+            Walls = new List<IWall>();
+            populate();
+        }
+
+        private void enforceNonPenetrationConstraint(BaseGameEntity current)
+        {
+            //zie pagina 125 van het boek. Mischien een idee om te implementeren
+        }
+
+        public List<IObstacle> getObstacles()
+        {
+            return Obstacles;
+        }
+
+        public List<IWall> getWalls()
+        {
+            return Walls;
+        }
+        
+        public List<MovingEntity> getHobgoblins()
+        {
+            return _hobgoblins;
         }
     }
 }

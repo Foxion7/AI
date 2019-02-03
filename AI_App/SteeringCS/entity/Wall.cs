@@ -1,25 +1,26 @@
-﻿using System;
+﻿using SteeringCS.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Obstacle : BaseGameEntity, IObstacle
+    public class Wall : BaseGameEntity, IWall
     {
         public Color VColor { get; set; }
-        public double Radius { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
         public Vector2D Center { get; set; }
 
-        public Obstacle(string name, double radius, Vector2D pos, World w) : base(name, pos, w)
+        public Wall(string name, double width, double height, Vector2D pos, World w) : base(name, pos, w)
         {
             this.Name = name;
-            Radius = radius;
-            Center = new Vector2D(pos.X + radius, pos.Y + radius);
             VColor = Color.Black;
+            Width = width;
+            Height = height;
         }
 
         public override void Update(float delta)
@@ -29,13 +30,12 @@ namespace SteeringCS.entity
 
         public override void Render(Graphics g)
         {
-            double size = Radius * 2;
 
             //Brush b = new SolidBrush(ColorTranslator.FromHtml("#77797a"));
             //g.FillEllipse(b, new Rectangle((int)Pos.X, (int)Pos.Y, (int)size, (int)size));
 
             Pen p = new Pen(VColor, 2);
-            g.DrawEllipse(p, new Rectangle((int)Pos.X, (int)Pos.Y, (int)size, (int)size));
+            g.DrawRectangle(p, (int)Pos.X, (int)Pos.Y, (int)Width, (int)Height);
         }
     }
 }

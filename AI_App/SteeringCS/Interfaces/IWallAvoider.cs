@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteeringCS.IEntity
+namespace SteeringCS.Interfaces
 {
-    public interface IObstacle
+    interface IWallAvoider : IMover
     {
-        double Radius { get; }
+        List<IWall> Walls { get; }
 
     }
 }

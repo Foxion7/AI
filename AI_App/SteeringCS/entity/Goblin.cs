@@ -49,7 +49,7 @@ namespace SteeringCS.entity
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 50;
-            MaxSpeed = 10;
+            MaxSpeed = 5;
             MaxForce = 50;
 
             GroupValue = 10;
@@ -97,7 +97,7 @@ namespace SteeringCS.entity
             Vector2D steeringForce = new Vector2D(0, 0);
 
             if(SB != null)
-                steeringForce += SB.Calculate();
+                steeringForce += SB.Calculate() * 10;
             if (FB != null)
                 steeringForce += FB.Calculate();
             if (OA != null)

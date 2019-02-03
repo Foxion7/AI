@@ -40,7 +40,7 @@ namespace SteeringCS.behaviour
             {
                 avoidanceForce = avoidanceForce * 0;
             }
-            return avoidanceForce;
+            return avoidanceForce * 0.5;
         }
 
         private IObstacle findMostThreateningObstacle() {

@@ -17,6 +17,7 @@ namespace SteeringCS.entity
         //grouping behaviour
         public IEnumerable<IMover> Neighbors => MyWorld.GetGoblinNeighbors(this, NeighborsRange);
         public double NeighborsRange { get; set; }
+        public double GroupValue { get; set; }
 
         //following behaviour
         public MovingEntity Leader { get; set; }
@@ -50,6 +51,10 @@ namespace SteeringCS.entity
             Mass = 50;
             MaxSpeed = 10;
             MaxForce = 50;
+
+            GroupValue = 10;
+            NeighborsRange = 100;
+
             SeparationValue = 1;
             CohesionValue = 1;
             AlignmentValue = 1;
@@ -65,7 +70,6 @@ namespace SteeringCS.entity
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
             BraveryLimit = 100;
-            NeighborsRange = 200;
             Scale = 4;
             VColor = Color.Black;
         }
@@ -95,7 +99,7 @@ namespace SteeringCS.entity
             if(SB != null)
                 steeringForce += SB.Calculate();
             if (FB != null)
-                steeringForce += FB.Calculate()*2;
+                steeringForce += FB.Calculate();
             if (OA != null)
                 steeringForce += OA.Calculate();
             if (WA != null)

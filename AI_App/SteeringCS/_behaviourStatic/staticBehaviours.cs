@@ -69,8 +69,9 @@ namespace SteeringCS.behaviour
                     steeringForce += toAgent.Normalize() / toAgent.Length();
                 return steeringForce;
             });
-
-            return force;
+            if (force.LenghtIsZero())
+                return force;
+            return force.Normalize();
         }
 
         public static Vector2D Alignment(IEnumerable<IMover> neighbors)
@@ -82,7 +83,10 @@ namespace SteeringCS.behaviour
                 sum += neighbor.Heading;
                 count++;
             }
-            return sum / count;
+
+            if (count == 0 || sum.LenghtIsZero())
+                return new Vector2D();
+            return (sum / count).Normalize();
         }
 
         public static Vector2D Cohesion(IEnumerable<IEntity> neighbors, IMover me)
@@ -94,7 +98,11 @@ namespace SteeringCS.behaviour
                 centerOfMass += neighbor.Pos;
                 count++;
             }
-            return Seek(centerOfMass / count, me);
+
+            var force = Seek(centerOfMass / count, me);
+            if (force.LenghtIsZero())
+                return force;
+            return Seek(centerOfMass / count, me).Normalize();
         }
     }
 }

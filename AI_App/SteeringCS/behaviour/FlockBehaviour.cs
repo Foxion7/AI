@@ -29,7 +29,12 @@ namespace SteeringCS.behaviour
             var separationForce =  Separation(group, ME) * ME.SeparationValue;
             var alignmentForce = Alignment(group)        * ME.AlignmentValue;
             var cohesionForce = Cohesion(group, ME)      * ME.CohesionValue;
-            return (separationForce + alignmentForce + cohesionForce).Truncate(ME.MaxForce);
+            var desiredSpeed = (separationForce + alignmentForce + cohesionForce).Normalize()*ME.GroupValue;
+            if (desiredSpeed.LenghtIsZero())
+                return desiredSpeed;
+
+            var neededForce = desiredSpeed - ME.Velocity;
+            return neededForce.Truncate(ME.MaxForce);
         }
     }
 }

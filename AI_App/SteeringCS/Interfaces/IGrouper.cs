@@ -16,5 +16,13 @@ namespace SteeringCS.Interfaces
         /// entities returned by Neighbors are in fact neighbors.
         /// </summary>
         double    NeighborsRange { get; }
+
+        /// <summary>
+        /// This is the importance of being part of the group.
+        /// 0 = 0%
+        /// anything larger than the maxForce of the mover = 100%
+        /// </summary>
+        double GroupValue { get; set; }
+
     }
 }

@@ -9,8 +9,8 @@ namespace SteeringCS.behaviour
 {
     class WallAvoidance : ISteeringBehaviour<IWallAvoider>
     {
-        public double MAX_SEE_AHEAD = 10;
-        public double MAX_AVOID_FORCE = 50;
+        public double MAX_SEE_AHEAD = 15;
+        public double MAX_AVOID_FORCE = 75;
         public Vector2D leftSensor;
         public Vector2D centerSensor;
         public Vector2D rightSensor;
@@ -34,7 +34,7 @@ namespace SteeringCS.behaviour
 
             if (mostThreatening != null)
             {
-                avoidanceForce = new Vector2D(affectedSensor.X * -1 + ME.Side.X, affectedSensor.Y * -1 + ME.Side.Y);
+                avoidanceForce = new Vector2D(ME.Pos.X - affectedSensor.X, ME.Pos.Y - affectedSensor.Y);
                 avoidanceForce = avoidanceForce.Normalize();
 
                 avoidanceForce = avoidanceForce * (MAX_AVOID_FORCE * ME.Velocity.Length());
@@ -44,7 +44,7 @@ namespace SteeringCS.behaviour
                 avoidanceForce = avoidanceForce * 0;
             }
 
-            return avoidanceForce;
+            return avoidanceForce * 0.5;
         }
 
         public IWall GetClosestWall()

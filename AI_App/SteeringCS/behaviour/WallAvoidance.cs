@@ -73,12 +73,12 @@ namespace SteeringCS.behaviour
             }
             if(SensorWithinWall(wall, rightSensor))
             {
-                affectedSensor = leftSensor;
+                affectedSensor = rightSensor;
                 return true;
             }
             if(SensorWithinWall(wall, centerSensor))
             {
-                affectedSensor = leftSensor;
+                affectedSensor = centerSensor;
                 return true;
             }
             return false;

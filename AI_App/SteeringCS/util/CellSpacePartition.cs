@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using SteeringCS.entity;
 using SteeringCS.Interfaces;
@@ -12,6 +13,9 @@ namespace SteeringCS.util
     class CellSpacePartition<T>  where T : IEntity
 
     {
+        //a lock for safety
+        private readonly ReaderWriterLockSlim _writeLock = new ReaderWriterLockSlim();
+
         //the required number of cells in the space
         private List<Cell<T>> _cells;
 
@@ -73,28 +77,32 @@ namespace SteeringCS.util
         }
 
         //adds entities to the class by allocating them to the appropriate cell
-        public void Add(T ent)
+        public void Add(int key, T ent)
         {
             int sz = _cells.Count;
             int i = PositionToIndex(ent.Pos);
 
-            _cells[i].Members.Add(ent);
+            _cells[i].Members.TryAdd(key, ent);
         }
 
         //update an entity's cell by calling this from your entity's Update method
-        public void UpdateEntity(T ent, Vector2D OldPos)
+        public void UpdateEntity(int key, Vector2D oldPos, Vector2D newPos)
         {
             //if the index for the old pos and the new pos are not equal then
             //the entity has moved to another cell.
-            int oldI = PositionToIndex(OldPos);
-            int newI = PositionToIndex(ent.Pos);
+            int oldI = PositionToIndex(oldPos);
+            int newI = PositionToIndex(newPos);
 
             if (newI == oldI) return;
 
             //the entity has moved into another cell so delete from current cell
             //and add to new one
-            _cells[oldI].Members.Remove(ent);
-            _cells[newI].Members.Add(ent);
+            lock (_writeLock)
+            {
+                _cells[oldI].Members.TryRemove(key, out T entity);
+                if(!entity.Equals(default(T)))
+                    _cells[newI].Members.TryAdd(key, entity);
+            }
         }
 
         //this method calculates all a target's neighbors and stores them in
@@ -112,29 +120,28 @@ namespace SteeringCS.util
             //iterate through each cell and test to see if its bounding box overlaps
             //with the query box. If it does and it also contains entities then
             //make further proximity tests.
-            var cells = _cells.ToList();
             var i = 0;
-            while(i < cells.Count)
+            while(i < _cells.Count)
             {
-                var members = cells[i].Members.ToList();
-                //test to see if this cell contains members and if it overlaps the
-                //query box
-                if (cells[i].boundingBox.Overlap(queryBox) && members.Any())
-                {
-                    int j = 0;
-                    //add any entities found within query radius to the neighbor list
-                    while(j < members.Count)
+
+                    var members = _cells[i].Members.Values.ToList();
+                    //test to see if this cell contains members and if it overlaps the
+                    //query box
+                    if (_cells[i].BoundingBox.Overlap(queryBox) && members.Any())
                     {
-                        var target = members[j];
-                        if (target != null && (target.Pos - searcherPos).LengthSquared() < QueryRadius * QueryRadius)
+                        int j = 0;
+                        //add any entities found within query radius to the neighbor list
+                        while (j < members.Count)
                         {
-                            yield return target;
+                            var target = members[j];
+                            if (target != null && (target.Pos - searcherPos).LengthSquared() < QueryRadius * QueryRadius)
+                            {
+                                yield return target;
+                            }
+
+                            j++;
                         }
-
-                        j++;
                     }
-                }
-
                 i++;
             }
         }

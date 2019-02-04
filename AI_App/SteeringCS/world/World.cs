@@ -104,7 +104,7 @@ namespace SteeringCS
             gentleman.VColor = goblinColors[rInt];
             gentleman.Target = Target;
             _goblins.Add(gentleman);
-            _goblinSpace.Add(gentleman);
+            _goblinSpace.Add(gentleman.Key, gentleman);
         }
 
         public void SpawnHobgoblin()
@@ -130,7 +130,6 @@ namespace SteeringCS
                 _goblins.ToList().ForEach(goblin =>
                 {
                     goblin.Update(timeElapsed);
-                    _goblinSpace.UpdateEntity(goblin, goblin.OldPos);
                     enforceNonPenetrationConstraint(goblin);
                 });
             }
@@ -175,6 +174,11 @@ namespace SteeringCS
             Obstacles = new List<IObstacle>();
             Walls = new List<IWall>();
             populate();
+        }
+
+        public void rePosGoblin(int key, Vector2D oldPos, Vector2D newPos)
+        {
+            _goblinSpace.UpdateEntity(key, oldPos, newPos);
         }
 
         private void enforceNonPenetrationConstraint(BaseGameEntity current)

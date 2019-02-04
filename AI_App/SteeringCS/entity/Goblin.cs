@@ -11,6 +11,10 @@ namespace SteeringCS.entity
 {
     public class Goblin : MovingEntity, IFlocker, IFollower, IArriver, IObstacleAvoider, IWallAvoider
     {
+        ///for thread safety
+        private static int _lastKey = 0;
+        public readonly int Key;
+
         public Color VColor { get; set; }
         public double BraveryLimit { get; set; }
 
@@ -48,6 +52,9 @@ namespace SteeringCS.entity
 
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
+            Key = _lastKey+1;
+            _lastKey++;
+            
             Mass = 50;
             MaxSpeed = 5;
             MaxForce = 50;
@@ -55,7 +62,7 @@ namespace SteeringCS.entity
             GroupValue = 10;
             NeighborsRange = 100;
 
-            SeparationValue = 1;
+            SeparationValue = 64;
             CohesionValue = 1;
             AlignmentValue = 1;
 
@@ -119,6 +126,7 @@ namespace SteeringCS.entity
                 Side = Heading.Perp();
             }
             WrapAround();
+            MyWorld.rePosGoblin(Key, OldPos, Pos);
         }
 
         public override void Render(Graphics g)
@@ -154,7 +162,7 @@ namespace SteeringCS.entity
             {
                 // Wall avoidance lines.
                 double MAX_SEE_AHEAD = 15;
-                Vector2D center = Pos + Velocity.Normalize() * MAX_SEE_AHEAD;
+                Vector2D center = Pos + Heading * MAX_SEE_AHEAD;
                 Vector2D leftSensor = new Vector2D(Pos.X + ((Side.X - Heading.X) * -MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y) * -MAX_SEE_AHEAD /2));
                 Vector2D rightSensor = new Vector2D(Pos.X + ((Side.X - Heading.X * -1) * MAX_SEE_AHEAD/2), Pos.Y + ((Side.Y - Heading.Y * -1) * MAX_SEE_AHEAD / 2));
 
@@ -166,6 +174,7 @@ namespace SteeringCS.entity
                 //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
             }
         }
+
 
         public Hobgoblin GetClosestHobgoblin()
         {

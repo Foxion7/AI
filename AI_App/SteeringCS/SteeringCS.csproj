@@ -57,7 +57,8 @@
     <Compile Include="behaviour\FleeBehaviour.cs" />
     <Compile Include="behaviour\FlockBehaviour.cs" />
     <Compile Include="behaviour\FollowPathBehaviour.cs" />
-    <Compile Include="util\ExplorationArea.cs" />
+    <Compile Include="util\Graph\Graph.cs" />
+    <Compile Include="util\Graph\GraphNode.cs" />
     <Compile Include="util\Route.cs" />
     <Compile Include="behaviour\WallAvoidance.cs" />
     <Compile Include="behaviour\LeaderFollowingBehaviour.cs" />

@@ -5,27 +5,47 @@ using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    public class LeaderFollowingBehaviour : ISteeringBehaviour<IFollower>
+    public class LeaderFollowingBehaviour : ISteeringBehaviour
     {
-        public IFollower ME { get; set; }
-        private const double LeaderBehindDist = 30;
-        public LeaderFollowingBehaviour(IFollower me)
+        private IGrouper _me;
+        public IMover Leader { get; set; }
+        public double LeaderBehindDist { get; set; }
+        public double SlowingRadius { get; set; }
+        public double GroupValue { get; set; }
+        public double FollowValue { get; set; }
+        public double SeparationValue { get; set; }
+
+        public LeaderFollowingBehaviour(IGrouper me, IMover leader, double slowingRadius, double leaderBehindDist, double groupValue, double followValue=1, double separationValue=1)
         {
-            ME = me;
+            _me = me;
+            Leader = leader;
+            SlowingRadius = slowingRadius;
+            LeaderBehindDist = leaderBehindDist;
+            GroupValue = groupValue;
+            FollowValue = followValue;
+            SeparationValue = separationValue;
         }
+
+
         public Vector2D Calculate()
         {
-            var group = ME.Neighbors;
-            var groupL = group as List<IMover> ?? group.ToList();
+            if (Leader == null)
+                return new Vector2D();
 
-            var tv = ME.Leader.Velocity * -1;
+            var group = _me.Neighbors;
+            var groupL = group as List<IGrouper> ?? group.ToList();
+
+            var tv = Leader.Velocity * -1;
             if(!tv.LenghtIsZero())
                 tv = tv.Normalize() * LeaderBehindDist;
-            var behind = ME.Leader.Pos + tv;
+            var behind = Leader.Pos + tv;
 
-            var arriveForce = Arrive(behind, ME, ME.SlowingRadius) * ME.FollowValue;
-            var separationForce = Separation(groupL, ME) * ME.SeparationValue;
-            return (arriveForce + separationForce).Truncate(ME.MaxForce);
+            var followForce = Follow(behind, _me, SlowingRadius)*FollowValue;
+            var separationForce = Separation(groupL, _me) * SeparationValue;
+            var desiredSpeed = followForce + separationForce;
+            if (!desiredSpeed.LenghtIsZero())
+                desiredSpeed = desiredSpeed.Normalize() * GroupValue;
+            return (desiredSpeed - _me.Velocity).Truncate(_me.MaxForce);
         }
     }
 }

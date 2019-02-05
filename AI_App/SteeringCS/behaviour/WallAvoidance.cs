@@ -7,37 +7,39 @@ using System.Threading.Tasks;
 
 namespace SteeringCS.behaviour
 {
-    class WallAvoidance : ISteeringBehaviour<IWallAvoider>
+    public class WallAvoidance : ISteeringBehaviour
     {
-        public double MAX_SEE_AHEAD = 15;
-        public double MAX_AVOID_FORCE = 75;
-        public Vector2D leftSensor;
-        public Vector2D centerSensor;
-        public Vector2D rightSensor;
+        public double MaxSeeAhead { get; set; }
+        public double MaxAvoidForce { get; set; }
+        private Vector2D leftSensor;
+        private Vector2D centerSensor;
+        private Vector2D rightSensor;
         private Vector2D affectedSensor;
-        public IWallAvoider ME { get; set; }
+        private IWallAvoider _me;
 
-        public WallAvoidance(IWallAvoider me)
+        public WallAvoidance(IWallAvoider me, double maxSeeAhead = 15, double maxAvoidForce = 75)
         {
-            ME = me;
+            _me = me;
+            MaxSeeAhead = maxSeeAhead;
+            MaxAvoidForce = maxAvoidForce;
         }
 
         public Vector2D Calculate()
         {
             Vector2D avoidanceForce = new Vector2D(0, 0);
             
-            centerSensor = ME.Pos + ME.Velocity.Normalize() * MAX_SEE_AHEAD;
-            leftSensor = new Vector2D(ME.Pos.X + ((ME.Side.X - ME.Heading.X) * -MAX_SEE_AHEAD / 2), ME.Pos.Y + ((ME.Side.Y - ME.Heading.Y) * -MAX_SEE_AHEAD / 2));
-            rightSensor = new Vector2D(ME.Pos.X + ((ME.Side.X - ME.Heading.X * -1) * MAX_SEE_AHEAD / 2), ME.Pos.Y + ((ME.Side.Y - ME.Heading.Y * -1) * MAX_SEE_AHEAD / 2));
+            centerSensor = _me.Pos + _me.Velocity.Normalize() * MaxSeeAhead;
+            leftSensor = new Vector2D(_me.Pos.X + ((_me.Side.X - _me.Heading.X) * -MaxSeeAhead / 2), _me.Pos.Y + ((_me.Side.Y - _me.Heading.Y) * -MaxSeeAhead / 2));
+            rightSensor = new Vector2D(_me.Pos.X + ((_me.Side.X - _me.Heading.X * -1) * MaxSeeAhead / 2), _me.Pos.Y + ((_me.Side.Y - _me.Heading.Y * -1) * MaxSeeAhead / 2));
 
-            IWall mostThreatening = GetClosestWall();
+            IWall mostThreatening = GetClosestWall(_me);
 
             if (mostThreatening != null)
             {
-                avoidanceForce = new Vector2D(ME.Pos.X - affectedSensor.X, ME.Pos.Y - affectedSensor.Y);
+                avoidanceForce = new Vector2D(_me.Pos.X - affectedSensor.X, _me.Pos.Y - affectedSensor.Y);
                 avoidanceForce = avoidanceForce.Normalize();
 
-                avoidanceForce = avoidanceForce * (MAX_AVOID_FORCE * ME.Velocity.Length());
+                avoidanceForce = avoidanceForce * (MaxAvoidForce * _me.Velocity.Length());
             }
             else
             {
@@ -47,7 +49,7 @@ namespace SteeringCS.behaviour
             return avoidanceForce * 0.5;
         }
 
-        public IWall GetClosestWall()
+        public IWall GetClosestWall(IWallAvoider ME)
         {
             IWall mostThreatening = null;
 
@@ -90,9 +92,9 @@ namespace SteeringCS.behaviour
             Vector2D bottomRight = new Vector2D(wall.Pos.X + wall.Width, wall.Pos.Y + wall.Height);
 
             return 
-                sensor.X >= topLeft.X &&
+                sensor.X >= topLeft.X     &&
                 sensor.X <= bottomRight.X &&
-                sensor.Y >= topLeft.Y &&
+                sensor.Y >= topLeft.Y     &&
                 sensor.Y <= bottomRight.Y;
         }
     }

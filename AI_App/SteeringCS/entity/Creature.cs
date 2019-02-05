@@ -9,12 +9,13 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Creature : MovingEntity, IArriver, IPursuer, IEvader, IWanderer, ISeeker, IFleer, IObstacleAvoider, IWallAvoider
+    public class Creature : MovingEntity, IObstacleAvoider, IWallAvoider
     {
         public Color VColor { get; set; }
 
-        public ISteeringBehaviour<Creature> SB;
-        public ISteeringBehaviour<Creature> OA;
+        public ISteeringBehaviour SB;
+        public ISteeringBehaviour OA;
+        public ISteeringBehaviour WA;
 
         public Creature(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -23,6 +24,7 @@ namespace SteeringCS.entity
             MaxForce = 50;
             PanicDistance = 100;
             OA = new ObstacleAvoidance(this);
+            WA = new WallAvoidance(this);
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 300;
 
@@ -43,7 +45,11 @@ namespace SteeringCS.entity
             }
             if (OA != null)
             {
-                steeringForce += OA.Calculate()*0.66;
+                steeringForce += OA.Calculate() * 0.66;
+            }
+            if (WA != null)
+            {
+                steeringForce += WA.Calculate() * 0.66;
             }
 
             Vector2D acceleration = steeringForce / Mass;

@@ -110,7 +110,7 @@ namespace SteeringCS
         public void SpawnHobgoblin()
         {
             var hobbyGobby = new Hobgoblin("Bloodbeard", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            hobbyGobby.PB = new SeekBehaviour(hobbyGobby);
+            hobbyGobby.PB = new SeekBehaviour(me:hobbyGobby, target:Target);
             hobbyGobby.VColor = Color.Black;
             _hobgoblins.Add(hobbyGobby);
             hobbyGobby.Evader = Target;

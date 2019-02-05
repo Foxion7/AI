@@ -9,12 +9,12 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Hobgoblin : MovingEntity, IPursuer, ISeeker, IArriver, IObstacleAvoider
+    public class Hobgoblin : MovingEntity, IObstacleAvoider, IWallAvoider
     {
         public Color VColor { get; set; }
-        public ISteeringBehaviour<Hobgoblin> PB;
-        public ISteeringBehaviour<Hobgoblin> FB;
-        public ISteeringBehaviour<Hobgoblin> OA;
+        public ISteeringBehaviour PB;
+        public ISteeringBehaviour FB;
+        public ISteeringBehaviour OA;
 
         public Hobgoblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -23,8 +23,8 @@ namespace SteeringCS.entity
             MaxForce = 40;
 
 
-            PB = new PursuitAndArriveBehaviour(this);
-            OA = new ObstacleAvoidance(this);
+            PB = new Pursuit(me:this, evader:Evader);
+            OA = new ObstacleAvoidance(me:this);
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
@@ -91,5 +91,6 @@ namespace SteeringCS.entity
         public double SlowingRadius { get; set; }
         public MovingEntity Evader { get; set; }
         public List<IObstacle> Obstacles => MyWorld.getObstacles();
+        public List<IWall> Walls => MyWorld.getWalls();
     }
 }

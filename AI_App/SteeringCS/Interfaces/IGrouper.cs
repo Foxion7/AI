@@ -2,13 +2,13 @@
 
 namespace SteeringCS.Interfaces
 {
-    public interface IGrouper<T> : IMover where T: IEntity
+    public interface IGrouper : IMover
     {
         /// <summary>
         /// Neighbors should return all the entities the IGrouper considers his Neighbors.
         /// So no More checking should be required by the actual SteeringBehaviour
         /// </summary>
-        IEnumerable<T> Neighbors { get; }
+        IEnumerable<IGrouper> Neighbors { get; }
         
         /// <summary>
         /// The range for which the IGrouper checks for Neighbors.
@@ -16,13 +16,8 @@ namespace SteeringCS.Interfaces
         /// entities returned by Neighbors are in fact neighbors.
         /// </summary>
         double    NeighborsRange { get; }
-
-        /// <summary>
-        /// This is the importance of being part of the group.
-        /// 0 = 0%
-        /// anything larger than the maxForce of the mover = 100%
-        /// </summary>
-        double GroupValue { get; set; }
-
     }
+    //this needs a place to be.
+    public enum FollowMode { flock, groupFollow, queueFollow }
+
 }

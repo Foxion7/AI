@@ -20,7 +20,7 @@ namespace SteeringCS.behaviour
         public static Vector2D Flee(Vector2D targetPos, IMover me, double panicDistanceSq)
         {
             var distance = (me.Pos - targetPos);
-            if (panicDistanceSq < distance.LengthSquared() || distance.LengthSquared() < 0.1)
+            if (panicDistanceSq < distance.LengthSquared() || distance.LenghtIsZero())
             {
                 return new Vector2D(0, 0);
             };
@@ -29,16 +29,16 @@ namespace SteeringCS.behaviour
             return neededForce.Truncate(me.MaxForce);
         }
 
-        public static Vector2D Arrive(Vector2D targetPost, IMover me, double slowingRadius)
+        public static Vector2D Arrive(Vector2D targetPos, IMover me, double slowingRadius)
         {
 
-            Vector2D toTarget = targetPost - me.Pos;
+            Vector2D toTarget = targetPos - me.Pos;
             if (toTarget.LengthSquared() < 0.1)
                 return new Vector2D();
 
             //calculate the distance to the target position
             // Calculate the desired velocity
-            var desiredVelocity = targetPost - me.Pos;
+            var desiredVelocity = targetPos - me.Pos;
             var distance = desiredVelocity.Length();
 
             // Slows when in slowingradius. Stops if in direct contact with target.
@@ -65,7 +65,7 @@ namespace SteeringCS.behaviour
             var force = neighbors.Aggregate(new Vector2D(), (steeringForce, neighbor) =>
             {
                 Vector2D toAgent = me.Pos - neighbor.Pos;
-                if(Math.Abs(toAgent.LengthSquared()) > 0.1)
+                if(!toAgent.LenghtIsZero())
                     steeringForce += toAgent.Normalize() / toAgent.Length();
                 return steeringForce;
             });
@@ -103,6 +103,22 @@ namespace SteeringCS.behaviour
             if (force.LenghtIsZero())
                 return force;
             return Seek(centerOfMass / count, me).Normalize();
+        }
+
+        public static Vector2D Follow(Vector2D targetPos, IGrouper me, double slowingRadius)
+        {
+            var desired = Arrive(targetPos, me, slowingRadius);
+            var distance = (targetPos - me.Pos);
+            
+            //if it is in the slowingRadius the vector is probably a slowing one so we want to keep it as is.
+            if (distance.LengthSquared() < slowingRadius * slowingRadius)
+                return desired;
+            
+            if (desired.LenghtIsZero())
+                return desired;
+
+            //only keep the direction;
+            return desired.Normalize();
         }
     }
 }

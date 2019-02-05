@@ -9,20 +9,24 @@ using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    class FleeBehaviour : ISteeringBehaviour<IFleer> 
+    class FleeBehaviour : ISteeringBehaviour
     {
-        public IFleer ME { get; set; }
-        public FleeBehaviour(IFleer me)
-        {
-            ME = me;
-        }
+        private IMover _me;
+        public IEntity Target { get; set; }
+        public double PanicDistanceSq { get; set; }
 
+        public FleeBehaviour(IMover me, IEntity target, double panicDistanceSq)
+        {
+            _me = me;
+            Target = target;
+            PanicDistanceSq = panicDistanceSq;
+        }
 
         public Vector2D Calculate()
         {
-            if (ME.Target == null)
+            if (Target == null)
                 return new Vector2D(0, 0);
-            return Flee(ME.Target.Pos, ME, ME.PanicDistance);
+            return Flee(Target.Pos, _me, PanicDistanceSq);
         }
     }
 }

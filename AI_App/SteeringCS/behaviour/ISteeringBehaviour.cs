@@ -8,9 +8,8 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS
 {
-    public interface ISteeringBehaviour<in TM> where TM : IMover
+    public interface ISteeringBehaviour
     {
-        TM ME { set; }
         Vector2D Calculate();
     }
 

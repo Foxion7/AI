@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SteeringCS.Interfaces
 {
-    interface IObstacleAvoider : IMover
+    public interface IObstacleAvoider : IMover
     {
         List<IObstacle> Obstacles { get; }
     }

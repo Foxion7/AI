@@ -9,20 +9,21 @@ using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    public class SeekBehaviour : ISteeringBehaviour<ISeeker>
+    public class SeekBehaviour : ISteeringBehaviour
     {
-        public ISeeker ME { get; set; }
-        public SeekBehaviour(ISeeker me)
+        private IMover _me;
+        public IEntity Target { get; set; }
+
+        public SeekBehaviour(IMover me, IEntity target)
         {
-            ME = me;
+            _me = me;
+            Target = target;
         }
-
-
         public Vector2D Calculate()
         {
-            if (ME.Target == null)
+            if (Target == null)
                 return new Vector2D(0, 0);
-            return Seek(ME.Target.Pos, ME);
+            return Seek(Target.Pos, _me);
 
         }
     }

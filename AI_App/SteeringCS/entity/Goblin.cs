@@ -9,7 +9,7 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.entity
 {
-    public class Goblin : MovingEntity, IFlocker, IFollower, IArriver, IObstacleAvoider, IWallAvoider
+    public class Goblin : MovingEntity, IGrouper, IObstacleAvoider, IWallAvoider
     {
         ///for thread safety
         private static int _lastKey = 0;
@@ -19,23 +19,8 @@ namespace SteeringCS.entity
         public double BraveryLimit { get; set; }
 
         //grouping behaviour
-        public IEnumerable<IMover> Neighbors => MyWorld.GetGoblinNeighbors(this, NeighborsRange);
-        public double NeighborsRange { get; set; }
-        public double GroupValue { get; set; }
-
-        //following behaviour
-        public MovingEntity Leader { get; set; }
-        public int FollowValue { get; set; }
-        public int AvoidValue { get; set; }
-
-        //flocking behaviour
-        public int SeparationValue { get; set; }
-        public int CohesionValue { get; set; }
-        public int AlignmentValue { get; set; }
-
-        //arriving behaviour
-        public BaseGameEntity Target { get; set; }
-        public double SlowingRadius { get; set; }
+        public IEnumerable<IGrouper> Neighbors => MyWorld.GetGoblinNeighbors(this, NeighborsRange).Cast<IGrouper>();
+        public FollowMode FollowMode { get; set; } = FollowMode.flock;
 
         //obstacle avoidance behaviour
         public List<IObstacle> Obstacles => MyWorld.getObstacles();
@@ -45,16 +30,18 @@ namespace SteeringCS.entity
 
 
         //the SteeringBehaviours
-        public ISteeringBehaviour<Goblin> SB; //the aggressive anti non goblin behaviour
-        public ISteeringBehaviour<Goblin> FB; //the grouping behaviour
-        public ISteeringBehaviour<Goblin> OA; //the don't get hit by obstacles behaviour
-        public ISteeringBehaviour<Goblin> WA; //the don't get hit by walls behaviour
+        private ArrivalBehaviour _SB;
+        private FlockBehaviour _FB;
+        private LeaderFollowingBehaviour _LFB;
+        private ObstacleAvoidance _OA;
+        private WallAvoidance _WA;
+
 
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
-            Key = _lastKey+1;
+            Key = _lastKey + 1;
             _lastKey++;
-            
+
             Mass = 50;
             MaxSpeed = 5;
             MaxForce = 50;
@@ -62,17 +49,20 @@ namespace SteeringCS.entity
             GroupValue = 10;
             NeighborsRange = 100;
 
-            SeparationValue = 64;
+            SeparationValue = 8;
             CohesionValue = 1;
-            AlignmentValue = 1;
+            AlignmentValue = 16;
 
             FollowValue = 20;
-            AvoidValue = 20;
 
-            SB = new ArrivalBehaviour(this);
-            FB = new FlockBehaviour(this);
-            OA = new ObstacleAvoidance(this);
-            WA = new WallAvoidance(this);
+            _SB = new ArrivalBehaviour(me: this, target: this.Target, slowingRadius: this.SlowingRadius);
+            _FB = new FlockBehaviour(me: this, groupValue: this.GroupValue, cohesionValue: this.CohesionValue,
+                alignmentValue: this.AlignmentValue, separationValue: this.SeparationValue);
+            _LFB = new LeaderFollowingBehaviour(me: this, leader: this.Leader, slowingRadius: this.SlowingRadius,
+                leaderBehindDist: 30, groupValue: this.GroupValue, followValue: this.FollowValue, separationValue: this.SeparationValue);
+            _OA = new ObstacleAvoidance(this);
+            _WA = new WallAvoidance(this);
+
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
@@ -103,14 +93,14 @@ namespace SteeringCS.entity
 
             Vector2D steeringForce = new Vector2D(0, 0);
 
-            if(SB != null)
-                steeringForce += SB.Calculate() * 10;
-            if (FB != null)
-                steeringForce += FB.Calculate();
-            if (OA != null)
-                steeringForce += OA.Calculate();
-            if (WA != null)
-                steeringForce += WA.Calculate();
+            if (_SB != null)
+                steeringForce += _SB.Calculate() * 4;
+            if (_FB != null)
+                steeringForce += _FB.Calculate();
+            if (_OA != null)
+                steeringForce += _OA.Calculate();
+            if (_WA != null)
+                steeringForce += _WA.Calculate();
             steeringForce.Truncate(MaxForce);
 
             Vector2D acceleration = steeringForce / Mass;
@@ -163,8 +153,8 @@ namespace SteeringCS.entity
                 // Wall avoidance lines.
                 double MAX_SEE_AHEAD = 15;
                 Vector2D center = Pos + Heading * MAX_SEE_AHEAD;
-                Vector2D leftSensor = new Vector2D(Pos.X + ((Side.X - Heading.X) * -MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y) * -MAX_SEE_AHEAD /2));
-                Vector2D rightSensor = new Vector2D(Pos.X + ((Side.X - Heading.X * -1) * MAX_SEE_AHEAD/2), Pos.Y + ((Side.Y - Heading.Y * -1) * MAX_SEE_AHEAD / 2));
+                Vector2D leftSensor = new Vector2D(Pos.X + ((Side.X - Heading.X) * -MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y) * -MAX_SEE_AHEAD / 2));
+                Vector2D rightSensor = new Vector2D(Pos.X + ((Side.X - Heading.X * -1) * MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y * -1) * MAX_SEE_AHEAD / 2));
 
                 g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)center.X, (int)center.Y);
                 g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)leftSensor.X, (int)leftSensor.Y);
@@ -175,16 +165,15 @@ namespace SteeringCS.entity
             }
         }
 
-
         public Hobgoblin GetClosestHobgoblin()
         {
             Hobgoblin closestHobgoblin = null;
             double closestDistance = int.MaxValue;
 
-            foreach(Hobgoblin hobgoblin in MyWorld.getHobgoblins())
+            foreach (Hobgoblin hobgoblin in MyWorld.getHobgoblins())
             {
                 double distance = VectorMath.DistanceBetweenPositions(Pos, hobgoblin.Pos);
-                if(distance < closestDistance)
+                if (distance < closestDistance)
                 {
                     closestHobgoblin = hobgoblin;
                     closestDistance = distance;
@@ -192,6 +181,106 @@ namespace SteeringCS.entity
             }
             return closestHobgoblin;
         }
+
+        //functions to tweak behaviour at runtime
+        #region behaviourTweaking
+        private int _separationValue;
+        private int _cohesionValue;
+        private int _alignmentValue;
+        private IMover _leader;
+        private IEntity _target;
+        private double _slowingRadius;
+        private int _followValue;
+
+        public double NeighborsRange { get; set; }
+        public double GroupValue { get; set; }
+
+        //following behaviour
+        public IMover Leader
+        {
+            get => _leader;
+            set
+            {
+                _leader = value;
+                if (_LFB != null) _LFB.Leader = value;
+            }
+        }
+        public int FollowValue
+        {
+            get => _followValue;
+            set
+            {
+                _followValue = value;
+                if (_LFB != null) _LFB.FollowValue = value;
+            }
+        }
+        public void Follow(IMover leader)
+        {
+            Leader = leader;
+            FollowMode = FollowMode.groupFollow;
+            if(_LFB == null)
+                _LFB = new LeaderFollowingBehaviour(me: this, leader: this.Leader, slowingRadius: this.SlowingRadius, leaderBehindDist: 30, groupValue: this.GroupValue, followValue: this.FollowValue, separationValue: this.SeparationValue);
+        }
+        public void Flock()
+        {
+            FollowMode = FollowMode.flock;
+            if (_FB == null)
+                _FB = new FlockBehaviour(me: this, groupValue: this.GroupValue, cohesionValue: this.CohesionValue,
+                    alignmentValue: this.AlignmentValue, separationValue: this.SeparationValue);
+        }
+
+        //flocking behaviour
+        public int SeparationValue
+        {
+            get => _separationValue;
+            set
+            {
+                _separationValue = value;
+                if (_FB != null) _FB.SeparationValue = value;
+                if (_LFB != null) _LFB.SeparationValue = value;
+            }
+        }
+        public int CohesionValue
+        {
+            get => _cohesionValue;
+            set
+            {
+                _cohesionValue = value;
+                if (_FB != null) _FB.CohesionValue = value;
+            }
+        }
+        public int AlignmentValue
+        {
+            get => _alignmentValue;
+            set
+            {
+                _alignmentValue = value;
+                if (_FB != null) _FB.AlignmentValue = value;
+            }
+        }
+
+
+        //arriving behaviour
+        public IEntity Target
+        {
+            get => _target;
+            set
+            {
+                _target = value;
+                if (_SB != null) _SB.Target = _target;
+            }
+        }
+        public double SlowingRadius
+        {
+            get => _slowingRadius;
+            set
+            {
+                _slowingRadius = value;
+                if (_SB != null) _SB.SlowingRadius = value;
+                if (_LFB != null) _LFB.SlowingRadius = value;
+            }
+        }
+        #endregion
 
     }
 }

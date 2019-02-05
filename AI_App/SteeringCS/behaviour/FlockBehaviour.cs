@@ -10,28 +10,37 @@ using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    class FlockBehaviour : ISteeringBehaviour<IFlocker> 
+    public class FlockBehaviour : ISteeringBehaviour 
     {
-        public IFlocker ME { get; set; }
-        public FlockBehaviour(IFlocker me)
+        private IGrouper _me;
+        public double GroupValue { get; set; }
+        public double CohesionValue { get; set; }
+        public double AlignmentValue { get; set; }
+        public double SeparationValue { get; set; }
+        public FlockBehaviour(IGrouper me, double groupValue, double cohesionValue,
+            double alignmentValue, double separationValue)
         {
-            ME = me;
+            GroupValue = groupValue;
+            CohesionValue = cohesionValue;
+            AlignmentValue = alignmentValue;
+            SeparationValue = separationValue;
+            _me = me;
         }
-
 
         public Vector2D Calculate()
         {
-            var group = ME.Neighbors.ToList();
-            if (group.Count <= 1)
+            var group = _me.Neighbors;
+            var groupL = group as List<IGrouper> ?? group.ToList();
+            if (groupL.Count <= 1)
                 return new Vector2D();
 
 
-            var separationForce =  Separation(group, ME) * ME.SeparationValue;
-            var alignmentForce = Alignment(group)        * ME.AlignmentValue;
-            var cohesionForce = Cohesion(group, ME)      * ME.CohesionValue;
-            var desiredSpeed = (separationForce + alignmentForce + cohesionForce).Normalize()*ME.GroupValue;
-            var neededForce = desiredSpeed - ME.Velocity;
-            return neededForce.Truncate(ME.MaxForce);
+            var separationForce =  Separation(groupL, _me) * SeparationValue;
+            var alignmentForce = Alignment(groupL)        * AlignmentValue;
+            var cohesionForce = Cohesion(groupL, _me)      * CohesionValue;
+            var desiredSpeed = (separationForce + alignmentForce + cohesionForce).Normalize()*GroupValue;
+            var neededForce = desiredSpeed - _me.Velocity;
+            return neededForce.Truncate(_me.MaxForce);
         }
     }
 }

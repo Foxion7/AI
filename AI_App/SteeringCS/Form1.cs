@@ -56,10 +56,6 @@ namespace SteeringCS
         {
             switch (e.KeyCode)
             {
-
-                case Keys.N:
-                    world.Target.SB = new WanderBehaviour(world.Target);
-                    break;
                 case Keys.T:
                     world.TriangleModeActive = !world.TriangleModeActive;
                     break;

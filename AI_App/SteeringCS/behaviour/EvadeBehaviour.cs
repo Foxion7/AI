@@ -10,30 +10,32 @@ using static SteeringCS.behaviour.StaticBehaviours;
 
 namespace SteeringCS.behaviour
 {
-    class EvadeBehaviour : ISteeringBehaviour<IEvader>
+    class EvadeBehaviour : ISteeringBehaviour
     {
-        public IEvader ME { get; set; }
-        public EvadeBehaviour(IEvader me)
-        {
-            ME = me;
-        }
+        private readonly IMover _me;
+        public IMover Pursuer { get; set; }
+        public double PanicDistanceSq { get; set; }
 
+        public EvadeBehaviour(IMover me, IMover pursuer, double panicDistanceSq)
+        {
+            _me = me;
+            Pursuer = pursuer;
+            PanicDistanceSq = panicDistanceSq;
+        }
 
         public Vector2D Calculate()
         {
-            if (ME.Pursuer == null)
+            if (Pursuer == null)
                 return new Vector2D();
 
-            var pursuer = ME.Pursuer;
-            var pursuerPos = ME.Pursuer.Pos;
-            Vector2D toPursuer = pursuerPos - ME.Pos;
+            Vector2D toPursuer = Pursuer.Pos - _me.Pos;
 
             //the quotiënt between the distance and the maximum speeds will serve to the determine
             //how far into the future we look
             double lookAheadTime = toPursuer.Length() /
-                                   (ME.MaxSpeed + pursuer.Velocity.Length());
+                                   (_me.MaxSpeed + Pursuer.Velocity.Length());
 
-            return Flee(pursuerPos + pursuer.Velocity * lookAheadTime, ME, ME.PanicDistanceSq());
+            return Flee(Pursuer.Pos + Pursuer.Velocity * lookAheadTime, _me, PanicDistanceSq);
         }
     }
 }

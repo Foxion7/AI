@@ -8,36 +8,40 @@ using SteeringCS.Interfaces;
 
 namespace SteeringCS.behaviour
 {
-    //nog niet geimplementeerd
-    class WanderBehaviour: ISteeringBehaviour<IWanderer>
+    public class WanderBehaviour: ISteeringBehaviour
     {
-        public IWanderer ME { get; set; }
-        private Random _rnd = new Random();
-        public WanderBehaviour(IWanderer me)
+        private static Random _rnd = new Random();
+        private IMover _me;
+        public double WanderRadius { get; set; }
+        public double WanderDistance { get; set; }
+
+        public WanderBehaviour(IMover me, double wanderRadius, double wanderDistance)
         {
-            ME = me;
+            _me = me;
+            WanderRadius = wanderRadius;
+            WanderDistance = wanderDistance;
         }
+
 
         public Vector2D Calculate()
         {
-            var heading = ME.Heading;
-            var dist = heading * ME.WanderDistance;
+            var heading = _me.Heading;
+            var dist = heading * WanderDistance;
             
             var x = _rnd.NextDouble() * (10 + 10) - 10;
             var y = _rnd.NextDouble() * (10 + 10) - 10;
             Vector2D jitterDistance;
             if (Math.Abs(x) > 0.01 || Math.Abs(y) > 0.01)
             {
-                jitterDistance = new Vector2D(x, y).Normalize() * ME.WanderRadius;
+                jitterDistance = new Vector2D(x, y).Normalize() * WanderRadius;
             }
             else
             {
-                jitterDistance = new Vector2D(x+0.1, y+0.1)* ME.WanderRadius;
+                jitterDistance = new Vector2D(x+0.1, y+0.1)* WanderRadius;
             }
 
-            var wanderTarget = (dist + jitterDistance) * ME.MaxForce;
-            return (wanderTarget - ME.Velocity).Truncate(ME.MaxForce);
+            var wanderTarget = (dist + jitterDistance) * _me.MaxForce;
+            return (wanderTarget - _me.Velocity).Truncate(_me.MaxForce);
         }
-
     }
 }

@@ -100,7 +100,7 @@ namespace SteeringCS.util
             lock (_writeLock)
             {
                 _cells[oldI].Members.TryRemove(key, out T entity);
-                if(!entity.Equals(default(T)))
+                if(entity != null && !entity.Equals(default(T)))
                     _cells[newI].Members.TryAdd(key, entity);
             }
         }

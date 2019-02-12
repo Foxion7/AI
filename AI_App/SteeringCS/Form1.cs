@@ -71,6 +71,10 @@ namespace SteeringCS
                 case Keys.R:
                     world.Reset();
                     break;
+                case Keys.W:
+                    world.GraphVisible = !world.GraphVisible;
+                    break;
+
                 case Keys.Space:
                     if (!paused)
                     {

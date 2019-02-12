@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.Interfaces;
 using SteeringCS.util;
+using SteeringCS.util.Graph;
 
 namespace SteeringCS
 {
@@ -26,6 +27,8 @@ namespace SteeringCS
         public List<Color> goblinColors { get; }
         public bool TriangleModeActive { get; set; }
         public bool VelocityVisible { get; set; }
+        public bool GraphVisible { get; set; }
+        private VectorGraph Graph { get; set; }
 
         public World(int w, int h)
         {
@@ -42,6 +45,9 @@ namespace SteeringCS
             goblinColors.Add(Color.DarkOliveGreen);
             goblinColors.Add(Color.DarkGreen);
 
+            SpawnObstacles();
+            SpawnWalls();
+            Graph = GraphUtil.CreateGraphForMap(w, h, 30, Obstacles, Walls);
             populate();
         }
 
@@ -50,9 +56,8 @@ namespace SteeringCS
             Target = new Creature("Player", new Vector2D(600, 600), this);
             Target.VColor = Color.Blue;
             Target.Pos = new Vector2D(500, 300);
-            
-            SpawnObstacles();
-            SpawnWalls();
+           
+
         }
 
         public void SpawnObstacles()
@@ -154,6 +159,8 @@ namespace SteeringCS
 
         public void Render(Graphics g)
         {
+            if(GraphVisible)
+                Graph.Render(g);
             _goblins.ToList().ForEach(e => e.Render(g));
             _hobgoblins.ForEach(e => e.Render(g));
             Obstacles.ForEach(e => e.Render(g));

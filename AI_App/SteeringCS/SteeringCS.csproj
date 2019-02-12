@@ -66,6 +66,7 @@
     <Compile Include="util\Graph\GraphEdge.cs" />
     <Compile Include="util\Graph\GraphNode.cs" />
     <Compile Include="util\Graph\GraphUtil.cs" />
+    <Compile Include="util\Graph\VectorGraph.cs" />
     <Compile Include="util\Route.cs" />
     <Compile Include="behaviour\WallAvoidance.cs" />
     <Compile Include="behaviour\LeaderFollowingBehaviour.cs" />

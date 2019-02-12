@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Priority_Queue;
 
 namespace SteeringCS.util.Graph
 {
     //everything in this class assumes two way edges.
-    public class GraphNode<T>
+    public class GraphNode<T> : FastPriorityQueueNode
     {
 
 
@@ -13,7 +14,7 @@ namespace SteeringCS.util.Graph
         private List<GraphEdge<T>> _edges;
         public IEnumerable<GraphEdge<T>> Edges => _edges;
         public bool Seen { get; set; } = false;
-        public double Distance { get; set; }
+        public new float Priority { get; set; }
         public GraphNode<T> From { get; set; }
 
         public GraphNode(T data, params GraphEdge<T>[] edges)

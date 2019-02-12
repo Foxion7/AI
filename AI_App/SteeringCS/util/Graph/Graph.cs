@@ -41,7 +41,7 @@ namespace SteeringCS.util.Graph
         /// <param name="end"></param>
         /// <param name="value"></param>
         /// <returns>the created edge, if it exist, otherwise null</returns>
-        public GraphEdge<T> createEdge(T start, T end, double value = 1)
+        public GraphEdge<T> createEdge(T start, T end, float value = 1)
         {
 
             if (_nodes[start] != null && _nodes[end] != null)
@@ -63,7 +63,7 @@ namespace SteeringCS.util.Graph
         /// <param name="end"></param>
         /// <param name="value"></param>
         /// <returns>the edge if it is created, null otherwise</returns>
-        public GraphEdge<T> createEdge(GraphNode<T> start, GraphNode<T> end, double value = 1)
+        public GraphEdge<T> createEdge(GraphNode<T> start, GraphNode<T> end, float value = 1)
         {
             if (start != null && end != null)
             {

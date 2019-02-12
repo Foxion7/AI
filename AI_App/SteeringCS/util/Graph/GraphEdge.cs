@@ -12,9 +12,9 @@ namespace SteeringCS.util.Graph
         public GraphNode<T> End { get; }
 
         //this is the distance
-        public double Value { get; }
+        public float Value { get; }
 
-        public GraphEdge(GraphNode<T> start, GraphNode<T> end, double value = 1)
+        public GraphEdge(GraphNode<T> start, GraphNode<T> end, float value = 1)
         {
             Start = start;
             End = end;

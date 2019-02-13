@@ -6,25 +6,37 @@ using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.behaviour;
 using SteeringCS.Interfaces;
+using SteeringCS.util;
 
 namespace SteeringCS.entity
 {
     public class Creature : MovingEntity, IObstacleAvoider, IWallAvoider
     {
         public Color VColor { get; set; }
+        private Route _path;
+        public Route Path
+        {
+            get => _path;
+            set
+            {
+                _path = value;
+                PB.Path = value;
+            }
+        }
 
-        public ISteeringBehaviour SB;
+        public FollowPathBehaviour PB;
         public ISteeringBehaviour OA;
         public ISteeringBehaviour WA;
 
         public Creature(string name, Vector2D pos, World w) : base(name, pos, w)
         {
-            Mass = 100;
+            Mass = 1;
             MaxSpeed = 10;
-            MaxForce = 50;
+            MaxForce = 500;
             PanicDistance = 100;
             OA = new ObstacleAvoidance(this);
             WA = new WallAvoidance(this);
+            PB = new FollowPathBehaviour(this, null, 10, 50);
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 300;
 
@@ -39,9 +51,9 @@ namespace SteeringCS.entity
         public override void Update(float timeElapsed)
         {
             Vector2D steeringForce = new Vector2D();
-            if (SB != null)
+            if (PB != null)
             {
-                steeringForce += SB.Calculate()*0.33;
+                steeringForce += PB.Calculate()*0.33;
             }
             if (OA != null)
             {

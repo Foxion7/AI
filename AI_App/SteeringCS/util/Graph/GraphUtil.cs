@@ -14,12 +14,13 @@ namespace SteeringCS.util.Graph
             bool ObstacleCollidesWithPoint(IObstacle obstacle, Vector2D point) =>
                 (point - obstacle.Center).LengthSquared() < obstacle.Radius * obstacle.Radius;
 
+            double diagonal = Math.Sqrt(tileSize * tileSize * 2);
             bool WallCollidesWithPoint(IWall wall, Vector2D point)
             {
-                var left   = wall.Pos.X - (wall.Width /2);
-                var right  = wall.Pos.X + (wall.Width /2);
-                var top    = wall.Pos.Y - (wall.Height/2);
-                var bottom = wall.Pos.Y + (wall.Height/2);
+                var left   = wall.Pos.X - (wall.Width );
+                var right  = wall.Pos.X + (wall.Width );
+                var top    = wall.Pos.Y - (wall.Height);
+                var bottom = wall.Pos.Y + (wall.Height);
                 return left < point.X && right > point.X && top < point.Y && bottom > point.Y;
             }
 
@@ -42,13 +43,13 @@ namespace SteeringCS.util.Graph
                         graph.createEdge(memory[(x - 1, y)], current, tileSize);
                     
                     if (memory.ContainsKey((x - 1, y - 1)))
-                        graph.createEdge(memory[(x - 1, y - 1)], current, tileSize + tileSize);
+                        graph.createEdge(memory[(x - 1, y - 1)], current, (int)diagonal);
 
                     if (memory.ContainsKey((x, y - 1)))
                         graph.createEdge(memory[(x, y - 1)], current, tileSize);
 
                     if (memory.ContainsKey((x-1, y + 1)))
-                        graph.createEdge(memory[(x-1, y + 1)], current, tileSize);
+                        graph.createEdge(memory[(x-1, y + 1)], current, (int)diagonal);
 
                 }
             }
@@ -56,6 +57,15 @@ namespace SteeringCS.util.Graph
             return graph;
         }
 
+        public static GraphNode<Vector2D> FindClosestNode(VectorGraph graph, Vector2D pos)
+        {
+            return graph.Nodes.Aggregate((node1, node2) =>
+            {
+                if ((node1.Data - pos).LengthSquared() < (node2.Data - pos).LengthSquared())
+                    return node1;
+                return node2;
+            });
+        }
         public static IEnumerable<GraphNode<T>> Route<T>(GraphNode<T> node)
         {
             var cur = node;
@@ -78,36 +88,69 @@ namespace SteeringCS.util.Graph
             => (float)(n.Data - m.Data).LengthSquared();
         public static float noHeuristic(GraphNode<Vector2D> n, GraphNode<Vector2D> m) => 0;
 
-        public static Route AStar(VectorGraph graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end, Func<GraphNode<Vector2D>, GraphNode<Vector2D>, float> heuristic)
+        public static IEnumerable<Vector2D> AStar(VectorGraph graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end, Func<GraphNode<Vector2D>, GraphNode<Vector2D>, float> heuristic)
         {
             //this library priorityQueue will do until we have our own implementation
-            FastPriorityQueue<GraphNode<Vector2D>> queue = new FastPriorityQueue<GraphNode<Vector2D>>(maxNodes: graph.Nodes.Count());
+            FastPriorityQueue<GraphNode<Vector2D>> queue = new FastPriorityQueue<GraphNode<Vector2D>>(maxNodes: (int)  graph.Nodes.Max(n => n.Data.LengthSquared()));
             start.Priority = 0;
             queue.Enqueue(start, start.Priority);
             while (queue.Count != 0)
             {
                 GraphNode<Vector2D> current = queue.Dequeue();
-                queue.Remove(current);
                 current.Seen = true;
                 if (current == end)
-                    return new Route(Route(current).Reverse().Select(node => node.Data).ToList());
+                {
+                    foreach (var n in graph.Nodes)
+                    {
+                        n.Seen = false;
+                        n.ShallowSeen = false;
+                        n.Priority = 0;
+                    }
+                    return Route(current).Reverse().Select(nd => nd.Data);
+                }
+
                 foreach (var currentEdge in current.Edges)
                 {
                     //if its a non directed list the node might have edged that "end" at it. in that case the "start" of the edge is the nextNode
                     var nextNode = currentEdge.Start == current ? currentEdge.End : currentEdge.Start;
                     if (!nextNode.Seen)
                     {
-                        nextNode.Priority = (current.Priority + currentEdge.Value) + heuristic(nextNode, end);
-                        nextNode.From = current;
-                        queue.Enqueue(nextNode, nextNode.Priority);
+                        if (!nextNode.ShallowSeen || nextNode.Priority > (current.Priority + currentEdge.Value) + heuristic(nextNode, end))
+                        {
+                            nextNode.Priority = (current.Priority + currentEdge.Value) + heuristic(nextNode, end);
+                            nextNode.From = current;
+                            if (nextNode.ShallowSeen)
+                            {
+                                queue.UpdatePriority(nextNode, nextNode.Priority);
+                            }
+                            else
+                            {
+                                queue.Enqueue(nextNode, nextNode.Priority);
+                                nextNode.ShallowSeen = true;
+                            }
+                        }
                     }
 
                 }
             }
-            return new Route(null);
+            return new List<Vector2D>();
         }
-        public static Route Dijkstra(VectorGraph graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end)
+        public static IEnumerable<Vector2D> Dijkstra(VectorGraph graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end)
             => AStar(graph, start, end, heuristic: noHeuristic);
 
+        public static IEnumerable<Vector2D> AStar(VectorGraph graph, Vector2D start, Vector2D end, Func<GraphNode<Vector2D>, GraphNode<Vector2D>, float> heuristic)
+        {
+            var closestS = FindClosestNode(graph, start);
+            yield return closestS.Data;
+            var closestE = FindClosestNode(graph, end);
+
+            var r = AStar(graph, closestS, closestE, heuristic);
+            foreach (var vec in r)
+            {
+                yield return vec;
+            }
+
+            yield return end;
+        }
     }
 }

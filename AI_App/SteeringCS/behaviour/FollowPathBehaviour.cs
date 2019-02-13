@@ -26,6 +26,8 @@ namespace SteeringCS.behaviour
 
         public Vector2D Calculate()
         {
+            if (Path == null || _me == null)
+                return new Vector2D();
             //move to next target if close enough to current target (working in
             //distance squared space)
             if ((Path.CurrentWaypoint() - _me.Pos).LengthSquared() < WaypointSeekDistSq)

@@ -48,7 +48,7 @@ namespace SteeringCS
         {
             if (e.Button == MouseButtons.Left)
             {
-                world.Target.Pos = new Vector2D(e.X, e.Y);
+                world.setPlayerRoute(new Vector2D(e.X, e.Y));
             }
         }
 

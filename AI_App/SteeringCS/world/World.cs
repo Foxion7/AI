@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using SteeringCS.Interfaces;
 using SteeringCS.util;
 using SteeringCS.util.Graph;
@@ -206,6 +207,13 @@ namespace SteeringCS
         public List<MovingEntity> getHobgoblins()
         {
             return _hobgoblins;
+        }
+
+        public void setPlayerRoute(Vector2D end)
+        {
+            if(Target == null)
+                return;
+            Target.Path = new Route(GraphUtil.AStar(Graph, Target.Pos, end, GraphUtil.Manhatten).ToList());
         }
     }
 }

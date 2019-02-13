@@ -47,7 +47,7 @@ namespace SteeringCS
 
             SpawnObstacles();
             SpawnWalls();
-            Graph = GraphUtil.CreateGraphForMap(w, h, 30, Obstacles, Walls);
+            Graph = GraphUtil.CreateGraphForMap(w, h, 50, Obstacles, Walls);
             populate();
         }
 

@@ -16,11 +16,11 @@ namespace SteeringCS.util.Graph
 
             bool WallCollidesWithPoint(IWall wall, Vector2D point)
             {
-                var left = wall.Pos.X - (wall.Width / 2);
-                var right = wall.Pos.X + (wall.Width / 2);
-                var top = wall.Pos.X - (wall.Height / 2);
-                var bottom = wall.Pos.Y + (wall.Height / 2);
-                return left < point.X && right > point.X && top < point.Y && bottom < point.Y;
+                var left   = wall.Pos.X - (wall.Width /2);
+                var right  = wall.Pos.X + (wall.Width /2);
+                var top    = wall.Pos.Y - (wall.Height/2);
+                var bottom = wall.Pos.Y + (wall.Height/2);
+                return left < point.X && right > point.X && top < point.Y && bottom > point.Y;
             }
 
             var memory = new Dictionary<(int, int), Vector2D>();

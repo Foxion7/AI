@@ -13,7 +13,7 @@ namespace SteeringCS.util.Graph
         {
             foreach (var graphEdge in Edges)
             {
-                Pen p = new Pen(Color.Gray, 2);
+                Pen p = new Pen(graphEdge.Color, 2);
                 g.DrawLine(p, (float)graphEdge.Start.Data.X, (float)graphEdge.Start.Data.Y, (float)graphEdge.End.Data.X, (float)graphEdge.End.Data.Y);
             }
 

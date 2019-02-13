@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Priority_Queue;
 using SteeringCS.Interfaces;
@@ -73,9 +74,7 @@ namespace SteeringCS.util.Graph
             while (cur.From != null)
             {
                 yield return cur;
-                var temp = cur.From;
-                cur.From = null;
-                cur = temp;
+                cur = cur.From;
             }
             yield return cur;
         }
@@ -93,6 +92,17 @@ namespace SteeringCS.util.Graph
 
         public static IEnumerable<Vector2D> AStar(VectorGraph graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end, Func<GraphNode<Vector2D>, GraphNode<Vector2D>, float> heuristic)
         {
+            foreach (var n in graph.Nodes)
+            {
+                n.Seen = false;
+                n.ShallowSeen = false;
+                n.Priority = 0;
+                n.From = null;
+            }
+            foreach (var e in graph.Edges)
+            {
+                e.Color = Color.Gray;
+            }
             //this library priorityQueue will do until we have our own implementation
             FastPriorityQueue<GraphNode<Vector2D>> queue = new FastPriorityQueue<GraphNode<Vector2D>>(maxNodes: (int)  graph.Nodes.Max(n => n.Data.LengthSquared()));
             start.Priority = 0;
@@ -103,12 +113,6 @@ namespace SteeringCS.util.Graph
                 current.Seen = true;
                 if (current == end)
                 {
-                    foreach (var n in graph.Nodes)
-                    {
-                        n.Seen = false;
-                        n.ShallowSeen = false;
-                        n.Priority = 0;
-                    }
                     return Route(current).Reverse().Select(nd => nd.Data);
                 }
 
@@ -116,12 +120,14 @@ namespace SteeringCS.util.Graph
                 {
                     //if its a non directed list the node might have edged that "end" at it. in that case the "start" of the edge is the nextNode
                     var nextNode = currentEdge.Start == current ? currentEdge.End : currentEdge.Start;
+                    currentEdge.Color = Color.Yellow;
                     if (!nextNode.Seen)
                     {
                         if (!nextNode.ShallowSeen || nextNode.Priority > (current.Priority + currentEdge.Value) + heuristic(nextNode, end))
                         {
                             nextNode.Priority = (current.Priority + currentEdge.Value) + heuristic(nextNode, end);
                             nextNode.From = current;
+
                             if (nextNode.ShallowSeen)
                             {
                                 queue.UpdatePriority(nextNode, nextNode.Priority);

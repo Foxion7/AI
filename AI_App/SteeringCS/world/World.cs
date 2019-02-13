@@ -48,7 +48,7 @@ namespace SteeringCS
 
             SpawnObstacles();
             SpawnWalls();
-            Graph = GraphUtil.CreateGraphForMap(w, h, 50, Obstacles, Walls);
+            Graph = GraphUtil.CreateGraphForMap(w, h, 30, Obstacles, Walls);
             populate();
         }
 
@@ -181,6 +181,8 @@ namespace SteeringCS
             _hobgoblins = new List<MovingEntity>();
             Obstacles = new List<IObstacle>();
             Walls = new List<IWall>();
+            SpawnObstacles();
+            SpawnWalls();
             populate();
         }
 
@@ -213,7 +215,7 @@ namespace SteeringCS
         {
             if(Target == null)
                 return;
-            Target.Path = new Route(GraphUtil.AStar(Graph, Target.Pos, end, GraphUtil.noHeuristic).ToList());
+            Target.Path = new Route(GraphUtil.AStar(Graph, Target.Pos, end, GraphUtil.Manhatten).ToList());
         }
     }
 }

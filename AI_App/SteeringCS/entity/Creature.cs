@@ -36,7 +36,7 @@ namespace SteeringCS.entity
             PanicDistance = 100;
             OA = new ObstacleAvoidance(this);
             WA = new WallAvoidance(this);
-            PB = new FollowPathBehaviour(this, null, 10, 50);
+            PB = new FollowPathBehaviour(this, null, 50, 80);
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 300;
 

@@ -17,6 +17,7 @@ namespace SteeringCS.util.Graph
         public bool ShallowSeen { get; set; } = false;
         public new float Priority { get; set; }
         public GraphNode<T> From { get; set; }
+        public GraphEdge<T> Traveled { get; set; }
 
         public GraphNode(T data, params GraphEdge<T>[] edges)
         {

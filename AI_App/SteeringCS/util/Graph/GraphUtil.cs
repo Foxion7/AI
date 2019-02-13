@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Priority_Queue;
+using SteeringCS.entity;
 using SteeringCS.Interfaces;
+using static SteeringCS.VectorMath;
 
 namespace SteeringCS.util.Graph
 {
@@ -13,18 +15,7 @@ namespace SteeringCS.util.Graph
         public static VectorGraph CreateGraphForMap(int width, int height, int tileSize, List<IObstacle> obstacles,
             List<IWall> walls)
         {
-            bool ObstacleCollidesWithPoint(IObstacle obstacle, Vector2D point) =>
-                (point - obstacle.Center).LengthSquared() < obstacle.Radius * obstacle.Radius;
-
             double diagonal = Math.Sqrt(tileSize * tileSize * 2);
-            bool WallCollidesWithPoint(IWall wall, Vector2D point)
-            {
-                var left   = wall.Pos.X - (wall.Width );
-                var right  = wall.Pos.X + (wall.Width );
-                var top    = wall.Pos.Y - (wall.Height);
-                var bottom = wall.Pos.Y + (wall.Height);
-                return left < point.X && right > point.X && top < point.Y && bottom > point.Y;
-            }
 
             var memory = new Dictionary<(int, int), Vector2D>();
             var graph = new VectorGraph();
@@ -41,17 +32,33 @@ namespace SteeringCS.util.Graph
 
                     memory.Add((x, y), current);
                     graph.AddNode(current);
-                    if (memory.ContainsKey((x - 1, y)))
+                    if (memory.ContainsKey((x - 1, y)) &&
+                        !walls.Any(w => WallCollidesWithLine(w, current, memory[(x - 1, y)])) &&
+                        !obstacles.Any(obst => ObstacleCollidesWithLine(obst, current, memory[(x - 1, y)])))
+                    {
                         graph.createEdge(memory[(x - 1, y)], current, tileSize);
-                    
-                    if (memory.ContainsKey((x - 1, y - 1)))
-                        graph.createEdge(memory[(x - 1, y - 1)], current, (int)diagonal);
+                    }
 
-                    if (memory.ContainsKey((x, y - 1)))
+                    if (memory.ContainsKey((x - 1, y - 1)) &&
+                        !walls.Any(w => WallCollidesWithLine(w, current, memory[(x - 1, y - 1)])) &&
+                        !obstacles.Any(obst => ObstacleCollidesWithLine(obst, current, memory[(x - 1, y - 1)])))
+                    {
+                        graph.createEdge(memory[(x - 1, y - 1)], current, (int) diagonal);
+                    }
+
+                    if (memory.ContainsKey((x, y - 1)) &&
+                        !walls.Any(w => WallCollidesWithLine(w, current, memory[(x, y - 1)])) &&
+                        !obstacles.Any(obst => ObstacleCollidesWithLine(obst, current, memory[(x, y - 1)])))
+                    {
                         graph.createEdge(memory[(x, y - 1)], current, tileSize);
+                    }
 
-                    if (memory.ContainsKey((x-1, y + 1)))
-                        graph.createEdge(memory[(x-1, y + 1)], current, (int)diagonal);
+                    if (memory.ContainsKey((x - 1, y + 1)) &&
+                        !walls.Any(w => WallCollidesWithLine(w, current, memory[(x - 1, y + 1)])) &&
+                        !obstacles.Any(obst => ObstacleCollidesWithLine(obst, current, memory[(x - 1, y + 1)])))
+                    {
+                        graph.createEdge(memory[(x - 1, y + 1)], current, (int) diagonal);
+                    }
 
                 }
             }
@@ -73,6 +80,7 @@ namespace SteeringCS.util.Graph
             var cur = node;
             while (cur.From != null)
             {
+                cur.Traveled.Color = Color.Red;
                 yield return cur;
                 cur = cur.From;
             }
@@ -88,6 +96,8 @@ namespace SteeringCS.util.Graph
         }
         public static float EuclideanSq(GraphNode<Vector2D> n, GraphNode<Vector2D> m)
             => (float)(n.Data - m.Data).LengthSquared();
+        public static float Euclidean(GraphNode<Vector2D> n, GraphNode<Vector2D> m)
+            => (float)(n.Data - m.Data).Length();
         public static float noHeuristic(GraphNode<Vector2D> n, GraphNode<Vector2D> m) => 0;
 
         public static IEnumerable<Vector2D> AStar(VectorGraph graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end, Func<GraphNode<Vector2D>, GraphNode<Vector2D>, float> heuristic)
@@ -98,13 +108,14 @@ namespace SteeringCS.util.Graph
                 n.ShallowSeen = false;
                 n.Priority = 0;
                 n.From = null;
+                n.Traveled = null;
             }
             foreach (var e in graph.Edges)
             {
                 e.Color = Color.Gray;
             }
             //this library priorityQueue will do until we have our own implementation
-            FastPriorityQueue<GraphNode<Vector2D>> queue = new FastPriorityQueue<GraphNode<Vector2D>>(maxNodes: (int)  graph.Nodes.Max(n => n.Data.LengthSquared()));
+            FastPriorityQueue<GraphNode<Vector2D>> queue = new FastPriorityQueue<GraphNode<Vector2D>>(maxNodes: (int)graph.Nodes.Max(n => n.Data.LengthSquared()));
             start.Priority = 0;
             queue.Enqueue(start, start.Priority);
             while (queue.Count != 0)
@@ -127,6 +138,7 @@ namespace SteeringCS.util.Graph
                         {
                             nextNode.Priority = (current.Priority + currentEdge.Value) + heuristic(nextNode, end);
                             nextNode.From = current;
+                            nextNode.Traveled = currentEdge;
 
                             if (nextNode.ShallowSeen)
                             {

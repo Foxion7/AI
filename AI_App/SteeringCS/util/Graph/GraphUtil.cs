@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using Priority_Queue;
@@ -72,7 +73,9 @@ namespace SteeringCS.util.Graph
             while (cur.From != null)
             {
                 yield return cur;
-                cur = cur.From;
+                var temp = cur.From;
+                cur.From = null;
+                cur = temp;
             }
             yield return cur;
         }

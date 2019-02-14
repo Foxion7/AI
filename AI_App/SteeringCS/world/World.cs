@@ -215,7 +215,7 @@ namespace SteeringCS
         {
             if(Target == null)
                 return;
-            Target.Path = new Route(GraphUtil.AStar(Graph, Target.Pos, end, GraphUtil.Euclidean).ToList());
+            Target.Path = new Route(GraphUtil.AStar(Graph, Target.Pos, end, GraphUtil.Manhatten).ToList());
         }
     }
 }

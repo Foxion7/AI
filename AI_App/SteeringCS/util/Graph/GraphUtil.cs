@@ -134,7 +134,7 @@ namespace SteeringCS.util.Graph
                 {
                     //if its a non directed list the node might have edged that "end" at it. in that case the "start" of the edge is the nextNode
                     var nextNode = currentEdge.Start == current ? currentEdge.End : currentEdge.Start;
-                    currentEdge.Color = Color.Red;
+                    currentEdge.Color = Color.Yellow;
                     if (!nextNode.Seen)
                     {
                         if (!nextNode.ShallowSeen || nextNode.Distance > (current.Distance + currentEdge.Value))
@@ -152,6 +152,7 @@ namespace SteeringCS.util.Graph
                             {
                                 queue.Enqueue(nextNode, nextNode.Priority);
                                 nextNode.ShallowSeen = true;
+                                nextNode.Color = Color.Pink;
                             }
                         }
                     }
@@ -174,8 +175,8 @@ namespace SteeringCS.util.Graph
             {
                 yield return vec;
             }
-
-            yield return end;
+            if(r.Any())
+                yield return end;
         }
     }
 }

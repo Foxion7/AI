@@ -69,7 +69,6 @@ namespace SteeringCS
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            int manualStrength = 1;
             switch (keyData)
             {
                 case Keys.T:
@@ -90,31 +89,6 @@ namespace SteeringCS
                 case Keys.P:
                     world.GraphVisible = !world.GraphVisible;
                     break;
-                case Keys.Up:
-                    if (world.Target.Pos.Y + manualStrength >= 0)
-                    {
-                        world.Target.manualTarget = new Vector2D(world.Target.Pos.X, world.Target.Pos.Y - manualStrength);
-                    }
-                    break;
-                case Keys.Down:
-                    if (world.Target.Pos.Y - manualStrength <= dbPanel1.Height)
-                    {
-                        world.Target.manualTarget = new Vector2D(world.Target.Pos.X, world.Target.Pos.Y + manualStrength);
-                    }
-                    break;
-                case Keys.Left:
-                    if (world.Target.Pos.X - manualStrength  >= 0)
-                    {
-                        world.Target.manualTarget = new Vector2D(world.Target.Pos.X - manualStrength, world.Target.Pos.Y);
-                    }
-                    break;
-                case Keys.Right:
-                    if (world.Target.Pos.X + manualStrength <= dbPanel1.Width)
-                    {
-                        world.Target.manualTarget = new Vector2D(world.Target.Pos.X + manualStrength, world.Target.Pos.Y);
-                    }
-
-                    break;
                 case Keys.Space:
                     if (!paused)
                     {
@@ -131,6 +105,48 @@ namespace SteeringCS
                     break;
 
             }
+            if (keyData == Keys.Up || keyData == Keys.Down || keyData == Keys.Left || keyData == Keys.Right) {
+
+                int manualMovementStrength = 100;
+                Vector2D manualMovement = new Vector2D(world.Player.Pos.X, world.Player.Pos.Y);
+
+                // Up arrow press.
+                if (keyData == Keys.Up)
+                {
+                    if (world.Player.Pos.Y + manualMovementStrength >= 0)
+                    {
+                        manualMovement = new Vector2D(manualMovement.X, manualMovement.Y - manualMovementStrength);
+                    }
+                }
+
+                // Down arrow press.
+                if (keyData == Keys.Down)
+                {
+                    if (world.Player.Pos.Y - manualMovementStrength <= dbPanel1.Height)
+                    {
+                        manualMovement = new Vector2D(manualMovement.X, manualMovement.Y + manualMovementStrength);
+                    }
+                }
+
+                // Left arrow press.
+                if (keyData == Keys.Left)
+                {
+                    if (world.Player.Pos.X - manualMovementStrength >= 0)
+                    {
+                        manualMovement = new Vector2D(manualMovement.X - manualMovementStrength, manualMovement.Y);
+                    }
+                }
+
+                // Right arrow press.
+                if (keyData == Keys.Right) { 
+                    if (world.Player.Pos.X + manualMovementStrength <= dbPanel1.Width)
+                    {
+                        manualMovement = new Vector2D(manualMovement.X + manualMovementStrength, manualMovement.Y);
+                    }
+                }
+                world.setPlayerRoute(manualMovement);
+            }
+
             return true;
         }
 

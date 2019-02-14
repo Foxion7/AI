@@ -1,9 +1,5 @@
 ﻿using SteeringCS.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SteeringCS.behaviour
 {
@@ -17,7 +13,7 @@ namespace SteeringCS.behaviour
         private Vector2D affectedSensor;
         private IWallAvoider _me;
 
-        public WallAvoidance(IWallAvoider me, double maxSeeAhead = 15, double maxAvoidForce = 75)
+        public WallAvoidance(IWallAvoider me, double maxSeeAhead = 15, double maxAvoidForce = 35)
         {
             _me = me;
             MaxSeeAhead = maxSeeAhead;
@@ -38,15 +34,14 @@ namespace SteeringCS.behaviour
             {
                 avoidanceForce = new Vector2D(_me.Pos.X - affectedSensor.X, _me.Pos.Y - affectedSensor.Y);
                 avoidanceForce = avoidanceForce.Normalize();
-
-                avoidanceForce = avoidanceForce * (MaxAvoidForce * _me.Velocity.Length());
+                avoidanceForce = avoidanceForce * (MaxAvoidForce * 2);
             }
             else
             {
                 avoidanceForce = avoidanceForce * 0;
             }
 
-            return avoidanceForce * 0.5;
+            return avoidanceForce;
         }
 
         public IWall GetClosestWall(IWallAvoider ME)
@@ -57,7 +52,6 @@ namespace SteeringCS.behaviour
             {
                 IWall wall = ME.Walls[i];
                 bool collision = findSensorCollision(wall);
-
                 if (collision && (mostThreatening == null || VectorMath.DistanceBetweenPositions(ME.Pos, wall.Center) < VectorMath.DistanceBetweenPositions(ME.Pos, mostThreatening.Center)))
                 {
                     mostThreatening = wall;
@@ -68,7 +62,12 @@ namespace SteeringCS.behaviour
 
         private bool findSensorCollision(IWall wall)
         {
-            if(SensorWithinWall(wall, leftSensor))
+            if (SensorWithinWall(wall, centerSensor))
+            {
+                affectedSensor = centerSensor;
+                return true;
+            }
+            if (SensorWithinWall(wall, leftSensor))
             {
                 affectedSensor = leftSensor;
                 return true;
@@ -76,11 +75,6 @@ namespace SteeringCS.behaviour
             if(SensorWithinWall(wall, rightSensor))
             {
                 affectedSensor = rightSensor;
-                return true;
-            }
-            if(SensorWithinWall(wall, centerSensor))
-            {
-                affectedSensor = centerSensor;
                 return true;
             }
             return false;
@@ -96,6 +90,26 @@ namespace SteeringCS.behaviour
                 sensor.X <= bottomRight.X &&
                 sensor.Y >= topLeft.Y     &&
                 sensor.Y <= bottomRight.Y;
+        }
+
+        private bool MultipleSensorsWithinWall(IWall wall)
+        {
+            int count = 0;
+
+            if(SensorWithinWall(wall, leftSensor)){
+                count++;
+            }
+
+            if (SensorWithinWall(wall, centerSensor))
+            {
+                count++;
+            }
+
+            if (SensorWithinWall(wall, rightSensor))
+            {
+                count++;
+            }
+            return count > 1;
         }
     }
 }

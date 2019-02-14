@@ -103,7 +103,9 @@ namespace SteeringCS
                         timer.Interval = 20;
                     }
                     break;
-
+                case Keys.Escape:
+                    Environment.Exit(0);
+                    break;
             }
 
             // Arrow movement

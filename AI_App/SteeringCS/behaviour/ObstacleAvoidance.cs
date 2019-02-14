@@ -1,10 +1,4 @@
-﻿using SteeringCS.entity;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using SteeringCS.Interfaces;
 
 namespace SteeringCS.behaviour
@@ -23,8 +17,7 @@ namespace SteeringCS.behaviour
             MaxSeeAhead = maxSeeAhead;
             MaxAvoidForce = maxAvoidForce;
         }
-
-
+        
         public Vector2D Calculate()
         {
             Vector2D avoidanceForce = new Vector2D(0,0);

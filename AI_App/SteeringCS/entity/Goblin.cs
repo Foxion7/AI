@@ -109,7 +109,6 @@ namespace SteeringCS.entity
             Velocity = Velocity.Truncate(MaxSpeed);
             OldPos = Pos;
             Pos += (Velocity * timeElapsed);
-
             if (Velocity.LengthSquared() > 0.00000001)
             {
                 Heading = Velocity.Normalize();

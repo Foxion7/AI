@@ -109,19 +109,22 @@ namespace SteeringCS.util.Graph
                 n.Priority = 0;
                 n.From = null;
                 n.Traveled = null;
+                n.Color = Color.Black;
             }
             foreach (var e in graph.Edges)
             {
                 e.Color = Color.Gray;
             }
+
             //this library priorityQueue will do until we have our own implementation
-            FastPriorityQueue<GraphNode<Vector2D>> queue = new FastPriorityQueue<GraphNode<Vector2D>>(maxNodes: (int)graph.Nodes.Max(n => n.Data.LengthSquared()));
+            FastPriorityQueue<GraphNode<Vector2D>> queue = new FastPriorityQueue<GraphNode<Vector2D>>(graph.Nodes.Count());
             start.Priority = 0;
             queue.Enqueue(start, start.Priority);
             while (queue.Count != 0)
             {
                 GraphNode<Vector2D> current = queue.Dequeue();
                 current.Seen = true;
+                current.Color = Color.Blue;
                 if (current == end)
                 {
                     return Route(current).Reverse().Select(nd => nd.Data);
@@ -131,12 +134,13 @@ namespace SteeringCS.util.Graph
                 {
                     //if its a non directed list the node might have edged that "end" at it. in that case the "start" of the edge is the nextNode
                     var nextNode = currentEdge.Start == current ? currentEdge.End : currentEdge.Start;
-                    currentEdge.Color = Color.Yellow;
+                    currentEdge.Color = Color.Red;
                     if (!nextNode.Seen)
                     {
-                        if (!nextNode.ShallowSeen || nextNode.Priority > (current.Priority + currentEdge.Value) + heuristic(nextNode, end))
+                        if (!nextNode.ShallowSeen || nextNode.Distance > (current.Distance + currentEdge.Value))
                         {
-                            nextNode.Priority = (current.Priority + currentEdge.Value) + heuristic(nextNode, end);
+                            nextNode.Priority = (current.Distance + currentEdge.Value) + heuristic(nextNode, end) ;
+                            nextNode.Distance = (current.Distance + currentEdge.Value);
                             nextNode.From = current;
                             nextNode.Traveled = currentEdge;
 

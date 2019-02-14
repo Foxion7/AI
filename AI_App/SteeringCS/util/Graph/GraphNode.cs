@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Priority_Queue;
@@ -15,10 +16,13 @@ namespace SteeringCS.util.Graph
         public IEnumerable<GraphEdge<T>> Edges => _edges;
         public bool Seen { get; set; } = false;
         public bool ShallowSeen { get; set; } = false;
+        public new float Distance { get; set; }
+        public new float Heuristic { get; set; }
         public new float Priority { get; set; }
         public GraphNode<T> From { get; set; }
         public GraphEdge<T> Traveled { get; set; }
-
+        public Color Color { get; set; } = Color.Black;
+        
         public GraphNode(T data, params GraphEdge<T>[] edges)
         {
             Data = data;

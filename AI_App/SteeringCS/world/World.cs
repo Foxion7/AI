@@ -48,7 +48,7 @@ namespace SteeringCS
 
             SpawnObstacles();
             SpawnWalls();
-            Graph = GraphUtil.CreateGraphForMap(w, h, 30, Obstacles, Walls);
+            Graph = GraphUtil.CreateGraphForMap(w, h, 50, Obstacles, Walls);
             populate();
         }
 
@@ -215,7 +215,7 @@ namespace SteeringCS
         {
             if(Target == null)
                 return;
-            Target.Path = new Route(GraphUtil.AStar(Graph, Target.Pos, end, GraphUtil.Manhatten).ToList());
+            Target.Path = new Route(GraphUtil.AStar(Graph, Target.Pos, end, GraphUtil.Euclidean).ToList());
         }
     }
 }

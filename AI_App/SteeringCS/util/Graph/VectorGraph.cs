@@ -19,8 +19,8 @@ namespace SteeringCS.util.Graph
 
             foreach (var graphNode in Nodes)
             {
-                Pen p = new Pen(Color.Black, 2);
-                g.DrawEllipse(p, new Rectangle((int)graphNode.Data.X, (int)graphNode.Data.Y, 1, 1));
+                SolidBrush p = new SolidBrush(graphNode.Color);
+                g.FillEllipse(p, new Rectangle((int)graphNode.Data.X-5, (int)graphNode.Data.Y-5, 10, 10));
                 
             }
         }

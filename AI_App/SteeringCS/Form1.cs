@@ -105,6 +105,8 @@ namespace SteeringCS
                     break;
 
             }
+
+            // Arrow movement
             if (keyData == Keys.Up || keyData == Keys.Down || keyData == Keys.Left || keyData == Keys.Right) {
 
                 int manualMovementStrength = 100;
@@ -113,40 +115,27 @@ namespace SteeringCS
                 // Up arrow press.
                 if (keyData == Keys.Up)
                 {
-                    if (world.Player.Pos.Y + manualMovementStrength >= 0)
-                    {
-                        manualMovement = new Vector2D(manualMovement.X, manualMovement.Y - manualMovementStrength);
-                    }
+                    manualMovement = new Vector2D(manualMovement.X, manualMovement.Y - manualMovementStrength);
                 }
 
                 // Down arrow press.
                 if (keyData == Keys.Down)
                 {
-                    if (world.Player.Pos.Y - manualMovementStrength <= dbPanel1.Height)
-                    {
-                        manualMovement = new Vector2D(manualMovement.X, manualMovement.Y + manualMovementStrength);
-                    }
+                    manualMovement = new Vector2D(manualMovement.X, manualMovement.Y + manualMovementStrength);
                 }
 
                 // Left arrow press.
                 if (keyData == Keys.Left)
                 {
-                    if (world.Player.Pos.X - manualMovementStrength >= 0)
-                    {
-                        manualMovement = new Vector2D(manualMovement.X - manualMovementStrength, manualMovement.Y);
-                    }
+                    manualMovement = new Vector2D(manualMovement.X - manualMovementStrength, manualMovement.Y);
                 }
 
                 // Right arrow press.
-                if (keyData == Keys.Right) { 
-                    if (world.Player.Pos.X + manualMovementStrength <= dbPanel1.Width)
-                    {
-                        manualMovement = new Vector2D(manualMovement.X + manualMovementStrength, manualMovement.Y);
-                    }
+                if (keyData == Keys.Right) {
+                    manualMovement = new Vector2D(manualMovement.X + manualMovementStrength, manualMovement.Y);
                 }
                 world.setPlayerRoute(manualMovement);
             }
-
             return true;
         }
 

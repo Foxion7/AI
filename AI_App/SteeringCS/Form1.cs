@@ -31,12 +31,14 @@ namespace SteeringCS
             timer.Elapsed += Timer_Elapsed;
             timer.Interval = 20;
             timer.Enabled = true;
+            this.ActiveControl = null;
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             world.Update(timeDelta);
             dbPanel1.Invalidate();
+            this.ActiveControl = null;
         }
 
         private void dbPanel1_Paint(object sender, PaintEventArgs e)
@@ -52,9 +54,9 @@ namespace SteeringCS
             }
         }
 
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            switch (e.KeyCode)
+            switch (keyData)
             {
                 case Keys.T:
                     world.TriangleModeActive = !world.TriangleModeActive;
@@ -91,6 +93,20 @@ namespace SteeringCS
                     break;
 
             }
+            return true;
+        }
+
+        private void forceSpinnerGoblin_ValueChanged(object sender, EventArgs e)
+        {
+            foreach (Goblin goblin in world.getGoblins())
+            {
+                goblin.MaxForce = (float)forceSpinnerGoblin.Value;
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.ActiveControl = dbPanel1;
         }
     }
 }

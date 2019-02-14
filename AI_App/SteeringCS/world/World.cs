@@ -210,6 +210,12 @@ namespace SteeringCS
         {
             return _hobgoblins;
         }
+        
+        
+        public List<MovingEntity> getGoblins()
+        {
+            return _goblins;
+        }
 
         public void setPlayerRoute(Vector2D end)
         {

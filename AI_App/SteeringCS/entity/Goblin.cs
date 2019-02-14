@@ -44,7 +44,7 @@ namespace SteeringCS.entity
 
             Mass = 50;
             MaxSpeed = 5;
-            MaxForce = 50;
+            MaxForce = 25;
 
             GroupValue = 10;
             NeighborsRange = 100;

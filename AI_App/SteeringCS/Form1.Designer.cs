@@ -124,9 +124,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(1341, 35);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(118, 13);
+            this.label1.Size = new System.Drawing.Size(114, 13);
             this.label1.TabIndex = 15;
-            this.label1.Text = "W = Toggle pathfinding";
+            this.label1.Text = "P = Toggle pathfinding";
             // 
             // label2
             // 
@@ -172,6 +172,7 @@
             this.massSpinnerGoblin.Name = "massSpinnerGoblin";
             this.massSpinnerGoblin.Size = new System.Drawing.Size(67, 20);
             this.massSpinnerGoblin.TabIndex = 20;
+            this.massSpinnerGoblin.ValueChanged += new System.EventHandler(this.massSpinnerGoblin_ValueChanged);
             // 
             // maxSpeedSpinnerGoblin
             // 
@@ -179,6 +180,7 @@
             this.maxSpeedSpinnerGoblin.Name = "maxSpeedSpinnerGoblin";
             this.maxSpeedSpinnerGoblin.Size = new System.Drawing.Size(67, 20);
             this.maxSpeedSpinnerGoblin.TabIndex = 21;
+            this.maxSpeedSpinnerGoblin.ValueChanged += new System.EventHandler(this.maxSpeedSpinnerGoblin_ValueChanged);
             // 
             // label5
             // 
@@ -206,6 +208,7 @@
             this.maxSpeedSpinnerHobgoblin.Name = "maxSpeedSpinnerHobgoblin";
             this.maxSpeedSpinnerHobgoblin.Size = new System.Drawing.Size(67, 20);
             this.maxSpeedSpinnerHobgoblin.TabIndex = 28;
+            this.maxSpeedSpinnerHobgoblin.ValueChanged += new System.EventHandler(this.maxSpeedSpinnerHobgoblin_ValueChanged);
             // 
             // massSpinnerHobgoblin
             // 
@@ -213,6 +216,7 @@
             this.massSpinnerHobgoblin.Name = "massSpinnerHobgoblin";
             this.massSpinnerHobgoblin.Size = new System.Drawing.Size(67, 20);
             this.massSpinnerHobgoblin.TabIndex = 27;
+            this.massSpinnerHobgoblin.ValueChanged += new System.EventHandler(this.massSpinnerHobgoblin_ValueChanged);
             // 
             // forceSpinnerHobgoblin
             // 
@@ -220,6 +224,7 @@
             this.forceSpinnerHobgoblin.Name = "forceSpinnerHobgoblin";
             this.forceSpinnerHobgoblin.Size = new System.Drawing.Size(67, 20);
             this.forceSpinnerHobgoblin.TabIndex = 26;
+            this.forceSpinnerHobgoblin.ValueChanged += new System.EventHandler(this.forceSpinnerHobgoblin_ValueChanged);
             // 
             // label12
             // 
@@ -295,7 +300,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Gobbo Slayer";
             this.Load += new System.EventHandler(this.Form1_Load);
-            //this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerGoblin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.massSpinnerGoblin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxSpeedSpinnerGoblin)).EndInit();

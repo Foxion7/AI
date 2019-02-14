@@ -57,8 +57,6 @@ namespace SteeringCS
             Target = new Creature("Player", new Vector2D(600, 600), this);
             Target.VColor = Color.Blue;
             Target.Pos = new Vector2D(500, 300);
-           
-
         }
 
         public void SpawnObstacles()

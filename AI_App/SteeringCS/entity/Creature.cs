@@ -27,6 +27,7 @@ namespace SteeringCS.entity
         public FollowPathBehaviour PB;
         public ISteeringBehaviour OA;
         public ISteeringBehaviour WA;
+        public Vector2D manualTarget { get;  set; }
 
         public Creature(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -51,18 +52,21 @@ namespace SteeringCS.entity
         public override void Update(float timeElapsed)
         {
             Vector2D steeringForce = new Vector2D();
-            if (PB != null)
-            {
-                steeringForce += PB.Calculate()*0.33;
-            }
-            if (OA != null)
-            {
-                steeringForce += OA.Calculate() * 0.66;
-            }
-            if (WA != null)
-            {
-                steeringForce += WA.Calculate() * 0.66;
-            }
+
+            //if (PB != null)
+            //{
+            //    steeringForce += PB.Calculate()*0.33;
+            //}
+            //if (OA != null)
+            //{
+            //    steeringForce += OA.Calculate() * 0.66;
+            //}
+            //if (WA != null)
+            //{
+            //    steeringForce += WA.Calculate() * 0.66;
+            //}
+            steeringForce = manualTarget;
+
 
             Vector2D acceleration = steeringForce / Mass;
 
@@ -83,8 +87,13 @@ namespace SteeringCS.entity
             double leftCorner = Pos.X - Scale;
             double rightCorner = Pos.Y - Scale;
             double size = Scale * 2;
-
             Pen p = new Pen(VColor, 2);
+
+            if (manualTarget != null)
+            {
+                g.DrawEllipse(p, new Rectangle((int)manualTarget.X, (int)manualTarget.Y, 5, 5));
+            }
+
             g.DrawEllipse(p, new Rectangle((int) leftCorner, (int) rightCorner, (int) size, (int) size));
             g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
         }

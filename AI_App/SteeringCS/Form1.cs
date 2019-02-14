@@ -31,14 +31,27 @@ namespace SteeringCS
             timer.Elapsed += Timer_Elapsed;
             timer.Interval = 20;
             timer.Enabled = true;
-            this.ActiveControl = null;
-        }
+            
+            // Starting values goblin.
+            forceSpinnerGoblin.Value = 25;
+            massSpinnerGoblin.Value = 50;
+            maxSpeedSpinnerGoblin.Value = 5;
 
+            // Starting values hobgoblin.
+            forceSpinnerHobgoblin.Value = 40;
+            massSpinnerHobgoblin.Value = 100;
+            maxSpeedSpinnerHobgoblin.Value = 5;
+        }
+        
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            ActiveControl = dbPanel1;
+        }
+        
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             world.Update(timeDelta);
             dbPanel1.Invalidate();
-            this.ActiveControl = null;
         }
 
         private void dbPanel1_Paint(object sender, PaintEventArgs e)
@@ -56,6 +69,7 @@ namespace SteeringCS
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            int manualStrength = 1;
             switch (keyData)
             {
                 case Keys.T:
@@ -73,10 +87,34 @@ namespace SteeringCS
                 case Keys.R:
                     world.Reset();
                     break;
-                case Keys.W:
+                case Keys.P:
                     world.GraphVisible = !world.GraphVisible;
                     break;
+                case Keys.Up:
+                    if (world.Target.Pos.Y + manualStrength >= 0)
+                    {
+                        world.Target.manualTarget = new Vector2D(world.Target.Pos.X, world.Target.Pos.Y - manualStrength);
+                    }
+                    break;
+                case Keys.Down:
+                    if (world.Target.Pos.Y - manualStrength <= dbPanel1.Height)
+                    {
+                        world.Target.manualTarget = new Vector2D(world.Target.Pos.X, world.Target.Pos.Y + manualStrength);
+                    }
+                    break;
+                case Keys.Left:
+                    if (world.Target.Pos.X - manualStrength  >= 0)
+                    {
+                        world.Target.manualTarget = new Vector2D(world.Target.Pos.X - manualStrength, world.Target.Pos.Y);
+                    }
+                    break;
+                case Keys.Right:
+                    if (world.Target.Pos.X + manualStrength <= dbPanel1.Width)
+                    {
+                        world.Target.manualTarget = new Vector2D(world.Target.Pos.X + manualStrength, world.Target.Pos.Y);
+                    }
 
+                    break;
                 case Keys.Space:
                     if (!paused)
                     {
@@ -104,9 +142,44 @@ namespace SteeringCS
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void massSpinnerGoblin_ValueChanged(object sender, EventArgs e)
         {
-            this.ActiveControl = dbPanel1;
+            foreach (Goblin goblin in world.getGoblins())
+            {
+                goblin.Mass = (float)massSpinnerGoblin.Value;
+            }
+        }
+
+        private void maxSpeedSpinnerGoblin_ValueChanged(object sender, EventArgs e)
+        {
+            foreach (Goblin goblin in world.getGoblins())
+            {
+                goblin.MaxSpeed = (float)maxSpeedSpinnerGoblin.Value;
+            }
+        }
+
+        private void forceSpinnerHobgoblin_ValueChanged(object sender, EventArgs e)
+        {
+            foreach (Hobgoblin hobgoblin in world.getHobgoblins())
+            {
+                hobgoblin.MaxForce = (float)forceSpinnerHobgoblin.Value;
+            }
+        }
+
+        private void massSpinnerHobgoblin_ValueChanged(object sender, EventArgs e)
+        {
+            foreach (Hobgoblin hobgoblin in world.getHobgoblins())
+            {
+                hobgoblin.MaxForce = (float)massSpinnerHobgoblin.Value;
+            }
+        }
+
+        private void maxSpeedSpinnerHobgoblin_ValueChanged(object sender, EventArgs e)
+        {
+            foreach (Hobgoblin hobgoblin in world.getHobgoblins())
+            {
+                hobgoblin.MaxForce = (float)maxSpeedSpinnerHobgoblin.Value;
+            }
         }
     }
 }

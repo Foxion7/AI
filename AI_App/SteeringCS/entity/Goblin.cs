@@ -19,14 +19,14 @@ namespace SteeringCS.entity
         public double BraveryLimit { get; set; }
 
         //grouping behaviour
-        public IEnumerable<IGrouper> Neighbors => MyWorld.GetGoblinNeighbors(this, NeighborsRange).Cast<IGrouper>();
+        public IEnumerable<IGrouper> Neighbors => world.GetGoblinNeighbors(this, NeighborsRange).Cast<IGrouper>();
         public FollowMode FollowMode { get; set; } = FollowMode.flock;
 
         //obstacle avoidance behaviour
-        public List<IObstacle> Obstacles => MyWorld.getObstacles();
+        public List<IObstacle> Obstacles => world.getObstacles();
 
         //wall avoidance behaviour
-        public List<IWall> Walls => MyWorld.getWalls();
+        public List<IWall> Walls => world.getWalls();
 
 
         //the SteeringBehaviours
@@ -73,13 +73,13 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            if (MyWorld.getHobgoblins().Any())
+            if (world.getHobgoblins().Any())
             {
                 Hobgoblin closestHobgoblin = GetClosestHobgoblin();
 
-                double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(MyWorld.Hero.Pos, closestHobgoblin.Pos);
+                double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(world.Hero.Pos, closestHobgoblin.Pos);
 
-                if (distancePlayerAndHobgoblin > VectorMath.DistanceBetweenPositions(MyWorld.Hero.Pos, Pos) && distancePlayerAndHobgoblin >= BraveryLimit)
+                if (distancePlayerAndHobgoblin > VectorMath.DistanceBetweenPositions(world.Hero.Pos, Pos) && distancePlayerAndHobgoblin >= BraveryLimit)
                 {
                     // If leader is far from player, follows leader.
                     Target = closestHobgoblin;
@@ -87,7 +87,7 @@ namespace SteeringCS.entity
                 else
                 {
                     // If leader is near player, attacks.
-                    Target = MyWorld.Hero;
+                    Target = world.Hero;
                 }
             }
 
@@ -115,7 +115,7 @@ namespace SteeringCS.entity
                 Side = Heading.Perp();
             }
             WrapAround();
-            MyWorld.rePosGoblin(Key, OldPos, Pos);
+            world.rePosGoblin(Key, OldPos, Pos);
         }
 
         public override void Render(Graphics g)
@@ -126,7 +126,7 @@ namespace SteeringCS.entity
             Pen p = new Pen(VColor, 2);
             Pen r = new Pen(Color.Red, 2);
 
-            if (MyWorld.TriangleModeActive)
+            if (world.TriangleModeActive)
             {
                 // Draws triangle.
                 // Left lat
@@ -144,7 +144,7 @@ namespace SteeringCS.entity
                 g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
             }
 
-            if (MyWorld.VelocityVisible)
+            if (world.VelocityVisible)
             {
                 // Wall avoidance lines.
                 double MAX_SEE_AHEAD = 15;
@@ -166,7 +166,7 @@ namespace SteeringCS.entity
             Hobgoblin closestHobgoblin = null;
             double closestDistance = int.MaxValue;
 
-            foreach (Hobgoblin hobgoblin in MyWorld.getHobgoblins())
+            foreach (Hobgoblin hobgoblin in world.getHobgoblins())
             {
                 double distance = VectorMath.DistanceBetweenPositions(Pos, hobgoblin.Pos);
                 if (distance < closestDistance)

@@ -63,7 +63,7 @@ namespace SteeringCS.entity
             Pen p = new Pen(VColor, 2);
             Pen r = new Pen(Color.Red, 2);
 
-            if (MyWorld.TriangleModeActive)
+            if (world.TriangleModeActive)
             {
                 // Draws triangle.
                 // Left lat
@@ -81,7 +81,7 @@ namespace SteeringCS.entity
                 g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
             }
 
-            if (MyWorld.VelocityVisible)
+            if (world.VelocityVisible)
             { 
                 g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
             }
@@ -90,7 +90,7 @@ namespace SteeringCS.entity
         public BaseGameEntity Target { get; set; }
         public double SlowingRadius { get; set; }
         public MovingEntity Evader { get; set; }
-        public List<IObstacle> Obstacles => MyWorld.getObstacles();
-        public List<IWall> Walls => MyWorld.getWalls();
+        public List<IObstacle> Obstacles => world.getObstacles();
+        public List<IWall> Walls => world.getWalls();
     }
 }

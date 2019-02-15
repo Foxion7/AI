@@ -48,14 +48,20 @@ namespace SteeringCS
         {
             ActiveControl = dbPanel1;
             ModifyProgressBarColor.SetState(health, 2);
-            ModifyProgressBarColor.SetState(cooldown, 1);
-            ModifyProgressBarColor.SetState(stamina, 3);
+            ModifyProgressBarColor.SetState(cooldown, 3);
+            ModifyProgressBarColor.SetState(stamina, 1);
         }
         
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             world.Update(timeDelta);
             dbPanel1.Invalidate();
+
+            // Move this to here.
+            // Hero stat regeneration.
+            stamina.Value++;
+            cooldown.Value++;
+
         }
 
         private void dbPanel1_Paint(object sender, PaintEventArgs e)
@@ -75,6 +81,22 @@ namespace SteeringCS
         {
             switch (keyData)
             {
+                case Keys.E:
+                    if (world.Hero.Attack() && cooldown.Value >= world.Hero.cooldownCost)
+                    {
+                        if (stamina.Value - world.Hero.staminaCost >= 0)
+                        {
+                            stamina.Value -= world.Hero.staminaCost;
+                        }
+                        if (cooldown.Value - world.Hero.cooldownCost >= 0)
+                        {
+                            cooldown.Value -= world.Hero.cooldownCost;
+                        }
+                    } else if (cooldown.Value < world.Hero.cooldownCost)
+                    {
+                        Console.WriteLine("I'm not ready to attack.");
+                    }
+                    break;
                 case Keys.T:
                     world.TriangleModeActive = !world.TriangleModeActive;
                     break;
@@ -110,6 +132,7 @@ namespace SteeringCS
                 case Keys.Escape:
                     Environment.Exit(0);
                     break;
+
             }
 
             // Arrow movement

@@ -31,22 +31,22 @@ namespace SteeringCS.entity
         // Allows re-entry on other side of form if entity leaves.
         protected void WrapAround()
         {
-            if (this.Pos.X > MyWorld.Width)
+            if (this.Pos.X > world.Width)
             {
                 this.Pos = new Vector2D(1, Pos.Y);
             }
             else if (this.Pos.X < 0)
             {
-                this.Pos = new Vector2D(MyWorld.Width - 1, Pos.Y);
+                this.Pos = new Vector2D(world.Width - 1, Pos.Y);
             }
 
-            if (this.Pos.Y > MyWorld.Height)
+            if (this.Pos.Y > world.Height)
             {
                 this.Pos = new Vector2D(Pos.X, 1);
             }
             else if (this.Pos.Y < 0)
             {
-                this.Pos = new Vector2D(Pos.X, MyWorld.Height - 1);
+                this.Pos = new Vector2D(Pos.X, world.Height - 1);
             }
         }
 

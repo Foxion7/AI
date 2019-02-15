@@ -7,13 +7,13 @@ namespace SteeringCS
     {
         public Vector2D Pos { get; set; }
         public float Scale { get; set; }
-        public World MyWorld { get; set; }
+        public World world { get; set; }
         public string Name { get; set; }
 
         protected BaseGameEntity(string name, Vector2D pos, World w)
         {
             Pos = pos;
-            MyWorld = w;
+            world = w;
             Name = name;
         }
 

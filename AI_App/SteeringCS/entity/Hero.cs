@@ -28,6 +28,10 @@ namespace SteeringCS.entity
         public ISteeringBehaviour OA;
         public ISteeringBehaviour WA;
         public Vector2D manualTarget { get;  set; }
+        public Vector2D Center { get; set; }
+        public int staminaCost { get; }
+        public int cooldownCost { get; }
+
 
         public Hero(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -45,12 +49,39 @@ namespace SteeringCS.entity
             WanderDistance = 0;
             WanderJitter = 40;
 
+            staminaCost = 50;
+            cooldownCost = 50;
+
             Scale = 5;
             VColor = Color.Black;
+
+        }
+
+        public bool Attack()
+        {
+            Goblin closestThreat = null;
+            double closestDistance = 100;
+
+            foreach (Goblin goblin in world.getGoblins())
+            {
+                if (VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < Scale * 5 && VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < closestDistance)
+                {
+                    closestThreat = goblin;
+                    closestDistance = VectorMath.DistanceBetweenPositions(Pos, goblin.Pos);
+                }
+            }
+            if(closestThreat != null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public override void Update(float timeElapsed)
         {
+            Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
+
+
             Vector2D steeringForce = new Vector2D();
 
             if (PB != null)
@@ -65,8 +96,6 @@ namespace SteeringCS.entity
             {
                 steeringForce += WA.Calculate() * 0.66;
             }
-            //steeringForce += manualTarget;
-
 
             Vector2D acceleration = steeringForce / Mass;
 
@@ -105,8 +134,8 @@ namespace SteeringCS.entity
         public double WanderJitter { get; set; }
         public double WanderRadius { get; set; }
         public double WanderDistance { get; set; }
-        public List<IObstacle> Obstacles => MyWorld.getObstacles();
+        public List<IObstacle> Obstacles => world.getObstacles();
 
-        public List<IWall> Walls => MyWorld.getWalls();
+        public List<IWall> Walls => world.getWalls();
     }
 }

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using SteeringCS.behaviour;
 using SteeringCS.entity;
 using SteeringCS.Interfaces;
+using SteeringCS.util;
 
 namespace SteeringCS
 {
@@ -46,6 +47,9 @@ namespace SteeringCS
         private void Form1_Load(object sender, EventArgs e)
         {
             ActiveControl = dbPanel1;
+            ModifyProgressBarColor.SetState(health, 2);
+            ModifyProgressBarColor.SetState(cooldown, 1);
+            ModifyProgressBarColor.SetState(stamina, 3);
         }
         
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -112,7 +116,7 @@ namespace SteeringCS
             if (keyData == Keys.Up || keyData == Keys.Down || keyData == Keys.Left || keyData == Keys.Right) {
 
                 int manualMovementStrength = 100;
-                Vector2D manualMovement = new Vector2D(world.Player.Pos.X, world.Player.Pos.Y);
+                Vector2D manualMovement = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
 
                 // Up arrow press.
                 if (keyData == Keys.Up)

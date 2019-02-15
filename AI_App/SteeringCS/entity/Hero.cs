@@ -10,7 +10,7 @@ using SteeringCS.util;
 
 namespace SteeringCS.entity
 {
-    public class Creature : MovingEntity, IObstacleAvoider, IWallAvoider
+    public class Hero : MovingEntity, IObstacleAvoider, IWallAvoider
     {
         public Color VColor { get; set; }
         private Route _path;
@@ -29,7 +29,7 @@ namespace SteeringCS.entity
         public ISteeringBehaviour WA;
         public Vector2D manualTarget { get;  set; }
 
-        public Creature(string name, Vector2D pos, World w) : base(name, pos, w)
+        public Hero(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 1;
             MaxSpeed = 10;
@@ -88,9 +88,12 @@ namespace SteeringCS.entity
             double rightCorner = Pos.Y - Scale;
             double size = Scale * 2;
             Pen p = new Pen(VColor, 2);
+            Pen r = new Pen(Color.Red, 2);
 
             g.DrawEllipse(p, new Rectangle((int) leftCorner, (int) rightCorner, (int) size, (int) size));
             g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+
+            g.DrawEllipse(r, new Rectangle((int)( leftCorner - size * 2), (int)( rightCorner - size * 2), (int) size * 5, (int) size * 5));
         }
 
         public BaseGameEntity Target      { get; set; }

@@ -21,8 +21,7 @@ namespace SteeringCS
         private List<MovingEntity> _hobgoblins = new List<MovingEntity>();
         public List<IObstacle> Obstacles = new List<IObstacle>();
         public List<IWall> Walls = new List<IWall>();
-        public Creature Player { get; set; }
-        //public Creature Controlled { get; set; }
+        public Hero Hero { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public List<Color> goblinColors { get; }
@@ -54,9 +53,9 @@ namespace SteeringCS
 
         private void populate()
         {
-            Player = new Creature("Player", new Vector2D(600, 600), this);
-            Player.VColor = Color.Blue;
-            Player.Pos = new Vector2D(500, 300);
+            Hero = new Hero("Player", new Vector2D(600, 600), this);
+            Hero.VColor = Color.Blue;
+            Hero.Pos = new Vector2D(500, 300);
         }
 
         public void SpawnObstacles()
@@ -102,11 +101,10 @@ namespace SteeringCS
             //_goblins.Add(purs);
             //purs.Evader = Target;
             //purs.Target = Target;
-
-
+            
             var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
             gentleman.VColor = goblinColors[rInt];
-            gentleman.Target = Player;
+            gentleman.Target = Hero;
             _goblins.Add(gentleman);
             _goblinSpace.Add(gentleman.Key, gentleman);
         }
@@ -114,11 +112,11 @@ namespace SteeringCS
         public void SpawnHobgoblin()
         {
             var hobbyGobby = new Hobgoblin("Bloodbeard", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            hobbyGobby.PB = new SeekBehaviour(me:hobbyGobby, target:Player);
+            hobbyGobby.PB = new SeekBehaviour(me:hobbyGobby, target:Hero);
             hobbyGobby.VColor = Color.Black;
             _hobgoblins.Add(hobbyGobby);
-            hobbyGobby.Evader = Player;
-            hobbyGobby.Target = Player;
+            hobbyGobby.Evader = Hero;
+            hobbyGobby.Target = Hero;
         }
 
         public void DestroySeekers()
@@ -152,7 +150,7 @@ namespace SteeringCS
             {
                 Console.WriteLine("Hobgoblin exception: " + e.Message + " stacktrace: " +  e.StackTrace);
             }
-            Player.Update(timeElapsed);
+            Hero.Update(timeElapsed);
         }
 
         public void Render(Graphics g)
@@ -163,7 +161,7 @@ namespace SteeringCS
             _hobgoblins.ForEach(e => e.Render(g));
             Obstacles.ForEach(e => e.Render(g));
             Walls.ForEach(e => e.Render(g));
-            Player.Render(g);
+            Hero.Render(g);
         }
 
         public IEnumerable<MovingEntity> GetGoblinNeighbors(Goblin goblin, double neighborsRange)
@@ -216,9 +214,9 @@ namespace SteeringCS
 
         public void setPlayerRoute(Vector2D end)
         {
-            if(Player == null)
+            if(Hero == null)
                 return;
-            Player.Path = new Route(GraphUtil.AStar(Graph, Player.Pos, end, GraphUtil.Manhatten).ToList());
+            Hero.Path = new Route(GraphUtil.AStar(Graph, Hero.Pos, end, GraphUtil.Manhatten).ToList());
         }
     }
 }

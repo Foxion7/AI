@@ -77,9 +77,9 @@ namespace SteeringCS.entity
             {
                 Hobgoblin closestHobgoblin = GetClosestHobgoblin();
 
-                double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(MyWorld.Player.Pos, closestHobgoblin.Pos);
+                double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(MyWorld.Hero.Pos, closestHobgoblin.Pos);
 
-                if (distancePlayerAndHobgoblin > VectorMath.DistanceBetweenPositions(MyWorld.Player.Pos, Pos) && distancePlayerAndHobgoblin >= BraveryLimit)
+                if (distancePlayerAndHobgoblin > VectorMath.DistanceBetweenPositions(MyWorld.Hero.Pos, Pos) && distancePlayerAndHobgoblin >= BraveryLimit)
                 {
                     // If leader is far from player, follows leader.
                     Target = closestHobgoblin;
@@ -87,7 +87,7 @@ namespace SteeringCS.entity
                 else
                 {
                     // If leader is near player, attacks.
-                    Target = MyWorld.Player;
+                    Target = MyWorld.Hero;
                 }
             }
 
@@ -125,9 +125,6 @@ namespace SteeringCS.entity
             double size = Scale * 2;
             Pen p = new Pen(VColor, 2);
             Pen r = new Pen(Color.Red, 2);
-
-
-
 
             if (MyWorld.TriangleModeActive)
             {

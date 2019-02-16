@@ -104,6 +104,9 @@
     <Compile Include="util\Cell.cs" />
     <Compile Include="util\CellSpacePartition.cs" />
     <Compile Include="util\ModifyProgressBarColor.cs" />
+    <Compile Include="util\StatusBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="_behaviourStatic\staticBehaviours.cs" />
     <Compile Include="util\Vector2D.cs" />
     <Compile Include="util\VectorMath.cs" />

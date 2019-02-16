@@ -50,27 +50,29 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.health = new System.Windows.Forms.ProgressBar();
             this.label15 = new System.Windows.Forms.Label();
-            this.cooldown = new System.Windows.Forms.ProgressBar();
             this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
             this.dbPanel1 = new SteeringCS.DBPanel();
             this.dbPanel2 = new SteeringCS.DBPanel();
-            this.label17 = new System.Windows.Forms.Label();
-            this.stamina = new System.Windows.Forms.ProgressBar();
+            this.HeroPanel = new SteeringCS.DBPanel();
+            this.cooldownBar = new SteeringCS.util.StatusBar();
+            this.staminaBar = new SteeringCS.util.StatusBar();
+            this.healthBar = new SteeringCS.util.StatusBar();
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerGoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.massSpinnerGoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxSpeedSpinnerGoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxSpeedSpinnerHobgoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.massSpinnerHobgoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerHobgoblin)).BeginInit();
+            this.HeroPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(1357, 307);
+            this.label7.Location = new System.Drawing.Point(1357, 289);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(158, 20);
             this.label7.TabIndex = 7;
@@ -80,12 +82,11 @@
             // 
             this.pausedLabel.AutoSize = true;
             this.pausedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pausedLabel.Location = new System.Drawing.Point(1371, 336);
+            this.pausedLabel.Location = new System.Drawing.Point(1371, 330);
             this.pausedLabel.Name = "pausedLabel";
-            this.pausedLabel.Size = new System.Drawing.Size(132, 31);
+            this.pausedLabel.Size = new System.Drawing.Size(110, 31);
             this.pausedLabel.TabIndex = 8;
-            this.pausedLabel.Text = "PAUSED";
-            this.pausedLabel.Visible = false;
+            this.pausedLabel.Text = "Playing";
             // 
             // label8
             // 
@@ -263,15 +264,6 @@
             this.label14.TabIndex = 23;
             this.label14.Text = "Force";
             // 
-            // health
-            // 
-            this.health.ForeColor = System.Drawing.Color.Red;
-            this.health.Location = new System.Drawing.Point(1342, 56);
-            this.health.Name = "health";
-            this.health.Size = new System.Drawing.Size(185, 23);
-            this.health.TabIndex = 30;
-            this.health.Value = 100;
-            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -282,16 +274,6 @@
             this.label15.TabIndex = 31;
             this.label15.Text = "Health";
             // 
-            // cooldown
-            // 
-            this.cooldown.ForeColor = System.Drawing.Color.Orange;
-            this.cooldown.Location = new System.Drawing.Point(1341, 188);
-            this.cooldown.Name = "cooldown";
-            this.cooldown.Size = new System.Drawing.Size(186, 23);
-            this.cooldown.Step = 5;
-            this.cooldown.TabIndex = 32;
-            this.cooldown.Value = 100;
-            // 
             // label16
             // 
             this.label16.AutoSize = true;
@@ -301,6 +283,16 @@
             this.label16.Size = new System.Drawing.Size(100, 25);
             this.label16.TabIndex = 33;
             this.label16.Text = "Cooldown";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(1337, 94);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(84, 25);
+            this.label17.TabIndex = 35;
+            this.label17.Text = "Stamina";
             // 
             // dbPanel1
             // 
@@ -321,39 +313,52 @@
             this.dbPanel2.Size = new System.Drawing.Size(220, 412);
             this.dbPanel2.TabIndex = 33;
             // 
-            // label17
+            // HeroPanel
             // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(1337, 94);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(84, 25);
-            this.label17.TabIndex = 35;
-            this.label17.Text = "Stamina";
+            this.HeroPanel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.HeroPanel.Controls.Add(this.cooldownBar);
+            this.HeroPanel.Controls.Add(this.staminaBar);
+            this.HeroPanel.Controls.Add(this.healthBar);
+            this.HeroPanel.Location = new System.Drawing.Point(1327, 19);
+            this.HeroPanel.Name = "HeroPanel";
+            this.HeroPanel.Size = new System.Drawing.Size(220, 229);
+            this.HeroPanel.TabIndex = 0;
             // 
-            // stamina
+            // cooldownBar
             // 
-            this.stamina.ForeColor = System.Drawing.Color.Green;
-            this.stamina.Location = new System.Drawing.Point(1341, 122);
-            this.stamina.Name = "stamina";
-            this.stamina.Size = new System.Drawing.Size(186, 23);
-            this.stamina.Step = 5;
-            this.stamina.TabIndex = 34;
-            this.stamina.Value = 100;
+            this.cooldownBar.ForeColor = System.Drawing.Color.Gold;
+            this.cooldownBar.Location = new System.Drawing.Point(9, 169);
+            this.cooldownBar.Name = "cooldownBar";
+            this.cooldownBar.Size = new System.Drawing.Size(208, 23);
+            this.cooldownBar.TabIndex = 2;
+            // 
+            // staminaBar
+            // 
+            this.staminaBar.ForeColor = System.Drawing.Color.LimeGreen;
+            this.staminaBar.Location = new System.Drawing.Point(9, 103);
+            this.staminaBar.Name = "staminaBar";
+            this.staminaBar.Size = new System.Drawing.Size(208, 23);
+            this.staminaBar.TabIndex = 1;
+            // 
+            // healthBar
+            // 
+            this.healthBar.ForeColor = System.Drawing.Color.Red;
+            this.healthBar.Location = new System.Drawing.Point(9, 37);
+            this.healthBar.Name = "healthBar";
+            this.healthBar.Size = new System.Drawing.Size(208, 23);
+            this.healthBar.TabIndex = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1559, 829);
-            this.Controls.Add(this.cooldown);
+            this.Controls.Add(this.dbPanel1);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.label17);
-            this.Controls.Add(this.stamina);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.maxSpeedSpinnerHobgoblin);
-            this.Controls.Add(this.health);
             this.Controls.Add(this.massSpinnerHobgoblin);
             this.Controls.Add(this.forceSpinnerHobgoblin);
             this.Controls.Add(this.label12);
@@ -373,8 +378,8 @@
             this.Controls.Add(this.label8);
             this.Controls.Add(this.pausedLabel);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.dbPanel1);
             this.Controls.Add(this.dbPanel2);
+            this.Controls.Add(this.HeroPanel);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
@@ -387,6 +392,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.maxSpeedSpinnerHobgoblin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.massSpinnerHobgoblin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerHobgoblin)).EndInit();
+            this.HeroPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -416,13 +422,14 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.ProgressBar health;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.ProgressBar cooldown;
         private DBPanel dbPanel2;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.ProgressBar stamina;
+        private DBPanel HeroPanel;
+        private util.StatusBar cooldownBar;
+        private util.StatusBar staminaBar;
+        private util.StatusBar healthBar;
     }
 }
 

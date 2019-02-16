@@ -47,21 +47,35 @@ namespace SteeringCS
         private void Form1_Load(object sender, EventArgs e)
         {
             ActiveControl = dbPanel1;
-            ModifyProgressBarColor.SetState(health, 2);
-            ModifyProgressBarColor.SetState(cooldown, 3);
-            ModifyProgressBarColor.SetState(stamina, 1);
+            //ModifyProgressBarColor.SetState(health, 2);
+            //ModifyProgressBarColor.SetState(cooldown, 1);
+            //ModifyProgressBarColor.SetState(stamina, 1);
+
+            if(world.Hero != null)
+            {
+                //healthBar = new util.StatusBar(15, 37, 50, 10);
+                healthBar.Value = world.Hero.maxHealth;
+                ////healthBar.Location = new Point(15, 37);
+                //HeroPanel.Controls.Add(healthBar);
+
+                //staminaBar = new util.StatusBar(14, 103, 50, 10);
+                staminaBar.Value = world.Hero.maxStamina;
+                ////staminaBar.Location = new Point(14, 103);
+                //HeroPanel.Controls.Add(staminaBar);
+
+                //cooldownBar = new util.StatusBar(14, 169, 50, 10);
+                cooldownBar.Value = world.Hero.maxCooldown;
+                ////cooldownBar.Location = new Point(14, 169);
+                //HeroPanel.Controls.Add(cooldownBar);
+            }
+
         }
         
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             world.Update(timeDelta);
+            CalculateStats();
             dbPanel1.Invalidate();
-
-            // Move this to here.
-            // Hero stat regeneration.
-            stamina.Value++;
-            cooldown.Value++;
-
         }
 
         private void dbPanel1_Paint(object sender, PaintEventArgs e)
@@ -82,20 +96,7 @@ namespace SteeringCS
             switch (keyData)
             {
                 case Keys.E:
-                    if (world.Hero.Attack() && cooldown.Value >= world.Hero.cooldownCost)
-                    {
-                        if (stamina.Value - world.Hero.staminaCost >= 0)
-                        {
-                            stamina.Value -= world.Hero.staminaCost;
-                        }
-                        if (cooldown.Value - world.Hero.cooldownCost >= 0)
-                        {
-                            cooldown.Value -= world.Hero.cooldownCost;
-                        }
-                    } else if (cooldown.Value < world.Hero.cooldownCost)
-                    {
-                        Console.WriteLine("I'm not ready to attack.");
-                    }
+                    world.Hero.Attack();
                     break;
                 case Keys.T:
                     world.TriangleModeActive = !world.TriangleModeActive;
@@ -119,13 +120,13 @@ namespace SteeringCS
                     if (!paused)
                     {
                         paused = true;
-                        pausedLabel.Visible = true;
+                        pausedLabel.Text = "Paused";
                         timer.Interval = int.MaxValue;
                     }
                     else
                     {
                         paused = false;
-                        pausedLabel.Visible = false;
+                        pausedLabel.Text = "Playing";
                         timer.Interval = 20;
                     }
                     break;
@@ -214,6 +215,30 @@ namespace SteeringCS
             {
                 hobgoblin.MaxForce = (float)maxSpeedSpinnerHobgoblin.Value;
             }
+        }
+
+        private void CalculateStats()
+        {
+            if (world.Hero != null)
+            {
+                int incrementStamina = 1;
+                int incrementCooldown = 1;
+
+                world.Hero.RecoverStamina(incrementStamina);
+                world.Hero.RecoverCooldown(incrementCooldown);
+
+                healthBar.Value = world.Hero.health;
+                staminaBar.Value = world.Hero.stamina;
+                cooldownBar.Value = world.Hero.cooldown;
+                UpdateStats();
+            }
+        }
+
+        private void UpdateStats()
+        {
+            healthBar.Refresh();
+            staminaBar.Refresh();
+            cooldownBar.Refresh();
         }
     }
 }

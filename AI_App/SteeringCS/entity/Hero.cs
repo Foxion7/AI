@@ -29,10 +29,18 @@ namespace SteeringCS.entity
         public ISteeringBehaviour WA;
         public Vector2D manualTarget { get;  set; }
         public Vector2D Center { get; set; }
+
+        public int maxHealth { get; set; }
+        public int maxStamina { get; set; }
+        public int maxCooldown { get; set; }
+
+        public int health { get; set; }
+        public int stamina { get; set; }
+        public int cooldown { get; set; }
+
         public int staminaCost { get; }
         public int cooldownCost { get; }
-
-
+        
         public Hero(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             Mass = 1;
@@ -49,16 +57,24 @@ namespace SteeringCS.entity
             WanderDistance = 0;
             WanderJitter = 40;
 
+            health = 100;
+            cooldown = 100;
+            stamina = 100;
+
+            maxHealth = 100;
+            maxStamina = 100;
+            maxCooldown = 100;
+
             staminaCost = 50;
             cooldownCost = 50;
 
             Scale = 5;
             VColor = Color.Black;
-
         }
 
-        public bool Attack()
+        public void Attack()
         {
+            Console.WriteLine("Attacking");
             Goblin closestThreat = null;
             double closestDistance = 100;
 
@@ -70,18 +86,48 @@ namespace SteeringCS.entity
                     closestDistance = VectorMath.DistanceBetweenPositions(Pos, goblin.Pos);
                 }
             }
+            // If a target is nearby...
             if(closestThreat != null)
             {
-                return true;
+                // Checks if there is enough resources for an attack.
+                if (cooldown >= cooldownCost && stamina - staminaCost >= 0 && cooldown - cooldownCost >= 0)
+                {
+                    Console.WriteLine("Successful attack");
+                    stamina -= staminaCost;
+                    cooldown -= cooldownCost;
+                    // Kill goblin here.
+                }
             }
-            return false;
+        }
+
+        public void RecoverHealth(int amount)
+        {
+            if(health + amount <= maxHealth)
+            {
+                health += amount;
+            }
+        }
+
+        public void RecoverStamina(int amount)
+        {
+            if (stamina + amount <= maxStamina)
+            {
+                stamina += amount;
+            }
+        }
+
+        public void RecoverCooldown(int amount)
+        {
+            if (cooldown + amount <= maxCooldown)
+            {
+                cooldown += amount;
+            }
         }
 
         public override void Update(float timeElapsed)
         {
             Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
-
-
+            
             Vector2D steeringForce = new Vector2D();
 
             if (PB != null)

@@ -92,10 +92,9 @@ namespace SteeringCS.entity
                 // Checks if there is enough resources for an attack.
                 if (cooldown >= cooldownCost && stamina - staminaCost >= 0 && cooldown - cooldownCost >= 0)
                 {
-                    Console.WriteLine("Successful attack");
                     stamina -= staminaCost;
                     cooldown -= cooldownCost;
-                    // Kill goblin here.
+                    closestThreat.Die();
                 }
             }
         }

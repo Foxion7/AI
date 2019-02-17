@@ -19,6 +19,10 @@ namespace SteeringCS
         World world;
         System.Timers.Timer timer;
         bool paused = false;
+        bool upPressed = false;
+        bool downPressed = false;
+        bool leftPressed = false;
+        bool rightPressed = false;
 
         public const float timeDelta = 0.8f;
         
@@ -47,26 +51,17 @@ namespace SteeringCS
         private void Form1_Load(object sender, EventArgs e)
         {
             ActiveControl = dbPanel1;
-            //ModifyProgressBarColor.SetState(health, 2);
-            //ModifyProgressBarColor.SetState(cooldown, 1);
-            //ModifyProgressBarColor.SetState(stamina, 1);
 
-            if(world.Hero != null)
+            // Makes sure previewKeyDown is activated to prevent accidental navigation of interactive elements using keys.
+            foreach (Control control in this.Controls)
             {
-                //healthBar = new util.StatusBar(15, 37, 50, 10);
+                control.PreviewKeyDown += new PreviewKeyDownEventHandler(control_PreviewKeyDown);
+            }
+            if (world.Hero != null)
+            {
                 healthBar.Value = world.Hero.maxHealth;
-                ////healthBar.Location = new Point(15, 37);
-                //HeroPanel.Controls.Add(healthBar);
-
-                //staminaBar = new util.StatusBar(14, 103, 50, 10);
                 staminaBar.Value = world.Hero.maxStamina;
-                ////staminaBar.Location = new Point(14, 103);
-                //HeroPanel.Controls.Add(staminaBar);
-
-                //cooldownBar = new util.StatusBar(14, 169, 50, 10);
                 cooldownBar.Value = world.Hero.maxCooldown;
-                ////cooldownBar.Location = new Point(14, 169);
-                //HeroPanel.Controls.Add(cooldownBar);
             }
 
         }
@@ -91,83 +86,95 @@ namespace SteeringCS
             }
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            switch (keyData)
-            {
-                case Keys.E:
-                    world.Hero.Attack();
-                    break;
-                case Keys.T:
-                    world.TriangleModeActive = !world.TriangleModeActive;
-                    break;
-                case Keys.V:
-                    world.VelocityVisible = !world.VelocityVisible;
-                    break;
-                case Keys.G:
-                    world.SpawnGoblins();
-                    break;
-                case Keys.H:
-                    world.SpawnHobgoblin();
-                    break;
-                case Keys.R:
-                    world.Reset();
-                    break;
-                case Keys.P:
-                    world.GraphVisible = !world.GraphVisible;
-                    break;
-                case Keys.Space:
-                    if (!paused)
-                    {
-                        paused = true;
-                        pausedLabel.Text = "Paused";
-                        timer.Interval = int.MaxValue;
-                    }
-                    else
-                    {
-                        paused = false;
-                        pausedLabel.Text = "Playing";
-                        timer.Interval = 20;
-                    }
-                    break;
-                case Keys.Escape:
-                    Environment.Exit(0);
-                    break;
+        //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        //{
+        //    switch (keyData)
+        //    {
+        //        case Keys.E:
+        //            world.Hero.Attack();
+        //            break;
+        //        case Keys.T:
+        //            world.TriangleModeActive = !world.TriangleModeActive;
+        //            break;
+        //        case Keys.V:
+        //            world.VelocityVisible = !world.VelocityVisible;
+        //            break;
+        //        case Keys.G:
+        //            world.SpawnGoblins();
+        //            break;
+        //        case Keys.H:
+        //            world.SpawnHobgoblin();
+        //            break;
+        //        case Keys.R:
+        //            world.Reset();
+        //            break;
+        //        case Keys.P:
+        //            world.GraphVisible = !world.GraphVisible;
+        //            break;
+        //        case Keys.Space:
+        //            if (!paused)
+        //            {
+        //                paused = true;
+        //                pausedLabel.Text = "Paused";
+        //                timer.Interval = int.MaxValue;
+        //            }
+        //            else
+        //            {
+        //                paused = false;
+        //                pausedLabel.Text = "Playing";
+        //                timer.Interval = 20;
+        //            }
+        //            break;
+        //        case Keys.Escape:
+        //            Environment.Exit(0);
+        //            break;
 
-            }
+        //    }
 
-            // Arrow movement
-            if (keyData == Keys.Up || keyData == Keys.Down || keyData == Keys.Left || keyData == Keys.Right) {
+        //    // Arrow movement
+        //    if (keyData == Keys.Up || keyData == Keys.Down || keyData == Keys.Left || keyData == Keys.Right) {
 
-                int manualMovementStrength = 100;
-                Vector2D manualMovement = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
+        //        int manualMovementStrength = 999;
+        //        Vector2D manualMovement = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
 
-                // Up arrow press.
-                if (keyData == Keys.Up)
-                {
-                    manualMovement = new Vector2D(manualMovement.X, manualMovement.Y - manualMovementStrength);
-                }
+        //        // Up arrow press.
+        //        if (keyData == Keys.Up || upPressed)
+        //        {
+        //            upPressed = true;
+        //            Console.WriteLine("Pressing up");
+        //            manualMovement = new Vector2D(manualMovement.X, manualMovement.Y - manualMovementStrength);
+        //        }
 
-                // Down arrow press.
-                if (keyData == Keys.Down)
-                {
-                    manualMovement = new Vector2D(manualMovement.X, manualMovement.Y + manualMovementStrength);
-                }
+        //        // Down arrow press.
+        //        if (keyData == Keys.Down || downPressed)
+        //        {
+        //            Console.WriteLine("Pressing down");
+        //            downPressed = true;
 
-                // Left arrow press.
-                if (keyData == Keys.Left)
-                {
-                    manualMovement = new Vector2D(manualMovement.X - manualMovementStrength, manualMovement.Y);
-                }
+        //            manualMovement = new Vector2D(manualMovement.X, manualMovement.Y + manualMovementStrength);
+        //        }
 
-                // Right arrow press.
-                if (keyData == Keys.Right) {
-                    manualMovement = new Vector2D(manualMovement.X + manualMovementStrength, manualMovement.Y);
-                }
-                world.setPlayerRoute(manualMovement);
-            }
-            return true;
-        }
+        //        // Left arrow press.
+        //        if (keyData == Keys.Left || leftPressed)
+        //        {
+        //            leftPressed = true;
+
+        //            Console.WriteLine("Pressing left");
+
+        //            manualMovement = new Vector2D(manualMovement.X - manualMovementStrength, manualMovement.Y);
+        //        }
+
+        //        // Right arrow press.
+        //        if (keyData == Keys.Right || rightPressed) {
+        //            Console.WriteLine("Pressing right");
+        //            rightPressed = true;
+
+        //            manualMovement = new Vector2D(manualMovement.X + manualMovementStrength, manualMovement.Y);
+        //        }
+        //        world.setPlayerRoute(manualMovement);
+        //    }
+        //    return true;
+        //}
 
         private void forceSpinnerGoblin_ValueChanged(object sender, EventArgs e)
         {
@@ -239,6 +246,123 @@ namespace SteeringCS
             healthBar.Refresh();
             staminaBar.Refresh();
             cooldownBar.Refresh();
+        }
+
+        // Tells form you don't want to navigate with your keys.
+        void control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+            {
+                e.IsInputKey = true;
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.E:
+                    world.Hero.Attack();
+                    break;
+                case Keys.T:
+                    world.TriangleModeActive = !world.TriangleModeActive;
+                    break;
+                case Keys.V:
+                    world.VelocityVisible = !world.VelocityVisible;
+                    break;
+                case Keys.G:
+                    world.SpawnGoblins();
+                    break;
+                case Keys.H:
+                    world.SpawnHobgoblin();
+                    break;
+                case Keys.R:
+                    world.Reset();
+                    break;
+                case Keys.P:
+                    world.GraphVisible = !world.GraphVisible;
+                    break;
+                case Keys.Space:
+                    if (!paused)
+                    {
+                        paused = true;
+                        pausedLabel.Text = "Paused";
+                        timer.Interval = int.MaxValue;
+                    }
+                    else
+                    {
+                        paused = false;
+                        pausedLabel.Text = "Playing";
+                        timer.Interval = 20;
+                    }
+                    break;
+                case Keys.Escape:
+                    Environment.Exit(0);
+                    break;
+            }
+            // Arrow movement
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+            {
+                int manualMovementStrength = 10000;
+                Vector2D manualMovement = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
+
+                // Up arrow press.
+                if ((e.KeyCode == Keys.Up && !upPressed) || upPressed)
+                {
+                    upPressed = true;
+                    manualMovement = new Vector2D(manualMovement.X, manualMovement.Y - manualMovementStrength);
+                }
+
+                // Down arrow press.
+                if (e.KeyCode == Keys.Down || downPressed)
+                {
+                    downPressed = true;
+                    manualMovement = new Vector2D(manualMovement.X, manualMovement.Y + manualMovementStrength);
+                }
+
+                // Left arrow press.
+                if (e.KeyCode == Keys.Left || leftPressed)
+                {
+                    leftPressed = true;
+                    manualMovement = new Vector2D(manualMovement.X - manualMovementStrength, manualMovement.Y);
+                }
+
+                // Right arrow press.
+                if (e.KeyCode == Keys.Right || rightPressed)
+                {
+                    rightPressed = true;
+                    manualMovement = new Vector2D(manualMovement.X + manualMovementStrength, manualMovement.Y);
+                }
+
+                world.setPlayerRoute(manualMovement);
+            }
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            // Up arrow press.
+            if (e.KeyCode == Keys.Up && upPressed)
+            {
+                upPressed = false;
+            }
+
+            // Down arrow press.
+            if (e.KeyCode == Keys.Down && downPressed)
+            {
+                downPressed = false;
+            }
+
+            // Left arrow press.
+            if (e.KeyCode == Keys.Left && leftPressed)
+            {
+                leftPressed = false;
+            }
+
+            // Right arrow press.
+            if (e.KeyCode == Keys.Right && rightPressed)
+            {
+                rightPressed = false;
+            }
         }
     }
 }

@@ -94,6 +94,10 @@ namespace SteeringCS.entity
                 {
                     stamina -= staminaCost;
                     cooldown -= cooldownCost;
+                    world.SpawnCorpse(closestThreat.Scale * 4, closestThreat.Pos);
+                    // Remove goblin
+                    //Add corpse
+
                     closestThreat.Die();
                 }
             }

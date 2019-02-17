@@ -172,6 +172,7 @@
             this.forceSpinnerGoblin.Name = "forceSpinnerGoblin";
             this.forceSpinnerGoblin.Size = new System.Drawing.Size(67, 20);
             this.forceSpinnerGoblin.TabIndex = 19;
+            this.forceSpinnerGoblin.TabStop = false;
             this.forceSpinnerGoblin.ValueChanged += new System.EventHandler(this.forceSpinnerGoblin_ValueChanged);
             // 
             // massSpinnerGoblin
@@ -180,6 +181,7 @@
             this.massSpinnerGoblin.Name = "massSpinnerGoblin";
             this.massSpinnerGoblin.Size = new System.Drawing.Size(67, 20);
             this.massSpinnerGoblin.TabIndex = 20;
+            this.massSpinnerGoblin.TabStop = false;
             this.massSpinnerGoblin.ValueChanged += new System.EventHandler(this.massSpinnerGoblin_ValueChanged);
             // 
             // maxSpeedSpinnerGoblin
@@ -188,6 +190,7 @@
             this.maxSpeedSpinnerGoblin.Name = "maxSpeedSpinnerGoblin";
             this.maxSpeedSpinnerGoblin.Size = new System.Drawing.Size(67, 20);
             this.maxSpeedSpinnerGoblin.TabIndex = 21;
+            this.maxSpeedSpinnerGoblin.TabStop = false;
             this.maxSpeedSpinnerGoblin.ValueChanged += new System.EventHandler(this.maxSpeedSpinnerGoblin_ValueChanged);
             // 
             // label5
@@ -216,6 +219,7 @@
             this.maxSpeedSpinnerHobgoblin.Name = "maxSpeedSpinnerHobgoblin";
             this.maxSpeedSpinnerHobgoblin.Size = new System.Drawing.Size(67, 20);
             this.maxSpeedSpinnerHobgoblin.TabIndex = 28;
+            this.maxSpeedSpinnerHobgoblin.TabStop = false;
             this.maxSpeedSpinnerHobgoblin.ValueChanged += new System.EventHandler(this.maxSpeedSpinnerHobgoblin_ValueChanged);
             // 
             // massSpinnerHobgoblin
@@ -224,6 +228,7 @@
             this.massSpinnerHobgoblin.Name = "massSpinnerHobgoblin";
             this.massSpinnerHobgoblin.Size = new System.Drawing.Size(67, 20);
             this.massSpinnerHobgoblin.TabIndex = 27;
+            this.massSpinnerHobgoblin.TabStop = false;
             this.massSpinnerHobgoblin.ValueChanged += new System.EventHandler(this.massSpinnerHobgoblin_ValueChanged);
             // 
             // forceSpinnerHobgoblin
@@ -232,6 +237,7 @@
             this.forceSpinnerHobgoblin.Name = "forceSpinnerHobgoblin";
             this.forceSpinnerHobgoblin.Size = new System.Drawing.Size(67, 20);
             this.forceSpinnerHobgoblin.TabIndex = 26;
+            this.forceSpinnerHobgoblin.TabStop = false;
             this.forceSpinnerHobgoblin.ValueChanged += new System.EventHandler(this.forceSpinnerHobgoblin_ValueChanged);
             // 
             // label12
@@ -321,31 +327,31 @@
             this.HeroPanel.Controls.Add(this.healthBar);
             this.HeroPanel.Location = new System.Drawing.Point(1327, 19);
             this.HeroPanel.Name = "HeroPanel";
-            this.HeroPanel.Size = new System.Drawing.Size(220, 229);
+            this.HeroPanel.Size = new System.Drawing.Size(220, 210);
             this.HeroPanel.TabIndex = 0;
             // 
             // cooldownBar
             // 
             this.cooldownBar.ForeColor = System.Drawing.Color.Gold;
-            this.cooldownBar.Location = new System.Drawing.Point(9, 169);
+            this.cooldownBar.Location = new System.Drawing.Point(3, 169);
             this.cooldownBar.Name = "cooldownBar";
-            this.cooldownBar.Size = new System.Drawing.Size(208, 23);
+            this.cooldownBar.Size = new System.Drawing.Size(214, 23);
             this.cooldownBar.TabIndex = 2;
             // 
             // staminaBar
             // 
             this.staminaBar.ForeColor = System.Drawing.Color.LimeGreen;
-            this.staminaBar.Location = new System.Drawing.Point(9, 103);
+            this.staminaBar.Location = new System.Drawing.Point(3, 103);
             this.staminaBar.Name = "staminaBar";
-            this.staminaBar.Size = new System.Drawing.Size(208, 23);
+            this.staminaBar.Size = new System.Drawing.Size(214, 23);
             this.staminaBar.TabIndex = 1;
             // 
             // healthBar
             // 
             this.healthBar.ForeColor = System.Drawing.Color.Red;
-            this.healthBar.Location = new System.Drawing.Point(9, 37);
+            this.healthBar.Location = new System.Drawing.Point(3, 37);
             this.healthBar.Name = "healthBar";
-            this.healthBar.Size = new System.Drawing.Size(208, 23);
+            this.healthBar.Size = new System.Drawing.Size(214, 23);
             this.healthBar.TabIndex = 0;
             // 
             // Form1
@@ -382,10 +388,13 @@
             this.Controls.Add(this.HeroPanel);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Gobbo Slayer";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerGoblin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.massSpinnerGoblin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxSpeedSpinnerGoblin)).EndInit();

@@ -62,6 +62,7 @@
     <Compile Include="behaviour\FleeBehaviour.cs" />
     <Compile Include="behaviour\FlockBehaviour.cs" />
     <Compile Include="behaviour\FollowPathBehaviour.cs" />
+    <Compile Include="entity\Corpse.cs" />
     <Compile Include="util\Graph\Graph.cs" />
     <Compile Include="util\Graph\GraphEdge.cs" />
     <Compile Include="util\Graph\GraphNode.cs" />

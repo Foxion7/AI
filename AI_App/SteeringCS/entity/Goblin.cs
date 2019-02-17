@@ -153,8 +153,7 @@ namespace SteeringCS.entity
                 }
             } else
             {
-                string workingDirectory = Environment.CurrentDirectory;
-                string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
+                string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
                 Image sourceImage = Image.FromFile(@projectDirectory + "/images/blood.png");
                 g.DrawImage(sourceImage, (float)(leftCorner - size), (float)(rightCorner - size), (float)size * 4, (float)size * 4);
             }
@@ -294,7 +293,7 @@ namespace SteeringCS.entity
         #endregion
         public void Die()
         {
-            Alive = false;
+            //Alive = false;
         }
     }
 }

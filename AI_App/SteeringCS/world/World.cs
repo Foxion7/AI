@@ -19,6 +19,7 @@ namespace SteeringCS
         private List<MovingEntity> _goblins;
         private CellSpacePartition<MovingEntity> _goblinSpace;
         private List<MovingEntity> _hobgoblins = new List<MovingEntity>();
+        private List<Corpse> _corpses = new List<Corpse>();
         public List<IObstacle> Obstacles = new List<IObstacle>();
         public List<IWall> Walls = new List<IWall>();
         public Hero Hero { get; set; }
@@ -119,6 +120,12 @@ namespace SteeringCS
             hobbyGobby.Target = Hero;
         }
 
+        public void SpawnCorpse(double size, Vector2D pos)
+        {
+            var corpse = new Corpse("Dead guy", pos, this, size);
+            _corpses.Add(corpse);
+        }
+
         public void DestroySeekers()
         {
             _goblins.Clear();
@@ -150,6 +157,19 @@ namespace SteeringCS
             {
                 Console.WriteLine("Hobgoblin exception: " + e.Message + " stacktrace: " +  e.StackTrace);
             }
+
+            try
+            {
+                _corpses.ForEach(corpse =>
+                {
+                    corpse.Update(timeElapsed);
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Corpse exception: " + e.Message + " stacktrace: " + e.StackTrace);
+            }
+
             Hero.Update(timeElapsed);
         }
 
@@ -157,6 +177,7 @@ namespace SteeringCS
         {
             if(GraphVisible)
                 Graph.Render(g);
+            _corpses.ForEach(e => e.Render(g));
             _goblins.ToList().ForEach(e => e.Render(g));
             _hobgoblins.ForEach(e => e.Render(g));
             Obstacles.ForEach(e => e.Render(g));
@@ -174,6 +195,7 @@ namespace SteeringCS
             _goblins = new List<MovingEntity>();
             _goblinSpace.EmptyCells();
             _hobgoblins = new List<MovingEntity>();
+            _corpses = new List<Corpse>();
             Obstacles = new List<IObstacle>();
             Walls = new List<IWall>();
             SpawnObstacles();

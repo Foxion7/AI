@@ -65,8 +65,8 @@ namespace SteeringCS.entity
             maxStamina = 100;
             maxCooldown = 100;
 
-            staminaCost = 50;
-            cooldownCost = 50;
+            staminaCost = 10;
+            cooldownCost = 10;
 
             Scale = 5;
             VColor = Color.Black;
@@ -74,7 +74,6 @@ namespace SteeringCS.entity
 
         public void Attack()
         {
-            Console.WriteLine("Attacking");
             Goblin closestThreat = null;
             double closestDistance = 100;
 
@@ -95,10 +94,7 @@ namespace SteeringCS.entity
                     stamina -= staminaCost;
                     cooldown -= cooldownCost;
                     world.SpawnCorpse(closestThreat.Scale * 4, closestThreat.Pos);
-                    // Remove goblin
-                    //Add corpse
-
-                    closestThreat.Die();
+                    world.DestroyGoblin(closestThreat);
                 }
             }
         }

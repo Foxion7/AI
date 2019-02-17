@@ -23,6 +23,8 @@ namespace SteeringCS
         bool downPressed = false;
         bool leftPressed = false;
         bool rightPressed = false;
+        double statRecoverCount = 0;
+
 
         public const float timeDelta = 0.8f;
         
@@ -86,96 +88,6 @@ namespace SteeringCS
             }
         }
 
-        //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        //{
-        //    switch (keyData)
-        //    {
-        //        case Keys.E:
-        //            world.Hero.Attack();
-        //            break;
-        //        case Keys.T:
-        //            world.TriangleModeActive = !world.TriangleModeActive;
-        //            break;
-        //        case Keys.V:
-        //            world.VelocityVisible = !world.VelocityVisible;
-        //            break;
-        //        case Keys.G:
-        //            world.SpawnGoblins();
-        //            break;
-        //        case Keys.H:
-        //            world.SpawnHobgoblin();
-        //            break;
-        //        case Keys.R:
-        //            world.Reset();
-        //            break;
-        //        case Keys.P:
-        //            world.GraphVisible = !world.GraphVisible;
-        //            break;
-        //        case Keys.Space:
-        //            if (!paused)
-        //            {
-        //                paused = true;
-        //                pausedLabel.Text = "Paused";
-        //                timer.Interval = int.MaxValue;
-        //            }
-        //            else
-        //            {
-        //                paused = false;
-        //                pausedLabel.Text = "Playing";
-        //                timer.Interval = 20;
-        //            }
-        //            break;
-        //        case Keys.Escape:
-        //            Environment.Exit(0);
-        //            break;
-
-        //    }
-
-        //    // Arrow movement
-        //    if (keyData == Keys.Up || keyData == Keys.Down || keyData == Keys.Left || keyData == Keys.Right) {
-
-        //        int manualMovementStrength = 999;
-        //        Vector2D manualMovement = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
-
-        //        // Up arrow press.
-        //        if (keyData == Keys.Up || upPressed)
-        //        {
-        //            upPressed = true;
-        //            Console.WriteLine("Pressing up");
-        //            manualMovement = new Vector2D(manualMovement.X, manualMovement.Y - manualMovementStrength);
-        //        }
-
-        //        // Down arrow press.
-        //        if (keyData == Keys.Down || downPressed)
-        //        {
-        //            Console.WriteLine("Pressing down");
-        //            downPressed = true;
-
-        //            manualMovement = new Vector2D(manualMovement.X, manualMovement.Y + manualMovementStrength);
-        //        }
-
-        //        // Left arrow press.
-        //        if (keyData == Keys.Left || leftPressed)
-        //        {
-        //            leftPressed = true;
-
-        //            Console.WriteLine("Pressing left");
-
-        //            manualMovement = new Vector2D(manualMovement.X - manualMovementStrength, manualMovement.Y);
-        //        }
-
-        //        // Right arrow press.
-        //        if (keyData == Keys.Right || rightPressed) {
-        //            Console.WriteLine("Pressing right");
-        //            rightPressed = true;
-
-        //            manualMovement = new Vector2D(manualMovement.X + manualMovementStrength, manualMovement.Y);
-        //        }
-        //        world.setPlayerRoute(manualMovement);
-        //    }
-        //    return true;
-        //}
-
         private void forceSpinnerGoblin_ValueChanged(object sender, EventArgs e)
         {
             foreach (Goblin goblin in world.getGoblins())
@@ -228,16 +140,34 @@ namespace SteeringCS
         {
             if (world.Hero != null)
             {
-                int incrementStamina = 1;
-                int incrementCooldown = 1;
-
-                world.Hero.RecoverStamina(incrementStamina);
-                world.Hero.RecoverCooldown(incrementCooldown);
-
+                recoverStamina(0.5);
+                recoverCooldown(1);
                 healthBar.Value = world.Hero.health;
                 staminaBar.Value = world.Hero.stamina;
                 cooldownBar.Value = world.Hero.cooldown;
                 UpdateStats();
+            }
+        }
+
+        // SPS == Stamina per second => the amount the Hero recovers every second.
+        public void recoverStamina(double SPS)
+        {
+            statRecoverCount += SPS;
+            if (statRecoverCount >= 1)
+            {
+                statRecoverCount -= 1;
+                world.Hero.RecoverStamina(1);
+            }
+        }
+
+        // CPS == Cooldown per second => the amount the Hero recovers every second.
+        public void recoverCooldown(double SPS)
+        {
+            statRecoverCount += SPS;
+            if (statRecoverCount >= 1)
+            {
+                statRecoverCount -= 1;
+                world.Hero.RecoverCooldown(1);
             }
         }
 
@@ -303,7 +233,7 @@ namespace SteeringCS
             // Arrow movement
             if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
             {
-                int manualMovementStrength = 10000;
+                int manualMovementStrength = 150;
                 Vector2D manualMovement = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
 
                 // Up arrow press.
@@ -340,25 +270,25 @@ namespace SteeringCS
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            // Up arrow press.
+            // Up arrow release.
             if (e.KeyCode == Keys.Up && upPressed)
             {
                 upPressed = false;
             }
 
-            // Down arrow press.
+            // Down arrow release.
             if (e.KeyCode == Keys.Down && downPressed)
             {
                 downPressed = false;
             }
 
-            // Left arrow press.
+            // Left arrow release.
             if (e.KeyCode == Keys.Left && leftPressed)
             {
                 leftPressed = false;
             }
 
-            // Right arrow press.
+            // Right arrow release.
             if (e.KeyCode == Keys.Right && rightPressed)
             {
                 rightPressed = false;

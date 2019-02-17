@@ -112,18 +112,23 @@ namespace SteeringCS
 
         public void SpawnHobgoblin()
         {
-            var hobbyGobby = new Hobgoblin("Bloodbeard", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            hobbyGobby.PB = new SeekBehaviour(me:hobbyGobby, target:Hero);
-            hobbyGobby.VColor = Color.Black;
-            _hobgoblins.Add(hobbyGobby);
-            hobbyGobby.Evader = Hero;
-            hobbyGobby.Target = Hero;
+            var bloodbeard = new Hobgoblin("Bloodbeard", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            bloodbeard.PB = new SeekBehaviour(me: bloodbeard, target:Hero);
+            bloodbeard.VColor = Color.Black;
+            _hobgoblins.Add(bloodbeard);
+            bloodbeard.Evader = Hero;
+            bloodbeard.Target = Hero;
         }
 
         public void SpawnCorpse(double size, Vector2D pos)
         {
             var corpse = new Corpse("Dead guy", pos, this, size);
             _corpses.Add(corpse);
+        }
+
+        public void DestroyGoblin(Goblin goblin)
+        {
+            _goblins.Remove(goblin);
         }
 
         public void DestroySeekers()

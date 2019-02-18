@@ -211,6 +211,7 @@ namespace SteeringCS
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            Console.WriteLine("new keydown");
             switch (e.KeyCode)
             {
                 case Keys.E:
@@ -256,14 +257,16 @@ namespace SteeringCS
                     break;
             }
             // Arrow movement
-            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+            //if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+            if (true)
             {
                 int manualMovementStrength = 150;
                 Vector2D manualMovement = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
 
                 // Up arrow press.
-                if ((e.KeyCode == Keys.Up && !upPressed) || upPressed)
+                if ((e.KeyCode == Keys.Up) || upPressed)
                 {
+                    Console.WriteLine("Going up");
                     upPressed = true;
                     manualMovement = new Vector2D(manualMovement.X, manualMovement.Y - manualMovementStrength);
                 }
@@ -271,6 +274,8 @@ namespace SteeringCS
                 // Down arrow press.
                 if (e.KeyCode == Keys.Down || downPressed)
                 {
+                    Console.WriteLine("Going down");
+
                     downPressed = true;
                     manualMovement = new Vector2D(manualMovement.X, manualMovement.Y + manualMovementStrength);
                 }
@@ -278,6 +283,8 @@ namespace SteeringCS
                 // Left arrow press.
                 if (e.KeyCode == Keys.Left || leftPressed)
                 {
+                    Console.WriteLine("Going left");
+
                     leftPressed = true;
                     manualMovement = new Vector2D(manualMovement.X - manualMovementStrength, manualMovement.Y);
                 }
@@ -285,6 +292,8 @@ namespace SteeringCS
                 // Right arrow press.
                 if (e.KeyCode == Keys.Right || rightPressed)
                 {
+                    Console.WriteLine("Going right");
+
                     rightPressed = true;
                     manualMovement = new Vector2D(manualMovement.X + manualMovementStrength, manualMovement.Y);
                 }

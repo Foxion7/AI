@@ -12,7 +12,7 @@ namespace SteeringCS.entity
 {
     public class Goblin : MovingEntity, IGrouper, IObstacleAvoider, IWallAvoider
     {
-        ///for thread safety
+        // For thread safety.
         private static int _lastKey = 0;
         public readonly int Key;
 
@@ -20,23 +20,21 @@ namespace SteeringCS.entity
         public double BraveryLimit { get; set; }
         private string debugText { get; set; }
         public string DebugText {
-            get { return debugText; } set {
+            get { return debugText; }
+            set {
                 debugText = value.Replace("\n", Environment.NewLine);
             }
         }
 
-        //grouping behaviour
+        // Grouping behaviour.
         public IEnumerable<IGrouper> Neighbors => world.GetGoblinNeighbors(this, NeighborsRange).Cast<IGrouper>();
         public FollowMode FollowMode { get; set; } = FollowMode.flock;
 
-        //obstacle avoidance behaviour
+        // Avoidance behaviour.
         public List<IObstacle> Obstacles => world.getObstacles();
-
-        //wall avoidance behaviour
         public List<IWall> Walls => world.getWalls();
 
-
-        //the SteeringBehaviours
+        // Steering behaviours.
         private ArrivalBehaviour _SB;
         private FlockBehaviour _FB;
         private LeaderFollowingBehaviour _LFB;

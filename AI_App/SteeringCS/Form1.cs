@@ -141,7 +141,7 @@ namespace SteeringCS
             if (world.Hero != null)
             {
                 recoverStamina(0.5);
-                recoverCooldown(1);
+                recoverCooldown(2);
                 healthBar.Value = world.Hero.health;
                 staminaBar.Value = world.Hero.stamina;
                 cooldownBar.Value = world.Hero.cooldown;
@@ -152,22 +152,35 @@ namespace SteeringCS
         // SPS == Stamina per second => the amount the Hero recovers every second.
         public void recoverStamina(double SPS)
         {
-            statRecoverCount += SPS;
-            if (statRecoverCount >= 1)
+            if (SPS < 1)
             {
-                statRecoverCount -= 1;
-                world.Hero.RecoverStamina(1);
+                statRecoverCount += SPS;
+                if (statRecoverCount >= 1)
+                {
+                    statRecoverCount -= 1;
+                    world.Hero.RecoverStamina(1);
+                }
+            } else
+            {
+                world.Hero.RecoverCooldown((int)SPS);
+
             }
         }
 
         // CPS == Cooldown per second => the amount the Hero recovers every second.
-        public void recoverCooldown(double SPS)
+        public void recoverCooldown(double CPS)
         {
-            statRecoverCount += SPS;
-            if (statRecoverCount >= 1)
+            if (CPS < 1)
             {
-                statRecoverCount -= 1;
-                world.Hero.RecoverCooldown(1);
+                statRecoverCount += CPS;
+                if (statRecoverCount >= 1)
+                {
+                    statRecoverCount -= 1;
+                    world.Hero.RecoverCooldown(1);
+                }
+            } else
+            {
+                world.Hero.RecoverCooldown((int)CPS);
             }
         }
 
@@ -194,6 +207,12 @@ namespace SteeringCS
                 case Keys.E:
                     world.Hero.Attack();
                     break;
+                case Keys.D:
+                    world.DebugMode = !world.DebugMode;
+                    break;
+                case Keys.P:
+                    world.GraphVisible = !world.GraphVisible;
+                    break;
                 case Keys.T:
                     world.TriangleModeActive = !world.TriangleModeActive;
                     break;
@@ -208,9 +227,6 @@ namespace SteeringCS
                     break;
                 case Keys.R:
                     world.Reset();
-                    break;
-                case Keys.P:
-                    world.GraphVisible = !world.GraphVisible;
                     break;
                 case Keys.Space:
                     if (!paused)

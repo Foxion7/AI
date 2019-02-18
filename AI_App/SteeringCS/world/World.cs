@@ -26,6 +26,7 @@ namespace SteeringCS
         public int Width { get; set; }
         public int Height { get; set; }
         public List<Color> goblinColors { get; }
+        public bool DebugMode { get; set; }
         public bool TriangleModeActive { get; set; }
         public bool VelocityVisible { get; set; }
         public bool GraphVisible { get; set; }

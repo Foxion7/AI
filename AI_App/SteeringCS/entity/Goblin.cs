@@ -18,7 +18,12 @@ namespace SteeringCS.entity
 
         public Color VColor { get; set; }
         public double BraveryLimit { get; set; }
-        private bool Alive { get; set; }
+        private string debugText { get; set; }
+        public string DebugText {
+            get { return debugText; } set {
+                debugText = value.Replace("\n", Environment.NewLine);
+            }
+        }
 
         //grouping behaviour
         public IEnumerable<IGrouper> Neighbors => world.GetGoblinNeighbors(this, NeighborsRange).Cast<IGrouper>();
@@ -43,11 +48,9 @@ namespace SteeringCS.entity
         {
             Key = _lastKey + 1;
             _lastKey++;
-
             Mass = 50;
             MaxSpeed = 5;
             MaxForce = 25;
-            Alive = true;
 
             GroupValue = 10;
             NeighborsRange = 100;
@@ -76,52 +79,49 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            if (Alive)
+            if (world.getHobgoblins().Any())
             {
-                if (world.getHobgoblins().Any())
+                Hobgoblin closestHobgoblin = GetClosestHobgoblin();
+
+                double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(world.Hero.Pos, closestHobgoblin.Pos);
+
+                if (distancePlayerAndHobgoblin > VectorMath.DistanceBetweenPositions(world.Hero.Pos, Pos) && distancePlayerAndHobgoblin >= BraveryLimit)
                 {
-                    Hobgoblin closestHobgoblin = GetClosestHobgoblin();
-
-                    double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(world.Hero.Pos, closestHobgoblin.Pos);
-
-                    if (distancePlayerAndHobgoblin > VectorMath.DistanceBetweenPositions(world.Hero.Pos, Pos) && distancePlayerAndHobgoblin >= BraveryLimit)
-                    {
-                        // If leader is far from player, follows leader.
-                        Target = closestHobgoblin;
-                    }
-                    else
-                    {
-                        // If leader is near player, attacks.
-                        Target = world.Hero;
-                    }
+                    // If leader is far from player, follows leader.
+                    Target = closestHobgoblin;
                 }
-
-                Vector2D steeringForce = new Vector2D(0, 0);
-
-                if (_SB != null)
-                    steeringForce += _SB.Calculate() * 4;
-                if (_FB != null)
-                    steeringForce += _FB.Calculate();
-                if (_OA != null)
-                    steeringForce += _OA.Calculate();
-                if (_WA != null)
-                    steeringForce += _WA.Calculate();
-                steeringForce.Truncate(MaxForce);
-
-                Vector2D acceleration = steeringForce / Mass;
-
-                Velocity += (acceleration * timeElapsed);
-                Velocity = Velocity.Truncate(MaxSpeed);
-                OldPos = Pos;
-                Pos += (Velocity * timeElapsed);
-                if (Velocity.LengthSquared() > 0.00000001)
+                else
                 {
-                    Heading = Velocity.Normalize();
-                    Side = Heading.Perp();
+                    // If leader is near player, attacks.
+                    Target = world.Hero;
                 }
-                WrapAround();
-                world.rePosGoblin(Key, OldPos, Pos);
             }
+
+            Vector2D steeringForce = new Vector2D(0, 0);
+
+            if (_SB != null)
+                steeringForce += _SB.Calculate() * 4;
+            if (_FB != null)
+                steeringForce += _FB.Calculate();
+            if (_OA != null)
+                steeringForce += _OA.Calculate();
+            if (_WA != null)
+                steeringForce += _WA.Calculate();
+            steeringForce.Truncate(MaxForce);
+
+            Vector2D acceleration = steeringForce / Mass;
+
+            Velocity += (acceleration * timeElapsed);
+            Velocity = Velocity.Truncate(MaxSpeed);
+            OldPos = Pos;
+            Pos += (Velocity * timeElapsed);
+            if (Velocity.LengthSquared() > 0.00000001)
+            {
+                Heading = Velocity.Normalize();
+                Side = Heading.Perp();
+            }
+            WrapAround();
+            world.rePosGoblin(Key, OldPos, Pos);
         }
 
         public override void Render(Graphics g)
@@ -131,31 +131,23 @@ namespace SteeringCS.entity
             double size = Scale * 2;
             Pen p = new Pen(VColor, 2);
             Pen r = new Pen(Color.Red, 2);
-
-            if (Alive)
+            
+            if (world.TriangleModeActive)
             {
-                if (world.TriangleModeActive)
-                {
-                    // Draws triangle.
-                    // Left lat
-                    g.DrawLine(p, (int)(Pos.X + (Side.X - Heading.X) * (size / 2)), (int)(Pos.Y + (Side.Y - Heading.Y) * (size / 2)), (int)(Pos.X) + (int)(Heading.X * (size / 2)), (int)Pos.Y + (int)(Heading.Y * (size / 2)));
+                // Draws triangle.
+                // Left lat
+                g.DrawLine(p, (int)(Pos.X + (Side.X - Heading.X) * (size / 2)), (int)(Pos.Y + (Side.Y - Heading.Y) * (size / 2)), (int)(Pos.X) + (int)(Heading.X * (size / 2)), (int)Pos.Y + (int)(Heading.Y * (size / 2)));
 
-                    // Right lat
-                    g.DrawLine(p, (int)(Pos.X + ((Side.X * -1) - Heading.X) * (size / 2)), (int)(Pos.Y + ((Side.Y * -1) - Heading.Y) * (size / 2)), (int)Pos.X + (int)(Heading.X * (size / 2)), (int)Pos.Y + (int)(Heading.Y * (size / 2)));
+                // Right lat
+                g.DrawLine(p, (int)(Pos.X + ((Side.X * -1) - Heading.X) * (size / 2)), (int)(Pos.Y + ((Side.Y * -1) - Heading.Y) * (size / 2)), (int)Pos.X + (int)(Heading.X * (size / 2)), (int)Pos.Y + (int)(Heading.Y * (size / 2)));
 
-                    // Bottom lat
-                    g.DrawLine(p, (int)(Pos.X + ((Side.X * -1) - Heading.X) * (size / 2)), (int)(Pos.Y + ((Side.Y * -1) - Heading.Y) * (size / 2)), (int)(Pos.X + (Side.X - Heading.X) * (size / 2)), (int)(Pos.Y + (Side.Y - Heading.Y) * (size / 2)));
-                }
-                else
-                {
-                    // Draws circle.
-                    g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
-                }
-            } else
+                // Bottom lat
+                g.DrawLine(p, (int)(Pos.X + ((Side.X * -1) - Heading.X) * (size / 2)), (int)(Pos.Y + ((Side.Y * -1) - Heading.Y) * (size / 2)), (int)(Pos.X + (Side.X - Heading.X) * (size / 2)), (int)(Pos.Y + (Side.Y - Heading.Y) * (size / 2)));
+            }
+            else
             {
-                string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-                Image sourceImage = Image.FromFile(@projectDirectory + "/images/blood.png");
-                g.DrawImage(sourceImage, (float)(leftCorner - size), (float)(rightCorner - size), (float)size * 4, (float)size * 4);
+                // Draws circle.
+                g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
             }
 
             if (world.VelocityVisible)
@@ -172,6 +164,12 @@ namespace SteeringCS.entity
 
                 // Velocity
                 //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+            }
+
+            if (world.DebugMode)
+            {
+                Brush brush = new SolidBrush(Color.Pink);
+                g.DrawString(debugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y + size), new StringFormat());
             }
         }
 
@@ -291,9 +289,5 @@ namespace SteeringCS.entity
             }
         }
         #endregion
-        public void Die()
-        {
-            //Alive = false;
-        }
     }
 }

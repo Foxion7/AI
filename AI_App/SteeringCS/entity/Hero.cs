@@ -168,7 +168,10 @@ namespace SteeringCS.entity
             g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
 
             // Threat circle.
-            g.DrawEllipse(r, new Rectangle((int)( leftCorner - size * 2), (int)( rightCorner - size * 2), (int) size * 5, (int) size * 5));
+            if (world.DebugMode)
+            {
+                g.DrawEllipse(r, new Rectangle((int)(leftCorner - size * 2), (int)(rightCorner - size * 2), (int)size * 5, (int)size * 5));
+            }
         }
 
         public BaseGameEntity Target      { get; set; }

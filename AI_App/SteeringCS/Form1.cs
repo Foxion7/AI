@@ -27,7 +27,7 @@ namespace SteeringCS
 
 
         public const float timeDelta = 0.8f;
-        
+
         public Form1()
         {
             InitializeComponent();
@@ -38,7 +38,7 @@ namespace SteeringCS
             timer.Elapsed += Timer_Elapsed;
             timer.Interval = 20;
             timer.Enabled = true;
-            
+
             // Starting values goblin.
             forceSpinnerGoblin.Value = 25;
             massSpinnerGoblin.Value = 50;
@@ -49,7 +49,7 @@ namespace SteeringCS
             massSpinnerHobgoblin.Value = 100;
             maxSpeedSpinnerHobgoblin.Value = 5;
         }
-        
+
         private void Form1_Load(object sender, EventArgs e)
         {
             ActiveControl = dbPanel1;
@@ -67,7 +67,7 @@ namespace SteeringCS
             }
 
         }
-        
+
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             world.Update(timeDelta);
@@ -87,6 +87,15 @@ namespace SteeringCS
                 world.setPlayerRoute(new Vector2D(e.X, e.Y));
             }
         }
+
+        public MovingEntity checkForCreatureOnPositionClicked(Vector2D mousePos)
+        {
+            // For creatures...
+            // If distance < radius of creature...
+            // display creature debug info.
+            return null;
+        }
+        
 
         private void forceSpinnerGoblin_ValueChanged(object sender, EventArgs e)
         {

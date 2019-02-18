@@ -102,7 +102,7 @@ namespace SteeringCS.entity
             if (_SB != null)
                 steeringForce += _SB.Calculate() * 4;
             if (_FB != null)
-                steeringForce += _FB.Calculate();
+                steeringForce += _FB.Calculate() * 0.5;
             if (_OA != null)
                 steeringForce += _OA.Calculate();
             if (_WA != null)
@@ -168,8 +168,8 @@ namespace SteeringCS.entity
 
             if (world.DebugMode)
             {
-                Brush brush = new SolidBrush(Color.Pink);
-                g.DrawString(debugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y + size), new StringFormat());
+                Brush brush = new SolidBrush(Color.Black);
+                g.DrawString(debugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
             }
         }
 

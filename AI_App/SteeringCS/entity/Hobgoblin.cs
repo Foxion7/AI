@@ -15,6 +15,13 @@ namespace SteeringCS.entity
         public ISteeringBehaviour PB;
         public ISteeringBehaviour FB;
         public ISteeringBehaviour OA;
+        private string debugText { get; set; }
+        public string DebugText {
+            get { return debugText; }
+            set {
+                debugText = value.Replace("\n", Environment.NewLine);
+            }
+        }
 
         public Hobgoblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -84,6 +91,12 @@ namespace SteeringCS.entity
             if (world.VelocityVisible)
             { 
                 g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+            }
+
+            if (world.DebugMode)
+            {
+                Brush brush = new SolidBrush(Color.Black);
+                g.DrawString(debugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
             }
         }
         

@@ -61,5 +61,10 @@ namespace SteeringCS.States
         {
             throw new NotImplementedException();
         }
+
+        public override string ToString()
+        {
+            return "Hunting";
+        }
     }
 }

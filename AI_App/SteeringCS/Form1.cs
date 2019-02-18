@@ -247,7 +247,7 @@ namespace SteeringCS
                     else
                     {
                         paused = false;
-                        pausedLabel.Text = "Playing";
+                        pausedLabel.Text = "Active";
                         timer.Interval = 20;
                     }
                     break;
@@ -288,7 +288,6 @@ namespace SteeringCS
                     rightPressed = true;
                     manualMovement = new Vector2D(manualMovement.X + manualMovementStrength, manualMovement.Y);
                 }
-
                 world.setPlayerRoute(manualMovement);
             }
         }

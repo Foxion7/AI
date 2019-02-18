@@ -63,5 +63,10 @@ namespace SteeringCS.States
             Console.WriteLine("Already guarding.");
 
         }
+
+        public override string ToString()
+        {
+            return "Guarding";
+        }
     }
 }

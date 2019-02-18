@@ -13,7 +13,6 @@ namespace SteeringCS.entity
 {
     public class Goblin : MovingEntity, IGrouper, IObstacleAvoider, IWallAvoider
     {
-        #region
         // For thread safety.
         private static int _lastKey = 0;
         public readonly int Key;
@@ -42,25 +41,24 @@ namespace SteeringCS.entity
         private LeaderFollowingBehaviour _LFB;
         private ObstacleAvoidance _OA;
         private WallAvoidance _WA;
-        #endregion
+
         // States
         IGoblinState state;
-        IGoblinState approach;
-        IGoblinState attack;
-        IGoblinState retreat;
-        IGoblinState guard;
+        IGoblinState hunting;
+        IGoblinState attacking;
+        IGoblinState retreating;
+        IGoblinState guarding;
 
 
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             // State.
-            state = new Guarding(this); // Starting state.
-            approach = new Hunting(this);
-            attack = new Attacking(this);
-            retreat = new Retreating(this);
-            guard = new Guarding(this);
+            hunting = new Hunting(this);
+            attacking = new Attacking(this);
+            retreating = new Retreating(this);
+            guarding = new Guarding(this);
+            setGoblinState(hunting); // Starting state.
 
-            #region
             Key = _lastKey + 1;
             _lastKey++;
             Mass = 50;
@@ -90,54 +88,74 @@ namespace SteeringCS.entity
             BraveryLimit = 100;
             Scale = 4;
             VColor = Color.Black;
-            #endregion
         }
 
         public override void Update(float timeElapsed)
         {
-            if (world.getHobgoblins().Any())
+            if (state.Equals(hunting))
             {
-                Hobgoblin closestHobgoblin = GetClosestHobgoblin();
+                #region hunting behaviour
+                //if (world.getHobgoblins().Any())
+                //{
+                //    Hobgoblin closestHobgoblin = GetClosestHobgoblin();
+                //    double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(world.Hero.Pos, closestHobgoblin.Pos);
 
-                double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(world.Hero.Pos, closestHobgoblin.Pos);
+                //    if (distancePlayerAndHobgoblin > VectorMath.DistanceBetweenPositions(world.Hero.Pos, Pos) && distancePlayerAndHobgoblin >= BraveryLimit)
+                //    {
+                //        // If leader is far from player, follows leader.
+                //        Target = closestHobgoblin;
+                //    }
+                //    else
+                //    {
+                //        // If leader is near player, attacks.
+                //        Target = world.Hero;
+                //    }
+                //}
 
-                if (distancePlayerAndHobgoblin > VectorMath.DistanceBetweenPositions(world.Hero.Pos, Pos) && distancePlayerAndHobgoblin >= BraveryLimit)
+                Vector2D steeringForce = new Vector2D(0, 0);
+
+                if (_SB != null)
+                    steeringForce += _SB.Calculate() * 4;
+                if (_FB != null)
+                    steeringForce += _FB.Calculate() * 0.5;
+                if (_OA != null)
+                    steeringForce += _OA.Calculate();
+                if (_WA != null)
+                    steeringForce += _WA.Calculate();
+                steeringForce.Truncate(MaxForce);
+
+                Vector2D acceleration = steeringForce / Mass;
+
+                Velocity += (acceleration * timeElapsed);
+                Velocity = Velocity.Truncate(MaxSpeed);
+                OldPos = Pos;
+                Pos += (Velocity * timeElapsed);
+                if (Velocity.LengthSquared() > 0.00000001)
                 {
-                    // If leader is far from player, follows leader.
-                    Target = closestHobgoblin;
+                    Heading = Velocity.Normalize();
+                    Side = Heading.Perp();
                 }
-                else
-                {
-                    // If leader is near player, attacks.
-                    Target = world.Hero;
-                }
+                WrapAround();
+                world.rePosGoblin(Key, OldPos, Pos);
+                #endregion
             }
-
-            Vector2D steeringForce = new Vector2D(0, 0);
-
-            if (_SB != null)
-                steeringForce += _SB.Calculate() * 4;
-            if (_FB != null)
-                steeringForce += _FB.Calculate() * 0.5;
-            if (_OA != null)
-                steeringForce += _OA.Calculate();
-            if (_WA != null)
-                steeringForce += _WA.Calculate();
-            steeringForce.Truncate(MaxForce);
-
-            Vector2D acceleration = steeringForce / Mass;
-
-            Velocity += (acceleration * timeElapsed);
-            Velocity = Velocity.Truncate(MaxSpeed);
-            OldPos = Pos;
-            Pos += (Velocity * timeElapsed);
-            if (Velocity.LengthSquared() > 0.00000001)
+            else if (state == attacking)
             {
-                Heading = Velocity.Normalize();
-                Side = Heading.Perp();
+                #region attack behaviour
+
+
+
+
+                #endregion
             }
-            WrapAround();
-            world.rePosGoblin(Key, OldPos, Pos);
+            else if (state == retreating)
+            {
+
+            }
+            else if (state == guarding)
+            {
+
+            }
         }
 
         public override void Render(Graphics g)
@@ -309,34 +327,17 @@ namespace SteeringCS.entity
         public void setGoblinState(IGoblinState state)
         {
             this.state = state;
+            DebugText = "Current state: " + state.ToString();
         }
+        
+        public void Approach(){state.Approach();}
+        public void Attack(){state.Attack();}
+        public void Retreat(){state.Retreat();}
+        public void Guard(){state.Guard();}
 
-        public void Approach()
-        {
-            state.Approach();
-        }
-
-        public void Attack()
-        {
-            state.Attack();
-        }
-
-        public void Retreat()
-        {
-            state.Retreat();
-        }
-
-        public void Guard()
-        {
-            state.Guard();
-        }
-
-        public IGoblinState getApproachState(){return approach;}
-
-        public IGoblinState getAttackState(){return attack;}
-
-        public IGoblinState getRetreatState(){return retreat;}
-
-        public IGoblinState getGuardState(){return guard;}
+        public IGoblinState getApproachState(){return hunting;}
+        public IGoblinState getAttackState(){return attacking;}
+        public IGoblinState getRetreatState(){return retreating;}
+        public IGoblinState getGuardState(){return guarding;}
     }
 }

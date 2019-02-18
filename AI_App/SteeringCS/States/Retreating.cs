@@ -21,7 +21,6 @@ namespace SteeringCS.States
         {
             Console.WriteLine("Now approaching!");
             goblin.setGoblinState(goblin.getApproachState());
-
         }
 
         public void Attack()
@@ -61,6 +60,11 @@ namespace SteeringCS.States
         {
             Console.WriteLine("Already retreating.");
 
+        }
+
+        public override string ToString()
+        {
+            return "Retreating";
         }
     }
 }

@@ -63,5 +63,10 @@ namespace SteeringCS.States
             Console.WriteLine("Already attacking.");
 
         }
+
+        public override string ToString()
+        {
+            return "Attacking";
+        }
     }
 }

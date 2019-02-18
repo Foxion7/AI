@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.label7 = new System.Windows.Forms.Label();
-            this.pausedLabel = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -53,6 +51,10 @@
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
+            this.dbPanel3 = new SteeringCS.DBPanel();
+            this.DebugEntityInfo = new System.Windows.Forms.Label();
+            this.DebugEntityName = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.dbPanel1 = new SteeringCS.DBPanel();
             this.dbPanel2 = new SteeringCS.DBPanel();
             this.HeroPanel = new SteeringCS.DBPanel();
@@ -65,32 +67,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.maxSpeedSpinnerHobgoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.massSpinnerHobgoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerHobgoblin)).BeginInit();
+            this.dbPanel3.SuspendLayout();
             this.HeroPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(1357, 289);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(158, 20);
-            this.label7.TabIndex = 7;
-            this.label7.Text = "Space = Pause / Play";
-            // 
-            // pausedLabel
-            // 
-            this.pausedLabel.AutoSize = true;
-            this.pausedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pausedLabel.Location = new System.Drawing.Point(1371, 330);
-            this.pausedLabel.Name = "pausedLabel";
-            this.pausedLabel.Size = new System.Drawing.Size(110, 31);
-            this.pausedLabel.TabIndex = 8;
-            this.pausedLabel.Text = "Playing";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(1365, 701);
             this.label8.Name = "label8";
@@ -101,6 +85,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
+            this.label9.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(1365, 721);
             this.label9.Name = "label9";
@@ -111,6 +96,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
+            this.label10.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(1361, 752);
             this.label10.Name = "label10";
@@ -121,6 +107,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
+            this.label11.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label11.Location = new System.Drawing.Point(1361, 765);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(130, 13);
@@ -130,6 +117,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label1.Location = new System.Drawing.Point(1361, 778);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(114, 13);
@@ -139,6 +127,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(1360, 459);
             this.label2.Name = "label2";
@@ -149,6 +138,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(1360, 488);
             this.label3.Name = "label3";
@@ -159,6 +149,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(1360, 517);
             this.label4.Name = "label4";
@@ -196,6 +187,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(1359, 430);
             this.label5.Name = "label5";
@@ -206,6 +198,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(1359, 563);
             this.label6.Name = "label6";
@@ -243,6 +236,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
+            this.label12.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.Location = new System.Drawing.Point(1360, 650);
             this.label12.Name = "label12";
@@ -253,6 +247,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
+            this.label13.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.Location = new System.Drawing.Point(1360, 621);
             this.label13.Name = "label13";
@@ -263,6 +258,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
+            this.label14.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(1360, 592);
             this.label14.Name = "label14";
@@ -273,6 +269,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
+            this.label15.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.Location = new System.Drawing.Point(1336, 28);
             this.label15.Name = "label15";
@@ -283,6 +280,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
+            this.label16.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label16.Location = new System.Drawing.Point(1337, 160);
             this.label16.Name = "label16";
@@ -293,12 +291,50 @@
             // label17
             // 
             this.label17.AutoSize = true;
+            this.label17.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label17.Location = new System.Drawing.Point(1337, 94);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(84, 25);
             this.label17.TabIndex = 35;
             this.label17.Text = "Stamina";
+            // 
+            // dbPanel3
+            // 
+            this.dbPanel3.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.dbPanel3.Controls.Add(this.DebugEntityInfo);
+            this.dbPanel3.Controls.Add(this.DebugEntityName);
+            this.dbPanel3.Controls.Add(this.label7);
+            this.dbPanel3.Location = new System.Drawing.Point(1324, 235);
+            this.dbPanel3.Name = "dbPanel3";
+            this.dbPanel3.Size = new System.Drawing.Size(223, 164);
+            this.dbPanel3.TabIndex = 36;
+            this.dbPanel3.Visible = false;
+            // 
+            // DebugEntityInfo
+            // 
+            this.DebugEntityInfo.BackColor = System.Drawing.SystemColors.Control;
+            this.DebugEntityInfo.Location = new System.Drawing.Point(14, 37);
+            this.DebugEntityInfo.Name = "DebugEntityInfo";
+            this.DebugEntityInfo.Size = new System.Drawing.Size(196, 115);
+            this.DebugEntityInfo.TabIndex = 2;
+            // 
+            // DebugEntityName
+            // 
+            this.DebugEntityName.Location = new System.Drawing.Point(110, 14);
+            this.DebugEntityName.Name = "DebugEntityName";
+            this.DebugEntityName.Size = new System.Drawing.Size(100, 13);
+            this.DebugEntityName.TabIndex = 1;
+            this.DebugEntityName.Text = "None";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(14, 14);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(94, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Currently selected:";
             // 
             // dbPanel1
             // 
@@ -314,9 +350,9 @@
             // dbPanel2
             // 
             this.dbPanel2.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.dbPanel2.Location = new System.Drawing.Point(1327, 405);
+            this.dbPanel2.Location = new System.Drawing.Point(1324, 405);
             this.dbPanel2.Name = "dbPanel2";
-            this.dbPanel2.Size = new System.Drawing.Size(220, 412);
+            this.dbPanel2.Size = new System.Drawing.Size(223, 412);
             this.dbPanel2.TabIndex = 33;
             // 
             // HeroPanel
@@ -325,40 +361,41 @@
             this.HeroPanel.Controls.Add(this.cooldownBar);
             this.HeroPanel.Controls.Add(this.staminaBar);
             this.HeroPanel.Controls.Add(this.healthBar);
-            this.HeroPanel.Location = new System.Drawing.Point(1327, 19);
+            this.HeroPanel.Location = new System.Drawing.Point(1324, 19);
             this.HeroPanel.Name = "HeroPanel";
-            this.HeroPanel.Size = new System.Drawing.Size(220, 210);
+            this.HeroPanel.Size = new System.Drawing.Size(223, 210);
             this.HeroPanel.TabIndex = 0;
             // 
             // cooldownBar
             // 
             this.cooldownBar.ForeColor = System.Drawing.Color.Gold;
-            this.cooldownBar.Location = new System.Drawing.Point(3, 169);
+            this.cooldownBar.Location = new System.Drawing.Point(17, 169);
             this.cooldownBar.Name = "cooldownBar";
-            this.cooldownBar.Size = new System.Drawing.Size(214, 23);
+            this.cooldownBar.Size = new System.Drawing.Size(186, 23);
             this.cooldownBar.TabIndex = 2;
             // 
             // staminaBar
             // 
             this.staminaBar.ForeColor = System.Drawing.Color.LimeGreen;
-            this.staminaBar.Location = new System.Drawing.Point(3, 103);
+            this.staminaBar.Location = new System.Drawing.Point(17, 103);
             this.staminaBar.Name = "staminaBar";
-            this.staminaBar.Size = new System.Drawing.Size(214, 23);
+            this.staminaBar.Size = new System.Drawing.Size(186, 23);
             this.staminaBar.TabIndex = 1;
             // 
             // healthBar
             // 
             this.healthBar.ForeColor = System.Drawing.Color.Red;
-            this.healthBar.Location = new System.Drawing.Point(3, 37);
+            this.healthBar.Location = new System.Drawing.Point(17, 37);
             this.healthBar.Name = "healthBar";
-            this.healthBar.Size = new System.Drawing.Size(214, 23);
+            this.healthBar.Size = new System.Drawing.Size(186, 23);
             this.healthBar.TabIndex = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1559, 829);
+            this.ClientSize = new System.Drawing.Size(1559, 817);
+            this.Controls.Add(this.dbPanel3);
             this.Controls.Add(this.dbPanel1);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.label17);
@@ -382,8 +419,6 @@
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.pausedLabel);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.dbPanel2);
             this.Controls.Add(this.HeroPanel);
             this.DoubleBuffered = true;
@@ -391,7 +426,7 @@
             this.KeyPreview = true;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Gobbo Slayer";
+            this.Text = "None";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
@@ -401,6 +436,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.maxSpeedSpinnerHobgoblin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.massSpinnerHobgoblin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerHobgoblin)).EndInit();
+            this.dbPanel3.ResumeLayout(false);
+            this.dbPanel3.PerformLayout();
             this.HeroPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -410,8 +447,6 @@
         #endregion
 
         private DBPanel dbPanel1;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label pausedLabel;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
@@ -439,6 +474,10 @@
         private util.StatusBar cooldownBar;
         private util.StatusBar staminaBar;
         private util.StatusBar healthBar;
+        private DBPanel dbPanel3;
+        private System.Windows.Forms.Label DebugEntityInfo;
+        private System.Windows.Forms.Label DebugEntityName;
+        private System.Windows.Forms.Label label7;
     }
 }
 

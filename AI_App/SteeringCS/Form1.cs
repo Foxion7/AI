@@ -65,7 +65,7 @@ namespace SteeringCS
                 staminaBar.Value = world.Hero.maxStamina;
                 cooldownBar.Value = world.Hero.maxCooldown;
             }
-
+            dbPanel3.Visible = world.DebugMode;
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -85,15 +85,23 @@ namespace SteeringCS
             if (e.Button == MouseButtons.Left)
             {
                 world.setPlayerRoute(new Vector2D(e.X, e.Y));
+                AnalyseEntity(new Vector2D(e.X, e.Y));
             }
         }
 
-        public MovingEntity checkForCreatureOnPositionClicked(Vector2D mousePos)
+        public void AnalyseEntity(Vector2D mousePos)
         {
-            // For creatures...
-            // If distance < radius of creature...
-            // display creature debug info.
-            return null;
+            List<MovingEntity> entities = new List<MovingEntity>();
+            entities.AddRange(world.getGoblins());
+            entities.AddRange(world.getHobgoblins());
+            entities.Add(world.Hero);
+            foreach(MovingEntity entity in entities) {
+                if (VectorMath.DistanceBetweenPositions(entity.Pos, mousePos) < entity.Scale)
+                {
+                    DebugEntityName.Text = entity.Name;
+                    DebugEntityInfo.Text = entity.DebugText;
+                }
+            };
         }
         
 
@@ -218,6 +226,7 @@ namespace SteeringCS
                     break;
                 case Keys.D:
                     world.DebugMode = !world.DebugMode;
+                    dbPanel3.Visible = !dbPanel3.Visible;
                     break;
                 case Keys.P:
                     world.GraphVisible = !world.GraphVisible;
@@ -241,13 +250,13 @@ namespace SteeringCS
                     if (!paused)
                     {
                         paused = true;
-                        pausedLabel.Text = "Paused";
+                        //pausedLabel.Text = "Paused";
                         timer.Interval = int.MaxValue;
                     }
                     else
                     {
                         paused = false;
-                        pausedLabel.Text = "Active";
+                        //pausedLabel.Text = "Active";
                         timer.Interval = 20;
                     }
                     break;

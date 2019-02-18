@@ -16,21 +16,25 @@ namespace SteeringCS
     public class World
     {
         private Random _rnd = new Random();
+        private VectorGraph Graph { get; set; }
+
         private List<MovingEntity> _goblins;
         private CellSpacePartition<MovingEntity> _goblinSpace;
         private List<MovingEntity> _hobgoblins = new List<MovingEntity>();
         private List<Corpse> _corpses = new List<Corpse>();
-        public List<IObstacle> Obstacles = new List<IObstacle>();
-        public List<IWall> Walls = new List<IWall>();
+        private List<IObstacle> _obstacles = new List<IObstacle>();
+        private List<IWall> _walls = new List<IWall>();
+
         public Hero Hero { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public List<Color> goblinColors { get; }
+        private int goblinCount = 0;
+        private int hobgoblinCount = 0;
         public bool DebugMode { get; set; }
         public bool TriangleModeActive { get; set; }
         public bool VelocityVisible { get; set; }
         public bool GraphVisible { get; set; }
-        private VectorGraph Graph { get; set; }
 
         public World(int w, int h)
         {
@@ -38,6 +42,7 @@ namespace SteeringCS
             Height = h;
             TriangleModeActive = false;
             VelocityVisible = false;
+            DebugMode = true;
 
             _goblinSpace = new CellSpacePartition<MovingEntity>(w,h,5,5);
             _goblins = new List<MovingEntity>();
@@ -49,7 +54,7 @@ namespace SteeringCS
 
             SpawnObstacles();
             SpawnWalls();
-            Graph = GraphUtil.CreateGraphForMap(w, h, 50, Obstacles, Walls);
+            Graph = GraphUtil.CreateGraphForMap(w, h, 50, _obstacles, _walls);
             populate();
         }
 
@@ -63,33 +68,33 @@ namespace SteeringCS
         public void SpawnObstacles()
         {
             Obstacle obstacle1 = new Obstacle("obstacle1", 20, new Vector2D(150, 150), this);
-            Obstacles.Add(obstacle1);
+            _obstacles.Add(obstacle1);
 
             Obstacle obstacle2 = new Obstacle("obstacle2", 40, new Vector2D(400, 100), this);
-            Obstacles.Add(obstacle2);
+            _obstacles.Add(obstacle2);
 
             Obstacle obstacle3 = new Obstacle("obstacle3", 20, new Vector2D(250, 300), this);
-            Obstacles.Add(obstacle3);
+            _obstacles.Add(obstacle3);
 
             Obstacle obstacle4 = new Obstacle("obstacle4", 20, new Vector2D(600, 500), this);
-            Obstacles.Add(obstacle4);
+            _obstacles.Add(obstacle4);
         }
 
 
         public void SpawnWalls()
         {
             Wall wall1 = new Wall("wall1", 20, Height/2, new Vector2D(Width /2, 0), this);
-            Walls.Add(wall1);
+            _walls.Add(wall1);
 
             Wall wall2 = new Wall("wall2", Width * 0.129, 20, new Vector2D(Width * 0.85+20, 0), this);
-            Walls.Add(wall2);
+            _walls.Add(wall2);
         }
 
         public void SpawnGoblins()
         {
             Random r = new Random();
             int rInt = r.Next(0, goblinColors.Count());
-
+            goblinCount++;
             //var dummy = new Goblin("dummy", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
             //dummy.SB = new ArrivalBehaviour(dummy);
             //dummy.VColor = goblinColors[rInt];
@@ -104,21 +109,23 @@ namespace SteeringCS
             //purs.Evader = Target;
             //purs.Target = Target;
             
-            var gentleman = new Goblin("gentleman", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            gentleman.VColor = goblinColors[rInt];
-            gentleman.Target = Hero;
-            _goblins.Add(gentleman);
-            _goblinSpace.Add(gentleman.Key, gentleman);
+            var goblin = new Goblin("Goblin" + goblinCount.ToString(), new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            goblin.VColor = goblinColors[rInt];
+            goblin.Target = Hero;
+            _goblins.Add(goblin);
+            _goblinSpace.Add(goblin.Key, goblin);
         }
 
         public void SpawnHobgoblin()
         {
-            var bloodbeard = new Hobgoblin("Bloodbeard", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            bloodbeard.PB = new SeekBehaviour(me: bloodbeard, target:Hero);
-            bloodbeard.VColor = Color.Black;
-            _hobgoblins.Add(bloodbeard);
-            bloodbeard.Evader = Hero;
-            bloodbeard.Target = Hero;
+            hobgoblinCount++;
+
+            var hobgoblin = new Hobgoblin("Hobgoblin" + hobgoblinCount.ToString(), new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            hobgoblin.PB = new SeekBehaviour(me: hobgoblin, target:Hero);
+            hobgoblin.VColor = Color.Black;
+            _hobgoblins.Add(hobgoblin);
+            hobgoblin.Evader = Hero;
+            hobgoblin.Target = Hero;
         }
 
         public void SpawnCorpse(double size, Vector2D pos)
@@ -186,8 +193,8 @@ namespace SteeringCS
             _corpses.ForEach(e => e.Render(g));
             _goblins.ToList().ForEach(e => e.Render(g));
             _hobgoblins.ForEach(e => e.Render(g));
-            Obstacles.ForEach(e => e.Render(g));
-            Walls.ForEach(e => e.Render(g));
+            _obstacles.ForEach(e => e.Render(g));
+            _walls.ForEach(e => e.Render(g));
             Hero.Render(g);
         }
 
@@ -202,8 +209,8 @@ namespace SteeringCS
             _goblinSpace.EmptyCells();
             _hobgoblins = new List<MovingEntity>();
             _corpses = new List<Corpse>();
-            Obstacles = new List<IObstacle>();
-            Walls = new List<IWall>();
+            _obstacles = new List<IObstacle>();
+            _walls = new List<IWall>();
             SpawnObstacles();
             SpawnWalls();
             populate();
@@ -221,12 +228,12 @@ namespace SteeringCS
 
         public List<IObstacle> getObstacles()
         {
-            return Obstacles;
+            return _obstacles;
         }
 
         public List<IWall> getWalls()
         {
-            return Walls;
+            return _walls;
         }
         
         public List<MovingEntity> getHobgoblins()

@@ -19,13 +19,6 @@ namespace SteeringCS.entity
 
         public Color VColor { get; set; }
         public double BraveryLimit { get; set; }
-        private string debugText { get; set; }
-        public string DebugText {
-            get { return debugText; }
-            set {
-                debugText = value.Replace("\n", Environment.NewLine);
-            }
-        }
 
         // Grouping behaviour.
         public IEnumerable<IGrouper> Neighbors => world.GetGoblinNeighbors(this, NeighborsRange).Cast<IGrouper>();
@@ -203,7 +196,7 @@ namespace SteeringCS.entity
             if (world.DebugMode)
             {
                 Brush brush = new SolidBrush(Color.Black);
-                g.DrawString(debugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
+                g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
             }
         }
 

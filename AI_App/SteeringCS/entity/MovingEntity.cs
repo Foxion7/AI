@@ -18,7 +18,13 @@ namespace SteeringCS.entity
         public float MaxForce    { get; set; }
         public float MaxTurnRate { get; set; }
         public Vector2D OldPos { get; set; }
-
+        private string debugText { get; set; }
+        public string DebugText {
+            get { return debugText; }
+            set {
+                debugText = value.Replace("\n", Environment.NewLine);
+            }
+        }
 
         protected MovingEntity(string name, Vector2D pos, World w) : base(name, pos, w)
         {

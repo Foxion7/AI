@@ -7,11 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.behaviour;
 using SteeringCS.Interfaces;
+using SteeringCS.States;
 
 namespace SteeringCS.entity
 {
     public class Goblin : MovingEntity, IGrouper, IObstacleAvoider, IWallAvoider
     {
+        #region
         // For thread safety.
         private static int _lastKey = 0;
         public readonly int Key;
@@ -40,10 +42,25 @@ namespace SteeringCS.entity
         private LeaderFollowingBehaviour _LFB;
         private ObstacleAvoidance _OA;
         private WallAvoidance _WA;
+        #endregion
+        // States
+        IGoblinState state;
+        IGoblinState approach;
+        IGoblinState attack;
+        IGoblinState retreat;
+        IGoblinState guard;
 
 
         public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
         {
+            // State.
+            state = new Guarding(this); // Starting state.
+            approach = new Hunting(this);
+            attack = new Attacking(this);
+            retreat = new Retreating(this);
+            guard = new Guarding(this);
+
+            #region
             Key = _lastKey + 1;
             _lastKey++;
             Mass = 50;
@@ -73,6 +90,7 @@ namespace SteeringCS.entity
             BraveryLimit = 100;
             Scale = 4;
             VColor = Color.Black;
+            #endregion
         }
 
         public override void Update(float timeElapsed)
@@ -235,7 +253,7 @@ namespace SteeringCS.entity
                     alignmentValue: this.AlignmentValue, separationValue: this.SeparationValue);
         }
 
-        //flocking behaviour
+        // Flocking behaviour.
         public int SeparationValue
         {
             get => _separationValue;
@@ -266,7 +284,7 @@ namespace SteeringCS.entity
         }
 
 
-        //arriving behaviour
+        // Arriving behaviour.
         public IEntity Target
         {
             get => _target;
@@ -287,5 +305,38 @@ namespace SteeringCS.entity
             }
         }
         #endregion
+
+        public void setGoblinState(IGoblinState state)
+        {
+            this.state = state;
+        }
+
+        public void Approach()
+        {
+            state.Approach();
+        }
+
+        public void Attack()
+        {
+            state.Attack();
+        }
+
+        public void Retreat()
+        {
+            state.Retreat();
+        }
+
+        public void Guard()
+        {
+            state.Guard();
+        }
+
+        public IGoblinState getApproachState(){return approach;}
+
+        public IGoblinState getAttackState(){return attack;}
+
+        public IGoblinState getRetreatState(){return retreat;}
+
+        public IGoblinState getGuardState(){return guard;}
     }
 }

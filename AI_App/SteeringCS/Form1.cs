@@ -211,7 +211,6 @@ namespace SteeringCS
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            Console.WriteLine("new keydown");
             switch (e.KeyCode)
             {
                 case Keys.E:

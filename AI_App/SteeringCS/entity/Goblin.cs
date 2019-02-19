@@ -18,7 +18,10 @@ namespace SteeringCS.entity
         public readonly int Key;
 
         public Color VColor { get; set; }
-        public double BraveryLimit { get; set; }
+        public double BraveryDistance { get; set; }
+        public double PassiveDistance { get; set; }
+        public double WanderRadius { get; set; }
+        public double WanderDistance { get; set; }
 
         // Grouping behaviour.
         public IEnumerable<IGrouper> Neighbors => world.GetGoblinNeighbors(this, NeighborsRange).Cast<IGrouper>();
@@ -29,31 +32,31 @@ namespace SteeringCS.entity
         public List<IWall> Walls => world.getWalls();
 
         // Steering behaviours.
-        private ArrivalBehaviour _SB;
-        private FlockBehaviour _FB;
-        private LeaderFollowingBehaviour _LFB;
-        private ObstacleAvoidance _OA;
-        private WallAvoidance _WA;
+        public ArrivalBehaviour _SB             { get; set; }
+        public FleeBehaviour _FleeB             { get; set; }
+        public WanderBehaviour _WB              { get; set; }
+        public FlockBehaviour _FlockB           { get; set; }
+        public LeaderFollowingBehaviour _LFB    { get; set; }
+        public ObstacleAvoidance _OA            { get; set; }
+        public WallAvoidance _WA                { get; set; }
 
         // States
         IGoblinState state;
         IGoblinState hunting;
-        IGoblinState attacking;
         IGoblinState retreating;
         IGoblinState guarding;
-
-
-        public Goblin(string name, Vector2D pos, World w) : base(name, pos, w)
+        
+        public Goblin(string name, Vector2D pos, World w, MovingEntity Target) : base(name, pos, w)
         {
             // State.
             hunting = new Hunting(this);
-            attacking = new Attacking(this);
             retreating = new Retreating(this);
             guarding = new Guarding(this);
-            setGoblinState(hunting); // Starting state.
+            setGoblinState(retreating); // Starting state.
 
             Key = _lastKey + 1;
             _lastKey++;
+            this.Target = Target;
             Mass = 50;
             MaxSpeed = 5;
             MaxForce = 25;
@@ -67,88 +70,52 @@ namespace SteeringCS.entity
 
             FollowValue = 20;
 
-            _SB = new ArrivalBehaviour(me: this, target: this.Target, slowingRadius: this.SlowingRadius);
-            _FB = new FlockBehaviour(me: this, groupValue: this.GroupValue, cohesionValue: this.CohesionValue,
-                alignmentValue: this.AlignmentValue, separationValue: this.SeparationValue);
-            _LFB = new LeaderFollowingBehaviour(me: this, leader: this.Leader, slowingRadius: this.SlowingRadius,
-                leaderBehindDist: 30, groupValue: this.GroupValue, followValue: this.FollowValue, separationValue: this.SeparationValue);
+            _SB = new ArrivalBehaviour(me: this, target: Target, slowingRadius: SlowingRadius);
+            _FleeB = new FleeBehaviour(me: this, target: Target, panicDistance: PanicDistance);
+            _FlockB = new FlockBehaviour(me: this, groupValue: GroupValue, cohesionValue: CohesionValue, alignmentValue: AlignmentValue, separationValue: SeparationValue);
+            _LFB = new LeaderFollowingBehaviour(me: this, leader: Leader, slowingRadius: SlowingRadius, leaderBehindDist: 30, groupValue: GroupValue, followValue: FollowValue, separationValue: SeparationValue);
             _OA = new ObstacleAvoidance(this);
             _WA = new WallAvoidance(this);
-
-
+            _WB = new WanderBehaviour(this, 100, 200);
+            
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
-            BraveryLimit = 100;
+            PanicDistance = 200; // Distance at which goblin starts fleeing.
+            PassiveDistance = 200; // Distance at which goblin goes to guard.
+            BraveryDistance = 100;
+            WanderRadius = 10;
+            WanderDistance = 1;
             Scale = 4;
             VColor = Color.Black;
         }
 
         public override void Update(float timeElapsed)
         {
-            if (state.Equals(hunting))
-            {
-                #region hunting behaviour
-                //if (world.getHobgoblins().Any())
-                //{
-                //    Hobgoblin closestHobgoblin = GetClosestHobgoblin();
-                //    double distancePlayerAndHobgoblin = VectorMath.DistanceBetweenPositions(world.Hero.Pos, closestHobgoblin.Pos);
-
-                //    if (distancePlayerAndHobgoblin > VectorMath.DistanceBetweenPositions(world.Hero.Pos, Pos) && distancePlayerAndHobgoblin >= BraveryLimit)
-                //    {
-                //        // If leader is far from player, follows leader.
-                //        Target = closestHobgoblin;
-                //    }
-                //    else
-                //    {
-                //        // If leader is near player, attacks.
-                //        Target = world.Hero;
-                //    }
-                //}
-
-                Vector2D steeringForce = new Vector2D(0, 0);
-
-                if (_SB != null)
-                    steeringForce += _SB.Calculate() * 4;
-                if (_FB != null)
-                    steeringForce += _FB.Calculate() * 0.5;
-                if (_OA != null)
-                    steeringForce += _OA.Calculate();
-                if (_WA != null)
-                    steeringForce += _WA.Calculate();
-                steeringForce.Truncate(MaxForce);
-
-                Vector2D acceleration = steeringForce / Mass;
-
-                Velocity += (acceleration * timeElapsed);
-                Velocity = Velocity.Truncate(MaxSpeed);
-                OldPos = Pos;
-                Pos += (Velocity * timeElapsed);
-                if (Velocity.LengthSquared() > 0.00000001)
+            state.Act(timeElapsed);
+            //if (VectorMath.LineOfSight2(world, Pos, world.Hero.Pos))
+            //{
+                //Console.WriteLine("Line of sight found");
+                if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
                 {
-                    Heading = Velocity.Normalize();
-                    Side = Heading.Perp();
+                    if (world.Hero.cooldown == 100)
+                    {
+                        //setGoblinState(retreating);
+                    }
+                    else
+                    {
+                        //setGoblinState(hunting);
+                    }
                 }
-                WrapAround();
-                world.rePosGoblin(Key, OldPos, Pos);
-                #endregion
-            }
-            else if (state == attacking)
-            {
-                #region attack behaviour
+                else
+                {
+                    setGoblinState(guarding);
+                }
+                
+            //} else
+            //{
+            //    Console.WriteLine("No line of sight");
 
-
-
-
-                #endregion
-            }
-            else if (state == retreating)
-            {
-
-            }
-            else if (state == guarding)
-            {
-
-            }
+            //}
         }
 
         public override void Render(Graphics g)
@@ -180,23 +147,57 @@ namespace SteeringCS.entity
             if (world.VelocityVisible)
             {
                 // Wall avoidance lines.
-                double MAX_SEE_AHEAD = 15;
-                Vector2D center = Pos + Heading * MAX_SEE_AHEAD;
-                Vector2D leftSensor = new Vector2D(Pos.X + ((Side.X - Heading.X) * -MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y) * -MAX_SEE_AHEAD / 2));
-                Vector2D rightSensor = new Vector2D(Pos.X + ((Side.X - Heading.X * -1) * MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y * -1) * MAX_SEE_AHEAD / 2));
+                //double MAX_SEE_AHEAD = 15;
+                //Vector2D center = Pos + Heading * MAX_SEE_AHEAD;
+                //Vector2D leftSensor = new Vector2D(Pos.X + ((Side.X - Heading.X) * -MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y) * -MAX_SEE_AHEAD / 2));
+                //Vector2D rightSensor = new Vector2D(Pos.X + ((Side.X - Heading.X * -1) * MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y * -1) * MAX_SEE_AHEAD / 2));
 
-                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)center.X, (int)center.Y);
-                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)leftSensor.X, (int)leftSensor.Y);
-                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)rightSensor.X, (int)rightSensor.Y);
+                //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)center.X, (int)center.Y);
+                //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)leftSensor.X, (int)leftSensor.Y);
+                //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)rightSensor.X, (int)rightSensor.Y);
 
                 // Velocity
-                //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
             }
 
             if (world.DebugMode)
             {
                 Brush brush = new SolidBrush(Color.Black);
                 g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
+
+                Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
+                Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
+                
+                var toTarget = goalPosition - currentPosition;
+                var desiredVelocity = (goalPosition - Pos).Normalize() * MaxSpeed;
+                var neededForce = desiredVelocity - Velocity;
+                neededForce.Truncate(MaxForce);
+
+                Vector2D step = neededForce;
+                //while (currentPosition.X != goalPosition.X && currentPosition.Y != goalPosition.Y)
+                bool lineOfSightBlocked = false;
+
+                while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > 10) 
+                {
+                    currentPosition += step;
+                    g.DrawEllipse(r, new Rectangle((int)currentPosition.X, (int)currentPosition.Y, 1, 1));
+                    foreach (IObstacle obstacle in world.getObstacles())
+                    {
+                        if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
+                        {
+                            lineOfSightBlocked = true;
+                        }
+                    }
+
+                }
+                if (lineOfSightBlocked)
+                {
+                    DebugText = "No line of sight.";
+                }
+                else
+                {
+                    DebugText = "Line of sight found!";
+                }
             }
         }
 
@@ -217,7 +218,7 @@ namespace SteeringCS.entity
             return closestHobgoblin;
         }
 
-        //functions to tweak behaviour at runtime
+        // Functions to tweak behaviour at runtime.
         #region behaviourTweaking
         private int _separationValue;
         private int _cohesionValue;
@@ -225,12 +226,13 @@ namespace SteeringCS.entity
         private IMover _leader;
         private IEntity _target;
         private double _slowingRadius;
+        private double _panicDistance;
         private int _followValue;
 
         public double NeighborsRange { get; set; }
         public double GroupValue { get; set; }
 
-        //following behaviour
+        // Following behaviour.
         public IMover Leader
         {
             get => _leader;
@@ -259,8 +261,8 @@ namespace SteeringCS.entity
         public void Flock()
         {
             FollowMode = FollowMode.flock;
-            if (_FB == null)
-                _FB = new FlockBehaviour(me: this, groupValue: this.GroupValue, cohesionValue: this.CohesionValue,
+            if (_FlockB == null)
+                _FlockB = new FlockBehaviour(me: this, groupValue: this.GroupValue, cohesionValue: this.CohesionValue,
                     alignmentValue: this.AlignmentValue, separationValue: this.SeparationValue);
         }
 
@@ -271,7 +273,7 @@ namespace SteeringCS.entity
             set
             {
                 _separationValue = value;
-                if (_FB != null) _FB.SeparationValue = value;
+                if (_FlockB != null) _FlockB.SeparationValue = value;
                 if (_LFB != null) _LFB.SeparationValue = value;
             }
         }
@@ -281,7 +283,7 @@ namespace SteeringCS.entity
             set
             {
                 _cohesionValue = value;
-                if (_FB != null) _FB.CohesionValue = value;
+                if (_FlockB != null) _FlockB.CohesionValue = value;
             }
         }
         public int AlignmentValue
@@ -290,7 +292,7 @@ namespace SteeringCS.entity
             set
             {
                 _alignmentValue = value;
-                if (_FB != null) _FB.AlignmentValue = value;
+                if (_FlockB != null) _FlockB.AlignmentValue = value;
             }
         }
 
@@ -315,21 +317,24 @@ namespace SteeringCS.entity
                 if (_LFB != null) _LFB.SlowingRadius = value;
             }
         }
+
+        // Flee behaviour
+        public double PanicDistance {
+            get => _panicDistance;
+            set {
+                _panicDistance = value;
+                if (_FleeB != null) _FleeB.PanicDistance = value;
+            }
+        }
         #endregion
 
         public void setGoblinState(IGoblinState state)
         {
             this.state = state;
-            DebugText = "Current state: " + state.ToString();
+            //DebugText = "Current state: " + state.ToString();
         }
-        
-        public void Approach(){state.Approach();}
-        public void Attack(){state.Attack();}
-        public void Retreat(){state.Retreat();}
-        public void Guard(){state.Guard();}
 
         public IGoblinState getApproachState(){return hunting;}
-        public IGoblinState getAttackState(){return attacking;}
         public IGoblinState getRetreatState(){return retreating;}
         public IGoblinState getGuardState(){return guarding;}
     }

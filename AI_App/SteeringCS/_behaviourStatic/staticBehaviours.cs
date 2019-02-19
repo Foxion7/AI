@@ -17,13 +17,14 @@ namespace SteeringCS.behaviour
             return neededForce.Truncate(me.MaxForce);
         }
 
-        public static Vector2D Flee(Vector2D targetPos, IMover me, double panicDistanceSq)
+        public static Vector2D Flee(Vector2D targetPos, IMover me, double panicDistance)
         {
-            var distance = (me.Pos - targetPos);
-            if (panicDistanceSq < distance.LengthSquared() || distance.LenghtIsZero())
+            var distance = me.Pos - targetPos;
+
+            if (VectorMath.DistanceBetweenPositions(me.Pos, targetPos) > panicDistance || distance.LenghtIsZero())
             {
                 return new Vector2D(0, 0);
-            };
+            }
             var desiredVelocity = distance.Normalize() * me.MaxSpeed;
             var neededForce = desiredVelocity - me.Velocity;
             return neededForce.Truncate(me.MaxForce);
@@ -31,7 +32,6 @@ namespace SteeringCS.behaviour
 
         public static Vector2D Arrive(Vector2D targetPos, IMover me, double slowingRadius)
         {
-
             Vector2D toTarget = targetPos - me.Pos;
             if (toTarget.LengthSquared() < 0.1)
                 return new Vector2D();

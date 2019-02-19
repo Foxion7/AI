@@ -109,9 +109,8 @@ namespace SteeringCS
             //purs.Evader = Target;
             //purs.Target = Target;
             
-            var goblin = new Goblin("Goblin" + goblinCount.ToString(), new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
+            var goblin = new Goblin("Goblin" + goblinCount.ToString(), new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this, Hero);
             goblin.VColor = goblinColors[rInt];
-            goblin.Target = Hero;
             _goblins.Add(goblin);
             _goblinSpace.Add(goblin.Key, goblin);
         }

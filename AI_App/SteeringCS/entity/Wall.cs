@@ -37,5 +37,17 @@ namespace SteeringCS.entity
             Pen p = new Pen(VColor, 2);
             g.DrawRectangle(p, (int)Pos.X, (int)Pos.Y, (int)Width, (int)Height);
         }
+
+        private bool CollisionFound(Vector2D pos)
+        {
+            Vector2D topLeft = new Vector2D(Pos.X, Pos.Y);
+            Vector2D bottomRight = new Vector2D(Pos.X + Width, Pos.Y + Height);
+
+            return
+                pos.X >= topLeft.X &&
+                pos.X <= bottomRight.X &&
+                pos.Y >= topLeft.Y &&
+                pos.Y <= bottomRight.Y;
+        }
     }
 }

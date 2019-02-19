@@ -21,15 +21,15 @@ namespace SteeringCS.behaviour
             WanderRadius = wanderRadius;
             WanderDistance = wanderDistance;
         }
-
-
+        
         public Vector2D Calculate()
         {
             var heading = _me.Heading;
             var dist = heading * WanderDistance;
-            
-            var x = _rnd.NextDouble() * (10 + 10) - 10;
-            var y = _rnd.NextDouble() * (10 + 10) - 10;
+            var dunnowhatthisis = 10;
+
+            var x = _rnd.NextDouble() * (dunnowhatthisis + dunnowhatthisis) - dunnowhatthisis;
+            var y = _rnd.NextDouble() * (dunnowhatthisis + dunnowhatthisis) - dunnowhatthisis;
             Vector2D jitterDistance;
             if (Math.Abs(x) > 0.01 || Math.Abs(y) > 0.01)
             {

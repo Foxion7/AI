@@ -11,15 +11,15 @@ namespace SteeringCS.entity
     public abstract class MovingEntity : BaseGameEntity, IMover
     {
         public Vector2D Velocity { get; set; }
-        public Vector2D Heading { get; set; }
-        public Vector2D Side { get; set; }
+        public Vector2D Heading  { get; set; }
+        public Vector2D Side     { get; set; }
         public float Mass        { get; set; }
         public float MaxSpeed    { get; set; }
         public float MaxForce    { get; set; }
         public float MaxTurnRate { get; set; }
-        public Vector2D OldPos { get; set; }
+        public Vector2D OldPos   { get; set; }
         private string debugText { get; set; }
-        public string DebugText {
+        public string DebugText  {
             get { return debugText; }
             set {
                 debugText = value.Replace("\n", Environment.NewLine);
@@ -35,7 +35,7 @@ namespace SteeringCS.entity
         }
 
         // Allows re-entry on other side of form if entity leaves.
-        protected void WrapAround()
+        public void WrapAround()
         {
             if (this.Pos.X > world.Width)
             {

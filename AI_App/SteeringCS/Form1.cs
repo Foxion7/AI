@@ -158,7 +158,7 @@ namespace SteeringCS
             if (world.Hero != null)
             {
                 recoverStamina(0.5);
-                recoverCooldown(2);
+                recoverCooldown(1);
                 healthBar.Value = world.Hero.health;
                 staminaBar.Value = world.Hero.stamina;
                 cooldownBar.Value = world.Hero.cooldown;

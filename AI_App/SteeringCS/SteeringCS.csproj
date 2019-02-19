@@ -65,7 +65,6 @@
     <Compile Include="entity\Corpse.cs" />
     <Compile Include="Interfaces\IGoblinState.cs" />
     <Compile Include="States\Hunting.cs" />
-    <Compile Include="States\Attacking.cs" />
     <Compile Include="States\Guarding.cs" />
     <Compile Include="States\Retreating.cs" />
     <Compile Include="util\Graph\Graph.cs" />

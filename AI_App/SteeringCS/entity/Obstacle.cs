@@ -37,5 +37,10 @@ namespace SteeringCS.entity
             Pen p = new Pen(VColor, 2);
             g.DrawEllipse(p, new Rectangle((int)Pos.X, (int)Pos.Y, (int)size, (int)size));
         }
+
+        public bool CollisionFound(Vector2D pos)
+        {
+            return VectorMath.DistanceBetweenPositions(pos, Center) <= Radius;
+        }
     }
 }

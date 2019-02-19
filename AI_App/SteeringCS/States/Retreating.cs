@@ -1,4 +1,5 @@
-﻿using SteeringCS.entity;
+﻿using SteeringCS.behaviour;
+using SteeringCS.entity;
 using SteeringCS.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,49 +18,33 @@ namespace SteeringCS.States
             this.goblin = goblin;
         }
 
-        public void Approach()
+        public void Act(float timeElapsed)
         {
-            Console.WriteLine("Now approaching!");
-            goblin.setGoblinState(goblin.getApproachState());
-        }
+            Vector2D steeringForce = new Vector2D(0, 0);
 
-        public void Attack()
-        {
-            Console.WriteLine("Now attacking!");
-            goblin.setGoblinState(goblin.getAttackState());
+            if (goblin._FleeB != null)
+                steeringForce += goblin._FleeB.Calculate() * 4;
+            if (goblin._FlockB != null)
+                steeringForce += goblin._FlockB.Calculate() * 0.5;
+            if (goblin._OA != null)
+                steeringForce += goblin._OA.Calculate();
+            if (goblin._WA != null)
+                steeringForce += goblin._WA.Calculate();
+            steeringForce.Truncate(goblin.MaxForce);
 
-        }
+            Vector2D acceleration = steeringForce / goblin.Mass;
 
-        public void Equip()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void GroupUp()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Guard()
-        {
-            Console.WriteLine("Now guarding!");
-
-        }
-
-        public void Obey()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Wander()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IGoblinState.Retreat()
-        {
-            Console.WriteLine("Already retreating.");
-
+            goblin.Velocity += (acceleration * timeElapsed);
+            goblin.Velocity = goblin.Velocity.Truncate(goblin.MaxSpeed);
+            goblin.OldPos = goblin.Pos;
+            goblin.Pos += (goblin.Velocity * timeElapsed);
+            if (goblin.Velocity.LengthSquared() > 0.00000001)
+            {
+                goblin.Heading = goblin.Velocity.Normalize();
+                goblin.Side = goblin.Heading.Perp();
+            }
+            goblin.WrapAround();
+            goblin.world.rePosGoblin(goblin.Key, goblin.OldPos, goblin.Pos);
         }
 
         public override string ToString()

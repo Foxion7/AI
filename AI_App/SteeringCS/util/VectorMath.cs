@@ -73,6 +73,61 @@ namespace SteeringCS
             return false;
         }
 
+        public static bool LineOfSight2(World world, Vector2D posA, Vector2D posB)
+        {
+            Vector2D currentPosition = new Vector2D((int)posA.X, (int)posA.Y);
+            Vector2D goalPosition = new Vector2D((int)posB.X, (int)posB.Y);
+
+            int stepX = 0;
+            int stepY = 0;
+
+            if (goalPosition.X > currentPosition.X)
+            {
+                stepX = 1;
+            } else
+            {
+                stepX = -1;
+            }
+            if(goalPosition.Y > currentPosition.Y)
+            {
+                stepY = 1;
+            } else
+            {
+                stepY = -1;
+            }
+
+            Vector2D step = new Vector2D(stepX, stepY);
+            while (currentPosition.X != goalPosition.X && currentPosition.Y != goalPosition.Y)
+            {
+                currentPosition += step;
+                foreach (IObstacle obstacle in world.getObstacles())
+                {
+                    if(DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        //public static bool LineOfSight2(World world, Vector2D posA, Vector2D posB)
+        //{
+        //    foreach(IObstacle obstacle in world.getObstacles())
+        //    {
+        //        posA = new Vector2D(posA.X - obstacle.Pos.X, posA.Y - obstacle.Pos.Y);
+        //        posB = new Vector2D(posB.X - obstacle.Pos.X, posB.Y - obstacle.Pos.Y);
+
+        //        Vector2D foo = posB - posA;
+        //        double fooSQ = foo.X * foo.X + foo.Y * foo.Y;
+        //        double d = posA.X * posB.Y - posB.X * posA.Y;
+
+        //        return fooSQ * (obstacle.Radius * obstacle.Radius) > d*d;
+        //    }
+        //    Console.WriteLine("End of method");
+        //    return true;
+        //}
+
         private static bool LineCollidesWithPoint(Vector2D point, Vector2D st, Vector2D ed)
         {
             //double lineLen = (st - ed).Length();

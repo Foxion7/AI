@@ -17,51 +17,8 @@ namespace SteeringCS.States
             this.goblin = goblin;
         }
 
-        public void Approach()
+        public void Act(float timeElapsed)
         {
-            Console.WriteLine("Now approaching!");
-            goblin.setGoblinState(goblin.getApproachState());
-
-        }
-
-        public void Attack()
-        {
-            Console.WriteLine("Now attacking!");
-            goblin.setGoblinState(goblin.getAttackState());
-
-        }
-
-        public void Equip()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void GroupUp()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Obey()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Retreat()
-        {
-            Console.WriteLine("Now retreating!");
-            goblin.setGoblinState(goblin.getRetreatState());
-
-        }
-
-        public void Wander()
-        {
-            throw new NotImplementedException();
-        }
-
-        void IGoblinState.Guard()
-        {
-            Console.WriteLine("Already guarding.");
-
         }
 
         public override string ToString()

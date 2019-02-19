@@ -66,6 +66,9 @@ namespace SteeringCS
                 cooldownBar.Value = world.Hero.maxCooldown;
             }
             dbPanel3.Visible = world.DebugMode;
+
+            goblinCount.Text = world.getGoblins().Count().ToString();
+            hobgoblinCount.Text = world.getHobgoblins().Count().ToString();
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -239,9 +242,11 @@ namespace SteeringCS
                     break;
                 case Keys.G:
                     world.SpawnGoblins();
+                    goblinCount.Text = world.getGoblins().Count().ToString();
                     break;
                 case Keys.H:
                     world.SpawnHobgoblin();
+                    hobgoblinCount.Text = world.getHobgoblins().Count().ToString();
                     break;
                 case Keys.R:
                     world.Reset();

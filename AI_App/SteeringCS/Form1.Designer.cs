@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -61,6 +59,10 @@
             this.cooldownBar = new SteeringCS.util.StatusBar();
             this.staminaBar = new SteeringCS.util.StatusBar();
             this.healthBar = new SteeringCS.util.StatusBar();
+            this.goblinAmountText = new System.Windows.Forms.Label();
+            this.hobgoblinAmountText = new System.Windows.Forms.Label();
+            this.goblinCount = new System.Windows.Forms.Label();
+            this.hobgoblinCount = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerGoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.massSpinnerGoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maxSpeedSpinnerGoblin)).BeginInit();
@@ -68,37 +70,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.massSpinnerHobgoblin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerHobgoblin)).BeginInit();
             this.dbPanel3.SuspendLayout();
+            this.dbPanel2.SuspendLayout();
             this.HeroPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(1365, 701);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(143, 20);
-            this.label8.TabIndex = 11;
-            this.label8.Text = "H = Add Hobgoblin";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(1365, 721);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(118, 20);
-            this.label9.TabIndex = 12;
-            this.label9.Text = "G = Add Goblin";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(1361, 752);
+            this.label10.Location = new System.Drawing.Point(44, 344);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(142, 13);
             this.label10.TabIndex = 13;
@@ -108,7 +89,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.label11.Location = new System.Drawing.Point(1361, 765);
+            this.label11.Location = new System.Drawing.Point(44, 357);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(130, 13);
             this.label11.TabIndex = 14;
@@ -118,7 +99,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.label1.Location = new System.Drawing.Point(1361, 778);
+            this.label1.Location = new System.Drawing.Point(44, 370);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(114, 13);
             this.label1.TabIndex = 15;
@@ -129,7 +110,7 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(1360, 459);
+            this.label2.Location = new System.Drawing.Point(13, 74);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(50, 20);
             this.label2.TabIndex = 16;
@@ -140,7 +121,7 @@
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(1360, 488);
+            this.label3.Location = new System.Drawing.Point(13, 100);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(47, 20);
             this.label3.TabIndex = 17;
@@ -151,7 +132,7 @@
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(1360, 517);
+            this.label4.Location = new System.Drawing.Point(13, 126);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(86, 20);
             this.label4.TabIndex = 18;
@@ -159,7 +140,7 @@
             // 
             // forceSpinnerGoblin
             // 
-            this.forceSpinnerGoblin.Location = new System.Drawing.Point(1448, 462);
+            this.forceSpinnerGoblin.Location = new System.Drawing.Point(101, 74);
             this.forceSpinnerGoblin.Name = "forceSpinnerGoblin";
             this.forceSpinnerGoblin.Size = new System.Drawing.Size(67, 20);
             this.forceSpinnerGoblin.TabIndex = 19;
@@ -168,7 +149,7 @@
             // 
             // massSpinnerGoblin
             // 
-            this.massSpinnerGoblin.Location = new System.Drawing.Point(1448, 488);
+            this.massSpinnerGoblin.Location = new System.Drawing.Point(101, 100);
             this.massSpinnerGoblin.Name = "massSpinnerGoblin";
             this.massSpinnerGoblin.Size = new System.Drawing.Size(67, 20);
             this.massSpinnerGoblin.TabIndex = 20;
@@ -177,7 +158,7 @@
             // 
             // maxSpeedSpinnerGoblin
             // 
-            this.maxSpeedSpinnerGoblin.Location = new System.Drawing.Point(1448, 517);
+            this.maxSpeedSpinnerGoblin.Location = new System.Drawing.Point(101, 126);
             this.maxSpeedSpinnerGoblin.Name = "maxSpeedSpinnerGoblin";
             this.maxSpeedSpinnerGoblin.Size = new System.Drawing.Size(67, 20);
             this.maxSpeedSpinnerGoblin.TabIndex = 21;
@@ -189,26 +170,26 @@
             this.label5.AutoSize = true;
             this.label5.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(1359, 430);
+            this.label5.Location = new System.Drawing.Point(12, 15);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(96, 29);
+            this.label5.Size = new System.Drawing.Size(134, 29);
             this.label5.TabIndex = 22;
-            this.label5.Text = "Goblins";
+            this.label5.Text = "Goblins [G]";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(1359, 563);
+            this.label6.Location = new System.Drawing.Point(12, 167);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(137, 29);
+            this.label6.Size = new System.Drawing.Size(174, 29);
             this.label6.TabIndex = 29;
-            this.label6.Text = "Hobgoblins";
+            this.label6.Text = "Hobgoblins [H]";
             // 
             // maxSpeedSpinnerHobgoblin
             // 
-            this.maxSpeedSpinnerHobgoblin.Location = new System.Drawing.Point(1448, 650);
+            this.maxSpeedSpinnerHobgoblin.Location = new System.Drawing.Point(101, 284);
             this.maxSpeedSpinnerHobgoblin.Name = "maxSpeedSpinnerHobgoblin";
             this.maxSpeedSpinnerHobgoblin.Size = new System.Drawing.Size(67, 20);
             this.maxSpeedSpinnerHobgoblin.TabIndex = 28;
@@ -217,7 +198,7 @@
             // 
             // massSpinnerHobgoblin
             // 
-            this.massSpinnerHobgoblin.Location = new System.Drawing.Point(1448, 621);
+            this.massSpinnerHobgoblin.Location = new System.Drawing.Point(101, 255);
             this.massSpinnerHobgoblin.Name = "massSpinnerHobgoblin";
             this.massSpinnerHobgoblin.Size = new System.Drawing.Size(67, 20);
             this.massSpinnerHobgoblin.TabIndex = 27;
@@ -226,7 +207,7 @@
             // 
             // forceSpinnerHobgoblin
             // 
-            this.forceSpinnerHobgoblin.Location = new System.Drawing.Point(1448, 595);
+            this.forceSpinnerHobgoblin.Location = new System.Drawing.Point(101, 229);
             this.forceSpinnerHobgoblin.Name = "forceSpinnerHobgoblin";
             this.forceSpinnerHobgoblin.Size = new System.Drawing.Size(67, 20);
             this.forceSpinnerHobgoblin.TabIndex = 26;
@@ -238,7 +219,7 @@
             this.label12.AutoSize = true;
             this.label12.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(1360, 650);
+            this.label12.Location = new System.Drawing.Point(13, 284);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(86, 20);
             this.label12.TabIndex = 25;
@@ -249,7 +230,7 @@
             this.label13.AutoSize = true;
             this.label13.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(1360, 621);
+            this.label13.Location = new System.Drawing.Point(14, 255);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(47, 20);
             this.label13.TabIndex = 24;
@@ -260,7 +241,7 @@
             this.label14.AutoSize = true;
             this.label14.BackColor = System.Drawing.SystemColors.ControlLight;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(1360, 592);
+            this.label14.Location = new System.Drawing.Point(13, 229);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(50, 20);
             this.label14.TabIndex = 23;
@@ -350,9 +331,30 @@
             // dbPanel2
             // 
             this.dbPanel2.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.dbPanel2.Controls.Add(this.hobgoblinCount);
+            this.dbPanel2.Controls.Add(this.goblinCount);
+            this.dbPanel2.Controls.Add(this.label14);
+            this.dbPanel2.Controls.Add(this.goblinAmountText);
+            this.dbPanel2.Controls.Add(this.label13);
+            this.dbPanel2.Controls.Add(this.hobgoblinAmountText);
+            this.dbPanel2.Controls.Add(this.label12);
+            this.dbPanel2.Controls.Add(this.label5);
+            this.dbPanel2.Controls.Add(this.forceSpinnerHobgoblin);
+            this.dbPanel2.Controls.Add(this.label2);
+            this.dbPanel2.Controls.Add(this.massSpinnerHobgoblin);
+            this.dbPanel2.Controls.Add(this.label3);
+            this.dbPanel2.Controls.Add(this.maxSpeedSpinnerHobgoblin);
+            this.dbPanel2.Controls.Add(this.label4);
+            this.dbPanel2.Controls.Add(this.label6);
+            this.dbPanel2.Controls.Add(this.label1);
+            this.dbPanel2.Controls.Add(this.label11);
+            this.dbPanel2.Controls.Add(this.label10);
+            this.dbPanel2.Controls.Add(this.forceSpinnerGoblin);
+            this.dbPanel2.Controls.Add(this.massSpinnerGoblin);
+            this.dbPanel2.Controls.Add(this.maxSpeedSpinnerGoblin);
             this.dbPanel2.Location = new System.Drawing.Point(1324, 405);
             this.dbPanel2.Name = "dbPanel2";
-            this.dbPanel2.Size = new System.Drawing.Size(223, 412);
+            this.dbPanel2.Size = new System.Drawing.Size(223, 400);
             this.dbPanel2.TabIndex = 33;
             // 
             // HeroPanel
@@ -390,6 +392,46 @@
             this.healthBar.Size = new System.Drawing.Size(186, 23);
             this.healthBar.TabIndex = 0;
             // 
+            // goblinAmountText
+            // 
+            this.goblinAmountText.AutoSize = true;
+            this.goblinAmountText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.goblinAmountText.Location = new System.Drawing.Point(13, 49);
+            this.goblinAmountText.Name = "goblinAmountText";
+            this.goblinAmountText.Size = new System.Drawing.Size(145, 20);
+            this.goblinAmountText.TabIndex = 30;
+            this.goblinAmountText.Text = "Amount of goblins: ";
+            // 
+            // hobgoblinAmountText
+            // 
+            this.hobgoblinAmountText.AutoSize = true;
+            this.hobgoblinAmountText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.hobgoblinAmountText.Location = new System.Drawing.Point(14, 201);
+            this.hobgoblinAmountText.Name = "hobgoblinAmountText";
+            this.hobgoblinAmountText.Size = new System.Drawing.Size(172, 20);
+            this.hobgoblinAmountText.TabIndex = 31;
+            this.hobgoblinAmountText.Text = "Amount of hobgoblins: ";
+            // 
+            // goblinCount
+            // 
+            this.goblinCount.AutoSize = true;
+            this.goblinCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.goblinCount.Location = new System.Drawing.Point(152, 49);
+            this.goblinCount.Name = "goblinCount";
+            this.goblinCount.Size = new System.Drawing.Size(18, 20);
+            this.goblinCount.TabIndex = 32;
+            this.goblinCount.Text = "0";
+            // 
+            // hobgoblinCount
+            // 
+            this.hobgoblinCount.AutoSize = true;
+            this.hobgoblinCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.hobgoblinCount.Location = new System.Drawing.Point(180, 201);
+            this.hobgoblinCount.Name = "hobgoblinCount";
+            this.hobgoblinCount.Size = new System.Drawing.Size(18, 20);
+            this.hobgoblinCount.TabIndex = 33;
+            this.hobgoblinCount.Text = "0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -399,26 +441,7 @@
             this.Controls.Add(this.dbPanel1);
             this.Controls.Add(this.label16);
             this.Controls.Add(this.label17);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.label15);
-            this.Controls.Add(this.maxSpeedSpinnerHobgoblin);
-            this.Controls.Add(this.massSpinnerHobgoblin);
-            this.Controls.Add(this.forceSpinnerHobgoblin);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.maxSpeedSpinnerGoblin);
-            this.Controls.Add(this.massSpinnerGoblin);
-            this.Controls.Add(this.forceSpinnerGoblin);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.dbPanel2);
             this.Controls.Add(this.HeroPanel);
             this.DoubleBuffered = true;
@@ -438,6 +461,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.forceSpinnerHobgoblin)).EndInit();
             this.dbPanel3.ResumeLayout(false);
             this.dbPanel3.PerformLayout();
+            this.dbPanel2.ResumeLayout(false);
+            this.dbPanel2.PerformLayout();
             this.HeroPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -447,8 +472,6 @@
         #endregion
 
         private DBPanel dbPanel1;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label1;
@@ -478,6 +501,10 @@
         private System.Windows.Forms.Label DebugEntityInfo;
         private System.Windows.Forms.Label DebugEntityName;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label goblinAmountText;
+        private System.Windows.Forms.Label hobgoblinAmountText;
+        private System.Windows.Forms.Label hobgoblinCount;
+        private System.Windows.Forms.Label goblinCount;
     }
 }
 

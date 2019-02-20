@@ -95,19 +95,6 @@ namespace SteeringCS
             Random r = new Random();
             int rInt = r.Next(0, goblinColors.Count());
             goblinCount++;
-            //var dummy = new Goblin("dummy", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            //dummy.SB = new ArrivalBehaviour(dummy);
-            //dummy.VColor = goblinColors[rInt];
-            //_goblins.Add(dummy);
-            //dummy.Evader = Target;
-            //dummy.Target = Target;
-
-            //var purs = new Goblin("hunter", new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            //purs.SB = new PursuitBehaviour(purs);
-            //purs.VColor = goblinColors[rInt];
-            //_goblins.Add(purs);
-            //purs.Evader = Target;
-            //purs.Target = Target;
             
             var goblin = new Goblin("Goblin" + goblinCount.ToString(), new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this, Hero);
             goblin.VColor = goblinColors[rInt];
@@ -119,8 +106,7 @@ namespace SteeringCS
         {
             hobgoblinCount++;
 
-            var hobgoblin = new Hobgoblin("Hobgoblin" + hobgoblinCount.ToString(), new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this);
-            hobgoblin.PB = new SeekBehaviour(me: hobgoblin, target:Hero);
+            var hobgoblin = new Hobgoblin("Hobgoblin" + hobgoblinCount.ToString(), new Vector2D(_rnd.Next(0, Width), _rnd.Next(0, Height)), this, Hero);
             hobgoblin.VColor = Color.Black;
             _hobgoblins.Add(hobgoblin);
             hobgoblin.Evader = Hero;

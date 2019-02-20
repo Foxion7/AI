@@ -6,32 +6,74 @@ using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.behaviour;
 using SteeringCS.Interfaces;
+using SteeringCS.States.HobgoblinState;
 
 namespace SteeringCS.entity
 {
     public class Hobgoblin : MovingEntity, IObstacleAvoider, IWallAvoider
     {
-        public Color VColor { get; set; }
-        public ISteeringBehaviour PB;
-        public ISteeringBehaviour FB;
-        public ISteeringBehaviour OA;
-        private string debugText { get; set; }
-        public string DebugText {
-            get { return debugText; }
-            set {
-                debugText = value.Replace("\n", Environment.NewLine);
-            }
-        }
+        // For thread safety.
+        private static int _lastKey = 0;
+        public readonly int Key;
 
-        public Hobgoblin(string name, Vector2D pos, World w) : base(name, pos, w)
+        public Color VColor { get; set; }
+        private List<string> debugText;
+
+        public double BraveryDistance { get; set; }
+        public double PassiveDistance { get; set; }
+        public double PanicDistance { get; set; }
+        public double WanderRadius { get; set; }
+        public double WanderDistance { get; set; }
+
+        // Avoidance behaviour.
+        public List<IObstacle> Obstacles => world.getObstacles();
+        public List<IWall> Walls => world.getWalls();
+
+        // Steering behaviours.
+        public ArrivalBehaviour _SB { get; set; }
+        public FleeBehaviour _FleeB { get; set; }
+        public WanderBehaviour _WB { get; set; }
+        public ObstacleAvoidance _OA { get; set; }
+        public WallAvoidance _WA { get; set; }
+
+        // States
+        IHobgoblinState state;
+        IHobgoblinState hunting;
+        IHobgoblinState retreating;
+        IHobgoblinState guarding;
+        IHobgoblinState wandering;
+        IHobgoblinState command;
+        IHobgoblinState equip;
+
+        public Hobgoblin(string name, Vector2D pos, World w, MovingEntity Target) : base(name, pos, w)
         {
+            // State.
+            hunting = new Hunting(this);
+            retreating = new Retreating(this);
+            guarding = new Guarding(this);
+            wandering = new Wandering(this);
+            command = new Command(this);
+            equip = new Equip(this);
+            setState(hunting); // Starting state.
+
+            Key = _lastKey + 1;
+            _lastKey++;
+            debugText = new List<string>();
+            
             Mass = 100;
             MaxSpeed = 5;
             MaxForce = 40;
 
+            SlowingRadius = 100;
+            PanicDistance = 200; // Distance at which goblin starts fleeing.
+            PassiveDistance = 250; // Distance at which goblin goes to guard.
+            BraveryDistance = 100;
 
-            PB = new Pursuit(me:this, evader:Evader);
-            OA = new ObstacleAvoidance(me:this);
+            _SB = new ArrivalBehaviour(me: this, target: Target, slowingRadius: SlowingRadius);
+            _FleeB = new FleeBehaviour(me: this, target: Target, panicDistance: PanicDistance);
+            _OA = new ObstacleAvoidance(this);
+            _WA = new WallAvoidance(this);
+            _WB = new WanderBehaviour(this, 100, 200);
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
@@ -42,25 +84,17 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            Vector2D steeringForce = PB.Calculate() *2;
-            steeringForce += OA.Calculate();
-
-            steeringForce.Truncate(MaxForce);
-
-            Vector2D acceleration = steeringForce / Mass;
-
-            Velocity += (acceleration * timeElapsed);
-            Velocity = Velocity.Truncate(MaxSpeed);
-
-            Pos += (Velocity * timeElapsed);
-
-            if (Velocity.LengthSquared() > 0.00000001)
+            state.Act(timeElapsed);
+            if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance && VectorMath.LineOfSight(world, Pos, Target.Pos))
             {
-                Heading = Velocity.Normalize();
-                Side = Heading.Perp();
+                setState(hunting);
             }
-            WrapAround();
+            else
+            {
+                setState(guarding);
+            }
         }
+
         public override void Render(Graphics g)
         {
             double leftCorner = Pos.X - Scale;
@@ -96,14 +130,116 @@ namespace SteeringCS.entity
             if (world.DebugMode)
             {
                 Brush brush = new SolidBrush(Color.Black);
-                g.DrawString(debugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
+                g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
+
+                if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
+                {
+                    Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
+                    Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
+
+                    double segmentDistance = 15;
+
+                    var toTarget = goalPosition - currentPosition;
+                    Vector2D step = (goalPosition - Pos).Normalize() * segmentDistance;
+
+                    bool lineOfSightBlocked = false;
+
+                    while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > segmentDistance)
+                    {
+                        currentPosition += step;
+                        foreach (IObstacle obstacle in world.getObstacles())
+                        {
+                            if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
+                            {
+                                lineOfSightBlocked = true;
+                                break;
+                            }
+                        }
+                        foreach (IWall wall in world.getWalls())
+                        {
+                            if (VectorMath.PointInWall(currentPosition, wall))
+                            {
+                                lineOfSightBlocked = true;
+                                break;
+                            }
+                        }
+                        if (!lineOfSightBlocked)
+                        {
+                            g.DrawEllipse(r, new Rectangle((int)currentPosition.X, (int)currentPosition.Y, 1, 1));
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                    }
+                    if (lineOfSightBlocked)
+                    {
+                        RemoveDebugText(1);
+                    }
+                    else
+                    {
+                        AddDebugText("Line of sight to Hero!", 1);
+                    }
+                }
+                else
+                {
+                    RemoveDebugText(1);
+                }
             }
         }
-        
+
+        public void AddDebugText(string text, int index)
+        {
+            if (debugText != null)
+            {
+                // If not first text, adds new line.
+                string newLine = "";
+                if (debugText.Count() > 0 && index > 0)
+                {
+                    newLine += "\n";
+                }
+                newLine += text;
+
+                // If index is not taken, adds line on index. Else just adds at the end.
+                if (debugText.Count() > index)
+                {
+                    debugText[index] = newLine;
+                }
+                else
+                {
+                    debugText.Insert(debugText.Count(), newLine);
+                }
+
+                // Adds all debugText texts together to display.
+                string newDebugText = "";
+                for (int i = 0; i < debugText.Count(); i++)
+                {
+                    newDebugText += debugText[i];
+                }
+                DebugText = newDebugText;
+            }
+        }
+
+        public void RemoveDebugText(int index)
+        {
+            if (debugText != null)
+            {
+                if (debugText.Count() > index)
+                {
+                    debugText[index] = "";
+                }
+            }
+        }
+
+        public void setState(IHobgoblinState state)
+        {
+            this.state = state;
+            AddDebugText("Current state: " + state.ToString(), 0);
+        }
+
         public BaseGameEntity Target { get; set; }
         public double SlowingRadius { get; set; }
         public MovingEntity Evader { get; set; }
-        public List<IObstacle> Obstacles => world.getObstacles();
-        public List<IWall> Walls => world.getWalls();
     }
 }

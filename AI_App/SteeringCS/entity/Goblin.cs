@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using SteeringCS.behaviour;
 using SteeringCS.Interfaces;
 using SteeringCS.States;
+using SteeringCS.States.GoblinState;
 
 namespace SteeringCS.entity
 {
@@ -62,7 +63,7 @@ namespace SteeringCS.entity
             regroup = new Regroup(this);
             obey = new Obey(this);
             equip = new Equip(this);
-            setGoblinState(guarding); // Starting state.
+            setState(guarding); // Starting state.
 
             Key = _lastKey + 1;
             _lastKey++;
@@ -105,19 +106,11 @@ namespace SteeringCS.entity
             state.Act(timeElapsed);
             if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance && VectorMath.LineOfSight(world, Pos, Target.Pos))
             {
-                if (world.Hero.cooldown == 100)
-                {
-                    setGoblinState(retreating);
-                }
-                else
-                {
-                    setGoblinState(hunting);
-                }
+                setState(hunting);
             }
             else
             {
-                //setGoblinState(guarding);
-                setGoblinState(wandering);
+                setState(guarding);
             }
         }
 
@@ -170,7 +163,6 @@ namespace SteeringCS.entity
 
                 if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
                 {
-
                     Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
                     Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
 
@@ -395,7 +387,7 @@ namespace SteeringCS.entity
             }
         }
 
-        public void setGoblinState(IGoblinState state)
+        public void setState(IGoblinState state)
         {
             this.state = state;
             AddDebugText("Current state: " + state.ToString(), 0);

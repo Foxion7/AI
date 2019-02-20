@@ -6,20 +6,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteeringCS.States
+namespace SteeringCS.States.GoblinState
 {
-    public class Equip : IGoblinState
+    public class Regroup : IGoblinState
     {
         Goblin goblin;
 
-        public Equip(Goblin goblin)
+        public Regroup(Goblin goblin)
         {
             this.goblin = goblin;
         }
 
         public void Act(float timeElapsed)
         {
-            /// Tries to find and equip weapons / armor.
+            // Find other goblins to group up with.
         }
 
         public override string ToString()

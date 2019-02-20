@@ -63,14 +63,21 @@
     <Compile Include="behaviour\FlockBehaviour.cs" />
     <Compile Include="behaviour\FollowPathBehaviour.cs" />
     <Compile Include="entity\Corpse.cs" />
-    <Compile Include="Interfaces\IEnemyState.cs" />
-    <Compile Include="States\Goblin\Obey.cs" />
-    <Compile Include="States\Goblin\Equip.cs" />
-    <Compile Include="States\Goblin\Regroup.cs" />
-    <Compile Include="States\Goblin\Hunting.cs" />
-    <Compile Include="States\Goblin\Guarding.cs" />
-    <Compile Include="States\Goblin\Wandering.cs" />
-    <Compile Include="States\Goblin\Retreating.cs" />
+    <Compile Include="Interfaces\IGoblinState.cs" />
+    <Compile Include="Interfaces\IHobgoblinState.cs" />
+    <Compile Include="States\GoblinState\Obey.cs" />
+    <Compile Include="States\GoblinState\Equip.cs" />
+    <Compile Include="States\GoblinState\Regroup.cs" />
+    <Compile Include="States\GoblinState\Hunting.cs" />
+    <Compile Include="States\GoblinState\Guarding.cs" />
+    <Compile Include="States\GoblinState\Wandering.cs" />
+    <Compile Include="States\GoblinState\Retreating.cs" />
+    <Compile Include="States\HobgoblinState\Equip.cs" />
+    <Compile Include="States\HobgoblinState\Guarding.cs" />
+    <Compile Include="States\HobgoblinState\Hunting.cs" />
+    <Compile Include="States\HobgoblinState\Command.cs" />
+    <Compile Include="States\HobgoblinState\Retreating.cs" />
+    <Compile Include="States\HobgoblinState\Wandering.cs" />
     <Compile Include="util\Graph\Graph.cs" />
     <Compile Include="util\Graph\GraphEdge.cs" />
     <Compile Include="util\Graph\GraphNode.cs" />
@@ -146,9 +153,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="States\Hobgoblin\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

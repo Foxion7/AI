@@ -6,20 +6,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteeringCS.States
+namespace SteeringCS.States.GoblinState
 {
-    public class Obey : IGoblinState
+    public class Guarding : IGoblinState
     {
         Goblin goblin;
 
-        public Obey(Goblin goblin)
+        public Guarding(Goblin goblin)
         {
             this.goblin = goblin;
         }
 
         public void Act(float timeElapsed)
         {
-            // Only follows direct command by hobgoblin(s).
+            //if (VectorMath.LineOfSight(goblin.world, goblin.Pos, goblin.world.Hero.Pos))
+            //{
+            //    // Turn to look.
+            //}
         }
 
         public override string ToString()

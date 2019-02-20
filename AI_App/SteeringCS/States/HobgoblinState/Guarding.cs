@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteeringCS.States
+namespace SteeringCS.States.HobgoblinState
 {
-    public class Guarding : IGoblinState
+    public class Guarding : IHobgoblinState
     {
-        Goblin goblin;
+        Hobgoblin hobgoblin;
 
-        public Guarding(Goblin goblin)
+        public Guarding(Hobgoblin hobgoblin)
         {
-            this.goblin = goblin;
+            this.hobgoblin = hobgoblin;
         }
 
         public void Act(float timeElapsed)

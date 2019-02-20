@@ -24,6 +24,7 @@ namespace SteeringCS
         bool leftPressed = false;
         bool rightPressed = false;
         double statRecoverCount = 0;
+        MovingEntity selectedEntity;
 
 
         public const float timeDelta = 0.8f;
@@ -75,6 +76,10 @@ namespace SteeringCS
         {
             world.Update(timeDelta);
             CalculateStats();
+            if (world.DebugMode && selectedEntity != null)
+            {
+                UpdateDebugPanel();
+            }
             dbPanel1.Invalidate();
         }
 
@@ -102,10 +107,17 @@ namespace SteeringCS
             {
                 if (VectorMath.DistanceBetweenPositions(entity.Pos, mousePos) < entity.Scale)
                 {
+                    selectedEntity = entity;
                     DebugEntityName.Text = entity.Name;
                     DebugEntityInfo.Text = entity.DebugText;
                 }
             };
+        }
+
+        public void UpdateDebugPanel()
+        {
+            DebugEntityName.Text = selectedEntity.Name;
+            DebugEntityInfo.Text = selectedEntity.DebugText;
         }
         
         private void forceSpinnerGoblin_ValueChanged(object sender, EventArgs e)

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SteeringCS.behaviour;
 using SteeringCS.Interfaces;
-using SteeringCS.States;
 using SteeringCS.States.GoblinState;
 
 namespace SteeringCS.entity
@@ -25,6 +20,9 @@ namespace SteeringCS.entity
         public double PassiveDistance { get; set; }
         public double WanderRadius { get; set; }
         public double WanderDistance { get; set; }
+        public int DamagePerAttack { get; set; }
+        public int AttackRange { get; set; }
+        public int AttackSpeed { get; set; }
 
         // Grouping behaviour.
         public IEnumerable<IGrouper> Neighbors => world.GetGoblinNeighbors(this, NeighborsRange).Cast<IGrouper>();
@@ -72,6 +70,9 @@ namespace SteeringCS.entity
             Mass = 50;
             MaxSpeed = 5;
             MaxForce = 25;
+            DamagePerAttack = 10;
+            AttackRange = 10;
+            AttackSpeed = 15; // Lower is faster.
 
             GroupValue = 10;
             NeighborsRange = 100;
@@ -93,7 +94,7 @@ namespace SteeringCS.entity
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
             PanicDistance = 200; // Distance at which goblin starts fleeing.
-            PassiveDistance = 250; // Distance at which goblin goes to guard.
+            PassiveDistance = 1000; // Distance at which goblin goes to guard.
             BraveryDistance = 100;
             WanderRadius = 10;
             WanderDistance = 1;
@@ -104,7 +105,8 @@ namespace SteeringCS.entity
         public override void Update(float timeElapsed)
         {
             state.Act(timeElapsed);
-            if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance && VectorMath.LineOfSight(world, Pos, Target.Pos))
+            //if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance && VectorMath.LineOfSight(world, Pos, Target.Pos))
+            if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
             {
                 setState(hunting);
             }
@@ -143,14 +145,14 @@ namespace SteeringCS.entity
             if (world.VelocityVisible)
             {
                 // Wall avoidance lines.
-                //double MAX_SEE_AHEAD = 15;
-                //Vector2D center = Pos + Heading * MAX_SEE_AHEAD;
-                //Vector2D leftSensor = new Vector2D(Pos.X + ((Side.X - Heading.X) * -MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y) * -MAX_SEE_AHEAD / 2));
-                //Vector2D rightSensor = new Vector2D(Pos.X + ((Side.X - Heading.X * -1) * MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y * -1) * MAX_SEE_AHEAD / 2));
+                double MAX_SEE_AHEAD = 15;
+                Vector2D center = Pos + Heading * MAX_SEE_AHEAD;
+                Vector2D leftSensor = new Vector2D(Pos.X + ((Side.X - Heading.X) * -MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y) * -MAX_SEE_AHEAD / 2));
+                Vector2D rightSensor = new Vector2D(Pos.X + ((Side.X - Heading.X * -1) * MAX_SEE_AHEAD / 2), Pos.Y + ((Side.Y - Heading.Y * -1) * MAX_SEE_AHEAD / 2));
 
-                //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)center.X, (int)center.Y);
-                //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)leftSensor.X, (int)leftSensor.Y);
-                //g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)rightSensor.X, (int)rightSensor.Y);
+                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)center.X, (int)center.Y);
+                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)leftSensor.X, (int)leftSensor.Y);
+                g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)rightSensor.X, (int)rightSensor.Y);
 
                 // Velocity
                 g.DrawLine(r, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));

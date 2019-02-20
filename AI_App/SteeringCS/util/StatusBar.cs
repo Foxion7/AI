@@ -31,9 +31,8 @@ namespace SteeringCS.util
                 Brush brush = new SolidBrush(ForeColor);
                 g.FillRectangle(brush, rect.X, rect.Y, (int)Math.Round((float)Value / Maximum * rect.Width), rect.Height);
             }
-
-            // Assumes maximum == 100.
-            string text = Value.ToString() + '%';
+            
+            string text = Value.ToString() + '/' + Maximum;
 
             // Text.
             using (Font f = new Font(FontFamily.GenericMonospace, 10))

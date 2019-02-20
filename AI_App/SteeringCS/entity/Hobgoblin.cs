@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SteeringCS.behaviour;
 using SteeringCS.Interfaces;
 using SteeringCS.States.HobgoblinState;
@@ -16,14 +13,17 @@ namespace SteeringCS.entity
         private static int _lastKey = 0;
         public readonly int Key;
 
-        public Color VColor { get; set; }
         private List<string> debugText;
-
+        
+        public Color VColor { get; set; }
         public double BraveryDistance { get; set; }
         public double PassiveDistance { get; set; }
         public double PanicDistance { get; set; }
         public double WanderRadius { get; set; }
         public double WanderDistance { get; set; }
+        public int DamagePerAttack { get; set; }
+        public int AttackRange { get; set; }
+        public int AttackSpeed { get; set; }
 
         // Avoidance behaviour.
         public List<IObstacle> Obstacles => world.getObstacles();
@@ -63,6 +63,10 @@ namespace SteeringCS.entity
             Mass = 100;
             MaxSpeed = 5;
             MaxForce = 40;
+
+            DamagePerAttack = 25;
+            AttackRange = 20;
+            AttackSpeed = 30; // Lower is faster.
 
             SlowingRadius = 100;
             PanicDistance = 200; // Distance at which goblin starts fleeing.

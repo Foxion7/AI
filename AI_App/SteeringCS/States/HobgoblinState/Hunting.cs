@@ -11,6 +11,7 @@ namespace SteeringCS.States.HobgoblinState
     public class Hunting : IHobgoblinState
     {
         Hobgoblin hobgoblin;
+        double timeElapsedSinceLastAttack = 0;
 
         public Hunting(Hobgoblin hobgoblin)
         {
@@ -19,29 +20,53 @@ namespace SteeringCS.States.HobgoblinState
 
         public void Act(float timeElapsed)
         {
-            Vector2D steeringForce = new Vector2D(0, 0);
+            timeElapsedSinceLastAttack += timeElapsed;
 
-            if (hobgoblin._SB != null)
-                steeringForce += hobgoblin._SB.Calculate() * 4;
-            if (hobgoblin._OA != null)
-                steeringForce += hobgoblin._OA.Calculate();
-            if (hobgoblin._WA != null)
-                steeringForce += hobgoblin._WA.Calculate();
-            steeringForce.Truncate(hobgoblin.MaxForce);
-
-            Vector2D acceleration = steeringForce / hobgoblin.Mass;
-
-            hobgoblin.Velocity += (acceleration * timeElapsed);
-            hobgoblin.Velocity = hobgoblin.Velocity.Truncate(hobgoblin.MaxSpeed);
-            hobgoblin.OldPos = hobgoblin.Pos;
-            hobgoblin.Pos += (hobgoblin.Velocity * timeElapsed);
-            if (hobgoblin.Velocity.LengthSquared() > 0.00000001)
+            if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, hobgoblin.world.Hero.Pos) >= hobgoblin.AttackRange)
             {
-                hobgoblin.Heading = hobgoblin.Velocity.Normalize();
-                hobgoblin.Side = hobgoblin.Heading.Perp();
+                Vector2D steeringForce = new Vector2D(0, 0);
+
+                if (hobgoblin._SB != null)
+                    steeringForce += hobgoblin._SB.Calculate() * 4;
+                if (hobgoblin._OA != null)
+                    steeringForce += hobgoblin._OA.Calculate();
+                if (hobgoblin._WA != null)
+                    steeringForce += hobgoblin._WA.Calculate();
+                steeringForce.Truncate(hobgoblin.MaxForce);
+
+                Vector2D acceleration = steeringForce / hobgoblin.Mass;
+
+                hobgoblin.Velocity += (acceleration * timeElapsed);
+                hobgoblin.Velocity = hobgoblin.Velocity.Truncate(hobgoblin.MaxSpeed);
+                hobgoblin.OldPos = hobgoblin.Pos;
+                hobgoblin.Pos += (hobgoblin.Velocity * timeElapsed);
+                if (hobgoblin.Velocity.LengthSquared() > 0.00000001)
+                {
+                    hobgoblin.Heading = hobgoblin.Velocity.Normalize();
+                    hobgoblin.Side = hobgoblin.Heading.Perp();
+                }
+                hobgoblin.WrapAround();
+                hobgoblin.world.rePosGoblin(hobgoblin.Key, hobgoblin.OldPos, hobgoblin.Pos);
             }
-            hobgoblin.WrapAround();
-            hobgoblin.world.rePosGoblin(hobgoblin.Key, hobgoblin.OldPos, hobgoblin.Pos);
+            else if (AttackAvailable())
+            {
+                AttackPlayer();
+            }
+        }
+
+        public bool AttackAvailable()
+        {
+            if (timeElapsedSinceLastAttack > hobgoblin.AttackSpeed)
+            {
+                timeElapsedSinceLastAttack = 0;
+                return true;
+            }
+            return false;
+        }
+
+        public void AttackPlayer()
+        {
+            hobgoblin.world.Hero.health -= hobgoblin.DamagePerAttack;
         }
 
         public override string ToString()

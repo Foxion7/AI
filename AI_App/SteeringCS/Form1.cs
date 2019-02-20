@@ -25,8 +25,7 @@ namespace SteeringCS
         bool rightPressed = false;
         double statRecoverCount = 0;
         MovingEntity selectedEntity;
-
-
+        
         public const float timeDelta = 0.8f;
 
         public Form1()

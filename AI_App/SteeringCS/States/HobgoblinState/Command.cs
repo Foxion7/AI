@@ -20,7 +20,12 @@ namespace SteeringCS.States.HobgoblinState
 
         public void Act(float timeElapsed)
         {
-            // Only follows direct command by hobgoblin(s).
+            // Gives command to gathered goblins.
+
+            // Command gather(goblins gather at hobgoblin)
+            // Command attack(gathered goblins attack without hobgoblin)
+            // Command protect((gathered goblins get between Hero and hobgoblin when hobgoblin is wounded)
+            // Command guard(gathered goblins guard a spot)
         }
 
         public override string ToString()

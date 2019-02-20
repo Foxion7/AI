@@ -71,58 +71,7 @@ namespace SteeringCS.entity
             Scale = 5;
             VColor = Color.Black;
         }
-
-        public void Attack()
-        {
-            Goblin closestThreat = null;
-            double closestDistance = 100;
-
-            foreach (Goblin goblin in world.getGoblins())
-            {
-                if (VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < Scale * 5 && VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < closestDistance)
-                {
-                    closestThreat = goblin;
-                    closestDistance = VectorMath.DistanceBetweenPositions(Pos, goblin.Pos);
-                }
-            }
-            // If a target is nearby...
-            if(closestThreat != null)
-            {
-                // Checks if there is enough resources for an attack.
-                if (cooldown >= cooldownCost && stamina - staminaCost >= 0 && cooldown - cooldownCost >= 0)
-                {
-                    stamina -= staminaCost;
-                    cooldown -= cooldownCost;
-                    world.SpawnCorpse(closestThreat.Scale * 4, closestThreat.Pos);
-                    world.DestroyGoblin(closestThreat);
-                }
-            }
-        }
-
-        public void RecoverHealth(int amount)
-        {
-            if(health + amount <= maxHealth)
-            {
-                health += amount;
-            }
-        }
-
-        public void RecoverStamina(int amount)
-        {
-            if (stamina + amount <= maxStamina)
-            {
-                stamina += amount;
-            }
-        }
-
-        public void RecoverCooldown(int amount)
-        {
-            if (cooldown + amount <= maxCooldown)
-            {
-                cooldown += amount;
-            }
-        }
-
+        
         public override void Update(float timeElapsed)
         {
             Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
@@ -174,6 +123,57 @@ namespace SteeringCS.entity
             }
         }
 
+        public void Attack()
+        {
+            Goblin closestThreat = null;
+            double closestDistance = 100;
+
+            foreach (Goblin goblin in world.getGoblins())
+            {
+                if (VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < Scale * 5 && VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < closestDistance)
+                {
+                    closestThreat = goblin;
+                    closestDistance = VectorMath.DistanceBetweenPositions(Pos, goblin.Pos);
+                }
+            }
+            // If a target is nearby...
+            if (closestThreat != null)
+            {
+                // Checks if there is enough resources for an attack.
+                if (cooldown >= cooldownCost && stamina - staminaCost >= 0 && cooldown - cooldownCost >= 0)
+                {
+                    stamina -= staminaCost;
+                    cooldown -= cooldownCost;
+                    world.SpawnCorpse(closestThreat.Scale * 4, closestThreat.Pos);
+                    world.DestroyGoblin(closestThreat);
+                }
+            }
+        }
+
+        public void RecoverHealth(int amount)
+        {
+            if (health + amount <= maxHealth)
+            {
+                health += amount;
+            }
+        }
+
+        public void RecoverStamina(int amount)
+        {
+            if (stamina + amount <= maxStamina)
+            {
+                stamina += amount;
+            }
+        }
+
+        public void RecoverCooldown(int amount)
+        {
+            if (cooldown + amount <= maxCooldown)
+            {
+                cooldown += amount;
+            }
+        }
+        
         public BaseGameEntity Target      { get; set; }
         public MovingEntity Evader        { get; set; }
         public MovingEntity Pursuer       { get; set; }

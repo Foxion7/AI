@@ -34,7 +34,7 @@ namespace SteeringCS.behaviour
             {
                 avoidanceForce = new Vector2D(_me.Pos.X - affectedSensor.X, _me.Pos.Y - affectedSensor.Y);
                 avoidanceForce = avoidanceForce.Normalize();
-                avoidanceForce = avoidanceForce * (MaxAvoidForce * 2);
+                avoidanceForce = avoidanceForce * (MaxAvoidForce * _me.Velocity.Length());
             }
             else
             {

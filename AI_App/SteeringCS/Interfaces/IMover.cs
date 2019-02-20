@@ -9,5 +9,6 @@
         float MaxSpeed    { get; }
         float MaxForce    { get; }
         float MaxTurnRate { get; }
+        string DebugText { get; set; }
     }
 }

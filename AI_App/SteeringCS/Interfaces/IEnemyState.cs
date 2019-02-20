@@ -9,13 +9,5 @@ namespace SteeringCS.Interfaces
     public interface IGoblinState
     {
         void Act(float timeElapsed);
-        //void Approach();
-        //void Attack();
-        //void Retreat();
-        //void Guard();
-        //void Wander();
-        //void GroupUp();
-        //void Obey(); // Do what leader says
-        //void Equip();
     }
 }

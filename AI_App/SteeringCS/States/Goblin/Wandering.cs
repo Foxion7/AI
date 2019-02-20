@@ -1,19 +1,16 @@
 ﻿using SteeringCS.behaviour;
 using SteeringCS.entity;
 using SteeringCS.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SteeringCS.entity;
+using SteeringCS.Interfaces;
 
 namespace SteeringCS.States
 {
-    public class Retreating : IGoblinState
+    public class Wandering : IGoblinState
     {
         Goblin goblin;
 
-        public Retreating(Goblin goblin)
+        public Wandering(Goblin goblin)
         {
             this.goblin = goblin;
         }
@@ -22,8 +19,8 @@ namespace SteeringCS.States
         {
             Vector2D steeringForce = new Vector2D(0, 0);
 
-            if (goblin._FleeB != null)
-                steeringForce += goblin._FleeB.Calculate() * 4;
+            if (goblin._WB != null)
+                steeringForce += goblin._WB.Calculate();
             if (goblin._FlockB != null)
                 steeringForce += goblin._FlockB.Calculate() * 0.5;
             if (goblin._OA != null)

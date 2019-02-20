@@ -63,10 +63,14 @@
     <Compile Include="behaviour\FlockBehaviour.cs" />
     <Compile Include="behaviour\FollowPathBehaviour.cs" />
     <Compile Include="entity\Corpse.cs" />
-    <Compile Include="Interfaces\IGoblinState.cs" />
-    <Compile Include="States\Hunting.cs" />
-    <Compile Include="States\Guarding.cs" />
-    <Compile Include="States\Retreating.cs" />
+    <Compile Include="Interfaces\IEnemyState.cs" />
+    <Compile Include="States\Goblin\Obey.cs" />
+    <Compile Include="States\Goblin\Equip.cs" />
+    <Compile Include="States\Goblin\Regroup.cs" />
+    <Compile Include="States\Goblin\Hunting.cs" />
+    <Compile Include="States\Goblin\Guarding.cs" />
+    <Compile Include="States\Goblin\Wandering.cs" />
+    <Compile Include="States\Goblin\Retreating.cs" />
     <Compile Include="util\Graph\Graph.cs" />
     <Compile Include="util\Graph\GraphEdge.cs" />
     <Compile Include="util\Graph\GraphNode.cs" />
@@ -142,7 +146,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="States\Hobgoblin\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

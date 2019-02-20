@@ -17,6 +17,8 @@ namespace SteeringCS.entity
         private static int _lastKey = 0;
         public readonly int Key;
 
+        private List<string> debugText;
+
         public Color VColor { get; set; }
         public double BraveryDistance { get; set; }
         public double PassiveDistance { get; set; }
@@ -45,6 +47,10 @@ namespace SteeringCS.entity
         IGoblinState hunting;
         IGoblinState retreating;
         IGoblinState guarding;
+        IGoblinState wandering;
+        IGoblinState regroup;
+        IGoblinState obey;
+        IGoblinState equip;
         
         public Goblin(string name, Vector2D pos, World w, MovingEntity Target) : base(name, pos, w)
         {
@@ -52,10 +58,15 @@ namespace SteeringCS.entity
             hunting = new Hunting(this);
             retreating = new Retreating(this);
             guarding = new Guarding(this);
-            setGoblinState(retreating); // Starting state.
+            wandering = new Wandering(this);
+            regroup = new Regroup(this);
+            obey = new Obey(this);
+            equip = new Equip(this);
+            setGoblinState(guarding); // Starting state.
 
             Key = _lastKey + 1;
             _lastKey++;
+            debugText = new List<string>();
             this.Target = Target;
             Mass = 50;
             MaxSpeed = 5;
@@ -105,7 +116,8 @@ namespace SteeringCS.entity
             }
             else
             {
-                setGoblinState(guarding);
+                //setGoblinState(guarding);
+                setGoblinState(wandering);
             }
         }
 
@@ -200,12 +212,15 @@ namespace SteeringCS.entity
                     }
                     if (lineOfSightBlocked)
                     {
-                        DebugText = "No line of sight.";
+                        RemoveDebugText(1);
                     }
                     else
                     {
-                        DebugText = "Line of sight found!";
+                        AddDebugText("Line of sight to Hero!", 1);
                     }
+                } else
+                {
+                    RemoveDebugText(1);
                 }
             }
         }
@@ -337,14 +352,53 @@ namespace SteeringCS.entity
         }
         #endregion
 
+        public void AddDebugText(string text, int index)
+        {
+            if (debugText != null)
+            {
+                // If not first text, adds new line.
+                string newLine = "";
+                if (debugText.Count() > 0 && index > 0)
+                {
+                    newLine += "\n";
+                }
+                newLine += text;
+
+                // If index is not taken, adds line on index. Else just adds at the end.
+                if (debugText.Count() > index)
+                {
+                    debugText[index] = newLine;
+                }
+                else
+                {
+                    debugText.Insert(debugText.Count(), newLine);
+                }
+
+                // Adds all debugText texts together to display.
+                string newDebugText = "";
+                for(int i = 0; i < debugText.Count(); i++)
+                {
+                    newDebugText += debugText[i];
+                }
+                DebugText = newDebugText;
+            }
+        }
+
+        public void RemoveDebugText(int index)
+        {
+            if (debugText != null)
+            {
+                if (debugText.Count() > index)
+                {
+                    debugText[index] = "";
+                }
+            }
+        }
+
         public void setGoblinState(IGoblinState state)
         {
             this.state = state;
-            //DebugText = "Current state: " + state.ToString();
+            AddDebugText("Current state: " + state.ToString(), 0);
         }
-
-        public IGoblinState getApproachState(){return hunting;}
-        public IGoblinState getRetreatState(){return retreating;}
-        public IGoblinState getGuardState(){return guarding;}
     }
 }

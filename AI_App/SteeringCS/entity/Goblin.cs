@@ -92,30 +92,21 @@ namespace SteeringCS.entity
         public override void Update(float timeElapsed)
         {
             state.Act(timeElapsed);
-            //if (VectorMath.LineOfSight2(world, Pos, world.Hero.Pos))
-            //{
-                //Console.WriteLine("Line of sight found");
-                if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
+            if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
+            {
+                if (world.Hero.cooldown == 100)
                 {
-                    if (world.Hero.cooldown == 100)
-                    {
-                        //setGoblinState(retreating);
-                    }
-                    else
-                    {
-                        //setGoblinState(hunting);
-                    }
+                    setGoblinState(retreating);
                 }
                 else
                 {
-                    setGoblinState(guarding);
+                    setGoblinState(hunting);
                 }
-                
-            //} else
-            //{
-            //    Console.WriteLine("No line of sight");
-
-            //}
+            }
+            else
+            {
+                setGoblinState(guarding);
+            }
         }
 
         public override void Render(Graphics g)
@@ -165,46 +156,48 @@ namespace SteeringCS.entity
                 Brush brush = new SolidBrush(Color.Black);
                 g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
 
-                Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
-                Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
-
-                double segmentDistance = 10;
-                
-                var toTarget = goalPosition - currentPosition;
-                var desiredVelocity = (goalPosition - Pos).Normalize() * segmentDistance;
-                var neededForce = desiredVelocity - Velocity;
-                neededForce.Truncate(MaxForce);
-
-                Vector2D step = neededForce;
-                bool lineOfSightBlocked = false;
-
-                while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > 10) 
+                if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
                 {
-                    currentPosition += step;
-                    foreach (IObstacle obstacle in world.getObstacles())
+
+                    Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
+                    Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
+
+                    double segmentDistance = 15;
+
+                    var toTarget = goalPosition - currentPosition;
+                    Vector2D step = (goalPosition - Pos).Normalize() * segmentDistance;
+
+                    bool lineOfSightBlocked = false;
+
+                    while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > segmentDistance)
                     {
-                        if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
+                        currentPosition += step;
+                        foreach (IObstacle obstacle in world.getObstacles())
                         {
-                            lineOfSightBlocked = true;
+                            if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
+                            {
+                                lineOfSightBlocked = true;
+                                break;
+                            }
+                        }
+                        if (!lineOfSightBlocked)
+                        {
+                            g.DrawEllipse(r, new Rectangle((int)currentPosition.X, (int)currentPosition.Y, 1, 1));
+                        }
+                        else
+                        {
                             break;
                         }
-                    }
-                    if (!lineOfSightBlocked)
-                    {
-                        g.DrawEllipse(r, new Rectangle((int)currentPosition.X, (int)currentPosition.Y, 1, 1));
-                    } else
-                    {
-                        break;
-                    }
 
-                }
-                if (lineOfSightBlocked)
-                {
-                    DebugText = "No line of sight.";
-                }
-                else
-                {
-                    DebugText = "Line of sight found!";
+                    }
+                    if (lineOfSightBlocked)
+                    {
+                        DebugText = "No line of sight.";
+                    }
+                    else
+                    {
+                        DebugText = "Line of sight found!";
+                    }
                 }
             }
         }

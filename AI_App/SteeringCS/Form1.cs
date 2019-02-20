@@ -98,7 +98,8 @@ namespace SteeringCS
             entities.AddRange(world.getGoblins());
             entities.AddRange(world.getHobgoblins());
             entities.Add(world.Hero);
-            foreach(MovingEntity entity in entities) {
+            foreach (MovingEntity entity in entities)
+            {
                 if (VectorMath.DistanceBetweenPositions(entity.Pos, mousePos) < entity.Scale)
                 {
                     DebugEntityName.Text = entity.Name;
@@ -106,7 +107,7 @@ namespace SteeringCS
                 }
             };
         }
-        
+
 
         private void forceSpinnerGoblin_ValueChanged(object sender, EventArgs e)
         {
@@ -180,7 +181,8 @@ namespace SteeringCS
                     statRecoverCount -= 1;
                     world.Hero.RecoverStamina(1);
                 }
-            } else
+            }
+            else
             {
                 world.Hero.RecoverCooldown((int)SPS);
 
@@ -198,7 +200,8 @@ namespace SteeringCS
                     statRecoverCount -= 1;
                     world.Hero.RecoverCooldown(1);
                 }
-            } else
+            }
+            else
             {
                 world.Hero.RecoverCooldown((int)CPS);
             }
@@ -331,6 +334,11 @@ namespace SteeringCS
             {
                 rightPressed = false;
             }
+        }
+
+        private void menuItem1_Click(object sender, EventArgs e)
+        {
+            world.Reset();
         }
     }
 }

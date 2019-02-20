@@ -93,6 +93,13 @@ namespace SteeringCS
                         return false;
                     }
                 }
+                foreach (IWall wall in world.getWalls())
+                {
+                    if (PointInWall(currentPosition, wall))
+                    {
+                        return false;
+                    }
+                }
             }
             return true;
         }
@@ -133,6 +140,18 @@ namespace SteeringCS
             //
             //return uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1;
             return false;
+        }
+
+        public static bool PointInWall(Vector2D point, IWall wall)
+        {
+            Vector2D topLeft = new Vector2D(wall.Pos.X, wall.Pos.Y);
+            Vector2D bottomRight = new Vector2D(wall.Pos.X + wall.Width, wall.Pos.Y + wall.Height);
+
+            return
+                point.X >= topLeft.X &&
+                point.X <= bottomRight.X &&
+                point.Y >= topLeft.Y &&
+                point.Y <= bottomRight.Y;
         }
     }
 }

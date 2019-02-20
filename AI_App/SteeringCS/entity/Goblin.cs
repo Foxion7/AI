@@ -81,7 +81,7 @@ namespace SteeringCS.entity
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
             PanicDistance = 200; // Distance at which goblin starts fleeing.
-            PassiveDistance = 200; // Distance at which goblin goes to guard.
+            PassiveDistance = 250; // Distance at which goblin goes to guard.
             BraveryDistance = 100;
             WanderRadius = 10;
             WanderDistance = 1;
@@ -92,7 +92,7 @@ namespace SteeringCS.entity
         public override void Update(float timeElapsed)
         {
             state.Act(timeElapsed);
-            if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
+            if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance && VectorMath.LineOfSight(world, Pos, Target.Pos))
             {
                 if (world.Hero.cooldown == 100)
                 {
@@ -175,6 +175,14 @@ namespace SteeringCS.entity
                         foreach (IObstacle obstacle in world.getObstacles())
                         {
                             if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
+                            {
+                                lineOfSightBlocked = true;
+                                break;
+                            }
+                        }
+                        foreach (IWall wall in world.getWalls())
+                        {
+                            if (VectorMath.PointInWall(currentPosition, wall))
                             {
                                 lineOfSightBlocked = true;
                                 break;

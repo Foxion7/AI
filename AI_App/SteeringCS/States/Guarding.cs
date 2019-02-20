@@ -19,10 +19,10 @@ namespace SteeringCS.States
 
         public void Act(float timeElapsed)
         {
-            if (VectorMath.LineOfSight(goblin.world, goblin.Pos, goblin.world.Hero.Pos))
-            {
-                // Turn to look.
-            }
+            //if (VectorMath.LineOfSight(goblin.world, goblin.Pos, goblin.world.Hero.Pos))
+            //{
+            //    // Turn to look.
+            //}
         }
 
         public override string ToString()

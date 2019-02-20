@@ -107,8 +107,7 @@ namespace SteeringCS
                 }
             };
         }
-
-
+        
         private void forceSpinnerGoblin_ValueChanged(object sender, EventArgs e)
         {
             foreach (Goblin goblin in world.getGoblins())

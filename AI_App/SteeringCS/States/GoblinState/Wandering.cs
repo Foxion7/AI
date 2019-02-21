@@ -17,9 +17,9 @@ namespace SteeringCS.States.GoblinState
             Vector2D steeringForce = new Vector2D(0, 0);
 
             if (goblin._WB != null)
-                steeringForce += goblin._WB.Calculate();
+                steeringForce += goblin._WB.Calculate() * 0.5;
             if (goblin._FlockB != null)
-                steeringForce += goblin._FlockB.Calculate() * 0.5;
+                steeringForce += goblin._FlockB.Calculate();
             if (goblin._OA != null)
                 steeringForce += goblin._OA.Calculate();
             if (goblin._WA != null)
@@ -29,10 +29,10 @@ namespace SteeringCS.States.GoblinState
             Vector2D acceleration = steeringForce / goblin.Mass;
 
             goblin.Velocity += (acceleration * timeElapsed);
-            goblin.Velocity = goblin.Velocity.Truncate(goblin.MaxSpeed);
+            goblin.Velocity = goblin.Velocity.Truncate(goblin.MaxSpeed /3);
             goblin.OldPos = goblin.Pos;
             goblin.Pos += (goblin.Velocity * timeElapsed);
-            if (goblin.Velocity.LengthSquared() > 0.00000001)
+            if (!goblin.Velocity.LenghtIsZero())
             {
                 goblin.Heading = goblin.Velocity.Normalize();
                 goblin.Side = goblin.Heading.Perp();

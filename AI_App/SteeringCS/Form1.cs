@@ -31,13 +31,14 @@ namespace SteeringCS
         public Form1()
         {
             InitializeComponent();
-
             world = new World(w: dbPanel1.Width, h: dbPanel1.Height);
 
             timer = new System.Timers.Timer();
+            timer.SynchronizingObject = this;
             timer.Elapsed += Timer_Elapsed;
             timer.Interval = 20;
             timer.Enabled = true;
+
 
             // Starting values goblin.
             forceSpinnerGoblin.Value = 25;
@@ -173,9 +174,9 @@ namespace SteeringCS
             {
                 recoverStamina(0.5);
                 recoverCooldown(1);
-                healthBar.Value = world.Hero.health;
-                staminaBar.Value = world.Hero.stamina;
-                cooldownBar.Value = world.Hero.cooldown;
+                healthBar.Value   = Math.Max(0, Math.Min(100,world.Hero.health));
+                staminaBar.Value  = Math.Max(0, Math.Min(100,world.Hero.stamina));
+                cooldownBar.Value = Math.Max(0, Math.Min(100,world.Hero.cooldown));
                 UpdateStats();
             }
         }

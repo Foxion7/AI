@@ -14,10 +14,9 @@ namespace SteeringCS.util.Graph
         public readonly T Data;
         private List<GraphEdge<T>> _edges;
         public IEnumerable<GraphEdge<T>> Edges => _edges;
-        public bool Seen { get; set; } = false;
-        public bool ShallowSeen { get; set; } = false;
+        public bool Visited { get; set; } = false;
+        public bool Calculated { get; set; } = false;
         public float Distance { get; set; }
-        public float Heuristic { get; set; }
         public new float Priority { get; set; }
         public GraphNode<T> From { get; set; }
         public GraphEdge<T> Traveled { get; set; }

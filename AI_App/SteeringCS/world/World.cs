@@ -83,10 +83,10 @@ namespace SteeringCS
 
         public void SpawnWalls()
         {
-            Wall wall1 = new Wall("wall1", 20, Height/2, new Vector2D(Width /2, 0), this);
+            Wall wall1 = new Wall("wall1", 20, Height/2 -20, new Vector2D(Width /2 + 55, 0), this);
             _walls.Add(wall1);
 
-            Wall wall2 = new Wall("wall2", Width * 0.129, 20, new Vector2D(Width * 0.85+20, 0), this);
+            Wall wall2 = new Wall("wall2", Width * 0.129, 20, new Vector2D(Width * 0.85, 0), this);
             _walls.Add(wall2);
         }
 

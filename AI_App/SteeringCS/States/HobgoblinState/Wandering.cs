@@ -1,7 +1,4 @@
-﻿using SteeringCS.behaviour;
-using SteeringCS.entity;
-using SteeringCS.Interfaces;
-using SteeringCS.entity;
+﻿using SteeringCS.entity;
 using SteeringCS.Interfaces;
 
 namespace SteeringCS.States.HobgoblinState

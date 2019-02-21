@@ -33,6 +33,12 @@ namespace SteeringCS
             return v.Clone();
         }
         
+        public static double AngleBetweenPositions(Vector2D pointA, Vector2D pointB)
+        {
+            double x = pointB.X - pointA.X;
+            double y = pointB.Y - pointA.Y;
+            return Math.Atan(y / x) * 180.0 / Math.PI;
+        }
 
         public static double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using SteeringCS.behaviour;
@@ -167,13 +168,14 @@ namespace SteeringCS.entity
                 {
                     Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
                     Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
-
+                    
                     double segmentDistance = 15;
 
                     var toTarget = goalPosition - currentPosition;
                     Vector2D step = (goalPosition - Pos).Normalize() * segmentDistance;
 
                     bool lineOfSightBlocked = false;
+
 
                     while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > segmentDistance)
                     {

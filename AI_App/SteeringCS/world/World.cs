@@ -95,13 +95,10 @@ namespace SteeringCS
             Wall wall4 = new Wall("wall4", 20, 200, new Vector2D(820, 350 - 200), this);
             _walls.Add(wall4);
 
-            //Wall wall5 = new Wall("wall5", 240, 20, new Vector2D(600, 350 - 220), this);
-            //_walls.Add(wall5);
-
-            Wall wall5 = new Wall("wall5", 200, 20, new Vector2D(400, 350), this);
+            Wall wall5 = new Wall("wall5", 240, 20, new Vector2D(600, 350 - 220), this);
             _walls.Add(wall5);
 
-            Wall wall6 = new Wall("wall6", 20, 300, new Vector2D(300, 300), this);
+            Wall wall6 = new Wall("wall6", 30, 300, new Vector2D(300, 300), this);
             _walls.Add(wall6);
         }
 

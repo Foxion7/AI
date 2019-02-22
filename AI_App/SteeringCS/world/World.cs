@@ -67,27 +67,42 @@ namespace SteeringCS
 
         public void SpawnObstacles()
         {
-            Obstacle obstacle1 = new Obstacle("obstacle1", 20, new Vector2D(150, 150), this);
+            Obstacle obstacle1 = new Obstacle("obstacle1", 20, new Vector2D(600, 550), this);
             _obstacles.Add(obstacle1);
 
-            Obstacle obstacle2 = new Obstacle("obstacle2", 40, new Vector2D(400, 100), this);
+            Obstacle obstacle2 = new Obstacle("obstacle2", 20, new Vector2D(800, 550), this);
             _obstacles.Add(obstacle2);
 
-            Obstacle obstacle3 = new Obstacle("obstacle3", 20, new Vector2D(250, 300), this);
+            Obstacle obstacle3 = new Obstacle("obstacle3", 20, new Vector2D(600, 450), this);
             _obstacles.Add(obstacle3);
 
-            Obstacle obstacle4 = new Obstacle("obstacle4", 20, new Vector2D(600, 500), this);
+            Obstacle obstacle4 = new Obstacle("obstacle4", 20, new Vector2D(800, 450), this);
             _obstacles.Add(obstacle4);
         }
 
 
         public void SpawnWalls()
         {
-            Wall wall1 = new Wall("wall1", 20, Height/2 -20, new Vector2D(Width /2 + 55, 0), this);
+            Wall wall1 = new Wall("wall1", 100, 20, new Vector2D(600, 350), this);
             _walls.Add(wall1);
 
-            Wall wall2 = new Wall("wall2", Width * 0.129, 20, new Vector2D(Width * 0.85, 0), this);
+            Wall wall2 = new Wall("wall2", 100, 20, new Vector2D(740, 350), this);
             _walls.Add(wall2);
+
+            Wall wall3 = new Wall("wall3", 20, 200, new Vector2D(600, 350 - 200), this);
+            _walls.Add(wall3);
+
+            Wall wall4 = new Wall("wall4", 20, 200, new Vector2D(820, 350 - 200), this);
+            _walls.Add(wall4);
+
+            //Wall wall5 = new Wall("wall5", 240, 20, new Vector2D(600, 350 - 220), this);
+            //_walls.Add(wall5);
+
+            Wall wall5 = new Wall("wall5", 200, 20, new Vector2D(400, 350), this);
+            _walls.Add(wall5);
+
+            Wall wall6 = new Wall("wall6", 20, 300, new Vector2D(300, 300), this);
+            _walls.Add(wall6);
         }
 
         public void SpawnGoblins()

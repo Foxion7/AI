@@ -42,11 +42,7 @@ namespace SteeringCS.behaviour
             var distance = desiredVelocity.Length();
 
             // Slows when in slowingradius. Stops if in direct contact with target.
-            if (distance < 15)
-            {
-                desiredVelocity = new Vector2D(0, 0);
-            }
-            else  if (distance < slowingRadius)
+            if (distance < slowingRadius)
             {
                 desiredVelocity = desiredVelocity.Truncate(me.MaxSpeed) * (distance / slowingRadius);
             }

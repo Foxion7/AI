@@ -24,13 +24,6 @@ namespace SteeringCS.States.HobgoblinState
             // Gives order to listeners.
             hobgoblin.CallOrder();
 
-            // Command gather(goblins gather at hobgoblin)          
-            // Command release(goblins no longer obey hobgoblin)    
-            // Command attack(gathered goblins attack)
-
-            // Command protect(gathered goblins get between Hero and hobgoblin when hobgoblin is wounded)
-            // Command guard(gathered goblins guard a spot)
-
             StateCheck();
         }
 

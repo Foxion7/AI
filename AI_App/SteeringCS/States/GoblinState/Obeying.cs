@@ -32,7 +32,15 @@ namespace SteeringCS.States.GoblinState
             }
             else if(goblin.Commander.CurrentCommand == 2)
             {
-                // Guarding current location.
+                // Attack current target.
+                goblin.hunting.Act(timeElapsed);
+            }
+            else if(goblin.Commander.CurrentCommand == 3)
+            {
+                // Stand in area between commander and hero to protect commander.
+                IEntity targetZone = new Dummy("RendezvousZone", goblin.Commander.GetRendezvousPoint());
+                goblin.Target = targetZone;
+                
                 goblin.hunting.Act(timeElapsed);
             }
         }
@@ -47,7 +55,7 @@ namespace SteeringCS.States.GoblinState
                 {
                     goblin.Target = goblin.Commander;
 
-                }
+                } 
             }
             goblin.FollowingOrder = true;
 

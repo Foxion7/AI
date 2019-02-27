@@ -73,7 +73,7 @@ namespace SteeringCS.entity
             DamagePerAttack = 25;
             AttackRange = 20;
             AttackSpeed = 30; // Lower is faster.
-            CurrentCommand = 2; // Default command.
+            CurrentCommand = 3; // Default command.
             CommandRadius = 125; // Size of area where goblins will respond to commanding.
 
             SlowingRadius = 100;
@@ -97,6 +97,7 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
+
             currentState.Act(timeElapsed);
         }
 
@@ -273,12 +274,10 @@ namespace SteeringCS.entity
         // Triggers all listeners and gives them the hobgoblin and command nr.
         public void CallOrder()
         {
-            if (CurrentCommand == 2)
-                RendezvousPoint = GetRendezvousPoint();
             Order?.Invoke(this, CurrentCommand);
         }
 
-        private Vector2D GetRendezvousPoint()
+        public Vector2D GetRendezvousPoint()
         {
             Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
             Vector2D goalPosition = new Vector2D(Target.Pos.X, Target.Pos.Y);
@@ -301,7 +300,7 @@ namespace SteeringCS.entity
                     return currentPosition;
                 }
             }
-            return new Vector2D(0, 0);
+            return currentPosition;
         }
 
         public BaseGameEntity Target { get; set; }

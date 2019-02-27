@@ -16,7 +16,7 @@ namespace SteeringCS.entity
 
         public Obstacle(string name, double radius, Vector2D pos, World w) : base(name, pos, w)
         {
-            this.Name = name;
+            Name = name;
             Radius = radius;
             Center = new Vector2D(pos.X + radius, pos.Y + radius);
             VColor = Color.Black;
@@ -36,6 +36,12 @@ namespace SteeringCS.entity
 
             Pen p = new Pen(VColor, 2);
             g.DrawEllipse(p, new Rectangle((int)Pos.X, (int)Pos.Y, (int)size, (int)size));
+
+            if (world.DebugMode)
+            {
+                Brush brush = new SolidBrush(Color.Black);
+                g.DrawString(Name, SystemFonts.DefaultFont, brush, (float)(Pos.X + size / 2), (float)(Pos.Y - size / 2), new StringFormat());
+            }
         }
 
         public bool CollisionFound(Vector2D pos)

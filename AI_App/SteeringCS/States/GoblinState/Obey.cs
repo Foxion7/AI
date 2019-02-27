@@ -19,12 +19,24 @@ namespace SteeringCS.States.GoblinState
 
         public void Act(float timeElapsed)
         {
-            // Only follows direct command by hobgoblin(s).
+            if(goblin.Commander.CurrentCommand == 0)
+            {
+                goblin.FollowingOrder = true;
+                goblin.Target = goblin.Commander;
+            }
+        }
+
+        public void Enter( )
+        {
+        }
+
+        public void Exit( )
+        {
         }
 
         public override string ToString()
         {
-            return "Guarding";
+            return "Obeying";
         }
     }
 }

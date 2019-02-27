@@ -51,11 +51,14 @@ namespace SteeringCS.States.GoblinState
                 goblin.world.rePosGoblin(goblin.Key, goblin.OldPos, goblin.Pos);
             } else if (AttackAvailable())
             {
-                AttackPlayer();
+                //AttackPlayer();
             }
+
+            // Checks wether a state change is in order.
+            StateCheck();
         }
 
-        public bool AttackAvailable()
+        private bool AttackAvailable()
         {
             if(timeElapsedSinceLastAttack > goblin.AttackSpeed)
             {
@@ -65,9 +68,26 @@ namespace SteeringCS.States.GoblinState
             return false;
         }
 
-        public void AttackPlayer()
+        private void AttackPlayer()
         {
             goblin.world.Hero.health -= goblin.DamagePerAttack;
+        }
+
+        private void StateCheck()
+        {
+            if (VectorMath.DistanceBetweenPositions(goblin.Pos, goblin.Target.Pos) >= goblin.PassiveDistance || !VectorMath.LineOfSight(goblin.world, goblin.Pos, goblin.Target.Pos))
+            {
+                goblin.setState(goblin.guarding);
+            }
+        }
+
+        public void Enter( )
+        {
+        }
+
+        public void Exit( )
+        {
+
         }
 
         public override string ToString()

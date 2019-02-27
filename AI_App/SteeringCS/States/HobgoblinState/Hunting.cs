@@ -50,11 +50,14 @@ namespace SteeringCS.States.HobgoblinState
             }
             else if (AttackAvailable())
             {
-                AttackPlayer();
+                //AttackPlayer();
             }
+
+            // Checks wether a state change is in order.
+            StateCheck();
         }
 
-        public bool AttackAvailable()
+        private bool AttackAvailable()
         {
             if (timeElapsedSinceLastAttack > hobgoblin.AttackSpeed)
             {
@@ -64,9 +67,25 @@ namespace SteeringCS.States.HobgoblinState
             return false;
         }
 
-        public void AttackPlayer()
+        private void AttackPlayer()
         {
             hobgoblin.world.Hero.health -= hobgoblin.DamagePerAttack;
+        }
+
+        private void StateCheck()
+        {
+            if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, hobgoblin.Target.Pos) < hobgoblin.PassiveDistance && VectorMath.LineOfSight(hobgoblin.world, hobgoblin.Pos, hobgoblin.Target.Pos))
+            {
+                hobgoblin.setState(hobgoblin.command);
+            }
+        }
+
+        public void Enter( )
+        {
+        }
+
+        public void Exit( )
+        {
         }
 
         public override string ToString()

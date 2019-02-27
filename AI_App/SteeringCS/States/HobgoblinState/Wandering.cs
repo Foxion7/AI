@@ -39,9 +39,17 @@ namespace SteeringCS.States.HobgoblinState
             hobgoblin.world.rePosGoblin(hobgoblin.Key, hobgoblin.OldPos, hobgoblin.Pos);
         }
 
+        public void Enter( )
+        {
+        }
+
+        public void Exit( )
+        {
+        }
+
         public override string ToString()
         {
-            return "Retreating";
+            return "Wandering";
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SteeringCS.Interfaces;
+using System;
 using System.Linq;
 
 namespace SteeringCS.behaviour
@@ -23,7 +24,7 @@ namespace SteeringCS.behaviour
         public Vector2D Calculate()
         {
             Vector2D avoidanceForce = new Vector2D(0, 0);
-            
+
             centerSensor = _me.Pos + _me.Velocity.Normalize() * MaxSeeAhead;
             leftSensor = new Vector2D(_me.Pos.X + ((_me.Side.X - _me.Heading.X) * -MaxSeeAhead / 2), _me.Pos.Y + ((_me.Side.Y - _me.Heading.Y) * -MaxSeeAhead / 2));
             rightSensor = new Vector2D(_me.Pos.X + ((_me.Side.X - _me.Heading.X * -1) * MaxSeeAhead / 2), _me.Pos.Y + ((_me.Side.Y - _me.Heading.Y * -1) * MaxSeeAhead / 2));
@@ -43,6 +44,31 @@ namespace SteeringCS.behaviour
 
             return avoidanceForce;
         }
+
+        //public Vector2D Calculate()
+        //{
+        //    Vector2D force; // My force will be stored here
+        //    Vector2D pos = _me.Pos; // Position of the agent
+
+        //    // For each wall
+        //    for (int j = 0; j < _me.Walls.Count(); j++)
+        //    {
+        //        var wall = _me.Walls[j];
+        //        var x = (wall.Center.X + _me.Pos.X) / 2;
+        //        var y = (wall.Center.Y + _me.Pos.Y) / 2;
+        //        Vector2D distance = new Vector2D(x, y);
+
+        //        // If the wall is visible, calculate the force to apply
+        //        double dotProduct = distance * partsList[j]->normal();
+        //        if (dotProduct < 0)
+        //        {
+        //            force += partsList[j]->normal() / (distance.length() * distance.length() + 1);
+        //        }
+        //    }
+
+        //    // Returned the calculated force
+        //    return force;
+        //}
 
         public IWall GetClosestWall(IWallAvoider ME)
         {

@@ -22,9 +22,17 @@ namespace SteeringCS.States.HobgoblinState
             /// Tries to find and equip weapons / armor.
         }
 
+        public void Enter( )
+        {
+        }
+
+        public void Exit( )
+        {
+        }
+
         public override string ToString()
         {
-            return "Guarding";
+            return "Equipping";
         }
     }
 }

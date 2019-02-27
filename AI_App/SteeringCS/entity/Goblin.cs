@@ -25,6 +25,9 @@ namespace SteeringCS.entity
         public int AttackRange { get; set; }
         public int AttackSpeed { get; set; }
 
+        public Hobgoblin Commander { get; set; }
+        public bool FollowingOrder { get; set; }
+
         // Grouping behaviour.
         public IEnumerable<IGrouper> Neighbors => world.GetGoblinNeighbors(this, NeighborsRange).Cast<IGrouper>();
         public FollowMode FollowMode { get; set; } = FollowMode.flock;
@@ -43,14 +46,15 @@ namespace SteeringCS.entity
         public WallAvoidance _WA                { get; set; }
 
         // States
-        IGoblinState state;
-        IGoblinState hunting;
-        IGoblinState retreating;
-        IGoblinState guarding;
-        IGoblinState wandering;
-        IGoblinState regroup;
-        IGoblinState obey;
-        IGoblinState equip;
+        public IGoblinState currentState;
+        public IGoblinState previousState;
+        public IGoblinState hunting;
+        public IGoblinState retreating;
+        public IGoblinState guarding;
+        public IGoblinState wandering;
+        public IGoblinState regroup;
+        public IGoblinState obey;
+        public IGoblinState equip;
         
         public Goblin(string name, Vector2D pos, World w, MovingEntity Target) : base(name, pos, w)
         {
@@ -63,6 +67,8 @@ namespace SteeringCS.entity
             obey = new Obey(this);
             equip = new Equip(this);
             setState(guarding); // Starting state.
+
+            FollowingOrder = false;
 
             Key = _lastKey + 1;
             _lastKey++;
@@ -105,16 +111,7 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            state.Act(timeElapsed);
-            //if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance && VectorMath.LineOfSight(world, Pos, Target.Pos))
-            if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
-            {
-                setState(hunting);
-            }
-            else
-            {
-                setState(guarding);
-            }
+            currentState.Act(timeElapsed);
         }
 
         public override void Render(Graphics g)
@@ -182,6 +179,19 @@ namespace SteeringCS.entity
                         currentPosition += step;
                         foreach (IObstacle obstacle in world.getObstacles())
                         {
+                            //if (obstacle.Name.Equals("obstacle4"))
+                            //{
+                            //    var angle = VectorMath.AngleBetweenPositions(Pos, obstacle.Center);
+                                
+                            //    Console.WriteLine("Angle: " + angle);
+
+                            //    double relativeX = obstacle.Center.X - Pos.X;
+                            //    double relativeY = obstacle.Center.Y - Pos.Y;
+                            //    double rotatedX = Math.Cos(-angle) * relativeX - Math.Sin(-angle) * relativeY;
+                            //    double rotatedY = Math.Cos(-angle) * relativeY + Math.Sin(-angle) * relativeX;
+
+                            //    Console.WriteLine("Obstacle location in local space: " + new Vector2D(rotatedX, rotatedY));
+                            //}
                             if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
                             {
                                 lineOfSightBlocked = true;
@@ -393,8 +403,42 @@ namespace SteeringCS.entity
 
         public void setState(IGoblinState state)
         {
-            this.state = state;
-            AddDebugText("Current state: " + state.ToString(), 0);
+            if(previousState != null)
+            {
+                previousState.Exit();
+            }
+
+            previousState = currentState;
+            state.Enter();
+            currentState = state;
+            AddDebugText("Current state: " + currentState, 0);
+        }
+
+        public void Obey(Hobgoblin hobgoblin)
+        {
+            hobgoblin.Order += new Hobgoblin.OrderHandler(ReceivedOrder);
+        }
+
+        public void Release(Hobgoblin hobgoblin)
+        {
+            hobgoblin.Order += new Hobgoblin.OrderHandler(IgnoreCommands);
+        }
+
+        private void IgnoreCommands(Hobgoblin hobgoblin, int currentOrder)
+        {
+            AddDebugText("No longer obeying orders from " + hobgoblin.Name, 2);
+            Commander = null;
+            FollowingOrder = false;
+            setState(guarding);
+        }
+
+        private void ReceivedOrder(Hobgoblin hobgoblin, int currentOrder)
+        {
+            AddDebugText("Obeying orders from " + hobgoblin.Name, 2);
+            Commander = hobgoblin;
+
+            if(!FollowingOrder)
+                setState(obey);
         }
     }
 }

@@ -22,9 +22,17 @@ namespace SteeringCS.States.GoblinState
             // Find other goblins to group up with.
         }
 
+        public void Enter( )
+        {
+        }
+
+        public void Exit( )
+        {
+        }
+
         public override string ToString()
         {
-            return "Guarding";
+            return "Regrouping";
         }
     }
 }

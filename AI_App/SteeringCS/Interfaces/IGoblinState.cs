@@ -8,6 +8,8 @@ namespace SteeringCS.Interfaces
 {
     public interface IGoblinState
     {
+        void Enter();
         void Act(float timeElapsed);
+        void Exit();
     }
 }

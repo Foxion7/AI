@@ -19,10 +19,27 @@ namespace SteeringCS.States.GoblinState
 
         public void Act(float timeElapsed)
         {
+            StateCheck();
             //if (VectorMath.LineOfSight(goblin.world, goblin.Pos, goblin.world.Hero.Pos))
             //{
             //    // Turn to look.
             //}
+        }
+
+        private void StateCheck()
+        {
+            if (VectorMath.DistanceBetweenPositions(goblin.Pos, goblin.Target.Pos) < goblin.PassiveDistance && VectorMath.LineOfSight(goblin.world, goblin.Pos, goblin.Target.Pos))
+            {
+                goblin.setState(goblin.hunting);
+            }
+        }
+
+        public void Enter( )
+        {
+        }
+
+        public void Exit( )
+        {
         }
 
         public override string ToString()

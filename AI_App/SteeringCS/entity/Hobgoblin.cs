@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using SteeringCS.behaviour;
@@ -16,7 +17,6 @@ namespace SteeringCS.entity
         private List<string> debugText;
         
         public Color VColor { get; set; }
-        public double BraveryDistance { get; set; }
         public double PassiveDistance { get; set; }
         public double PanicDistance { get; set; }
         public double WanderRadius { get; set; }
@@ -24,6 +24,7 @@ namespace SteeringCS.entity
         public int DamagePerAttack { get; set; }
         public int AttackRange { get; set; }
         public int AttackSpeed { get; set; }
+        public int CurrentCommand { get; set; }
 
         // Avoidance behaviour.
         public List<IObstacle> Obstacles => world.getObstacles();
@@ -37,13 +38,17 @@ namespace SteeringCS.entity
         public WallAvoidance _WA { get; set; }
 
         // States
-        IHobgoblinState state;
-        IHobgoblinState hunting;
-        IHobgoblinState retreating;
-        IHobgoblinState guarding;
-        IHobgoblinState wandering;
-        IHobgoblinState command;
-        IHobgoblinState equip;
+        public IHobgoblinState currentState;
+        public IHobgoblinState previousState;
+        public IHobgoblinState hunting;
+        public IHobgoblinState retreating;
+        public IHobgoblinState guarding;
+        public IHobgoblinState wandering;
+        public IHobgoblinState command;
+        public IHobgoblinState equip;
+        
+        public event OrderHandler Order;
+        public delegate void OrderHandler(Hobgoblin hobgoblin, int CurrentCommand);
 
         public Hobgoblin(string name, Vector2D pos, World w, MovingEntity Target) : base(name, pos, w)
         {
@@ -67,11 +72,11 @@ namespace SteeringCS.entity
             DamagePerAttack = 25;
             AttackRange = 20;
             AttackSpeed = 30; // Lower is faster.
+            CurrentCommand = 0; // Default command.
 
             SlowingRadius = 100;
             PanicDistance = 200; // Distance at which goblin starts fleeing.
             PassiveDistance = 250; // Distance at which goblin goes to guard.
-            BraveryDistance = 100;
 
             _SB = new ArrivalBehaviour(me: this, target: Target, slowingRadius: SlowingRadius);
             _FleeB = new FleeBehaviour(me: this, target: Target, panicDistance: PanicDistance);
@@ -88,15 +93,7 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-            state.Act(timeElapsed);
-            if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance && VectorMath.LineOfSight(world, Pos, Target.Pos))
-            {
-                setState(hunting);
-            }
-            else
-            {
-                setState(guarding);
-            }
+            currentState.Act(timeElapsed);
         }
 
         public override void Render(Graphics g)
@@ -238,8 +235,24 @@ namespace SteeringCS.entity
 
         public void setState(IHobgoblinState state)
         {
-            this.state = state;
-            AddDebugText("Current state: " + state.ToString(), 0);
+            if (previousState != null)
+            {
+                previousState.Exit();
+            }
+
+            previousState = currentState;
+            state.Enter();
+            currentState = state;
+            AddDebugText("Current state: " + currentState.ToString(), 0);
+        }
+
+        public void CallOrder()
+        {
+            if (Order != null)
+            {
+                Order(this, CurrentCommand);
+                AddDebugText("Calling a command to nearby underlings", 2);
+            }
         }
 
         public BaseGameEntity Target { get; set; }

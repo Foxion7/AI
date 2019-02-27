@@ -36,7 +36,7 @@ namespace SteeringCS
             timer = new System.Timers.Timer();
             timer.SynchronizingObject = this;
             timer.Elapsed += Timer_Elapsed;
-            timer.Interval = 20;
+            timer.Interval = 40;
             timer.Enabled = true;
 
 

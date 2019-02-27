@@ -36,8 +36,13 @@ namespace SteeringCS
         public static double AngleBetweenPositions(Vector2D pointA, Vector2D pointB)
         {
             double x = pointB.X - pointA.X;
-            double y = pointB.Y - pointA.Y;
-            return Math.Atan(y / x) * 180.0 / Math.PI;
+            double y = pointB.Y * -1 - pointA.Y * -1;
+            double angle = Math.Atan(y / x) *180.0 / Math.PI;
+            if (angle < 0)
+            {
+                angle *= -1;
+            }
+            return angle;
         }
 
         public static double DistanceBetweenPositions(Vector2D pointA, Vector2D pointB)

@@ -23,6 +23,28 @@ namespace SteeringCS.States.HobgoblinState
             //{
             //    // Turn to look.
             //}
+
+            StateCheck();
+        }
+
+        private void StateCheck()
+        {
+            if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, hobgoblin.Target.Pos) < hobgoblin.PassiveDistance && VectorMath.LineOfSight(hobgoblin.world, hobgoblin.Pos, hobgoblin.Target.Pos))
+            {
+                hobgoblin.setState(hobgoblin.hunting);
+            }
+            else if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, hobgoblin.Target.Pos) >= hobgoblin.PassiveDistance && VectorMath.LineOfSight(hobgoblin.world, hobgoblin.Pos, hobgoblin.Target.Pos))
+            {
+                hobgoblin.setState(hobgoblin.command);
+            }
+        }
+
+        public void Enter( )
+        {
+        }
+
+        public void Exit( )
+        {
         }
 
         public override string ToString()

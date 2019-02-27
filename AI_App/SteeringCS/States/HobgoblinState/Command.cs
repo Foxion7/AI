@@ -26,8 +26,8 @@ namespace SteeringCS.States.HobgoblinState
 
             // Command gather(goblins gather at hobgoblin)          
             // Command release(goblins no longer obey hobgoblin)    
+            // Command attack(gathered goblins attack)
 
-            // Command attack(gathered goblins attack without hobgoblin)
             // Command protect(gathered goblins get between Hero and hobgoblin when hobgoblin is wounded)
             // Command guard(gathered goblins guard a spot)
 
@@ -48,7 +48,7 @@ namespace SteeringCS.States.HobgoblinState
         public void CallOut()
         {
             int debugCount = 0;
-            foreach(Goblin goblin in hobgoblin.world.getGoblins())
+            foreach (Goblin goblin in hobgoblin.world.getGoblins())
             {
                 if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, goblin.Pos) < hobgoblin.CommandRadius)
                 {
@@ -67,7 +67,7 @@ namespace SteeringCS.States.HobgoblinState
                 hobgoblin.setState(hobgoblin.hunting);
             }
         }
-
+        
         public void Enter( )
         {
             // Makes goblins listen for commands.

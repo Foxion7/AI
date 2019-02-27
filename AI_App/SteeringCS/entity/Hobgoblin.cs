@@ -26,6 +26,7 @@ namespace SteeringCS.entity
         public int AttackSpeed { get; set; }
         public int CurrentCommand { get; set; }
         public int CommandRadius { get; set; }
+        public Vector2D RendezvousPoint { get; set; }
 
         // Avoidance behaviour.
         public List<IObstacle> Obstacles => world.getObstacles();
@@ -72,7 +73,7 @@ namespace SteeringCS.entity
             DamagePerAttack = 25;
             AttackRange = 20;
             AttackSpeed = 30; // Lower is faster.
-            CurrentCommand = 1; // Default command.
+            CurrentCommand = 2; // Default command.
             CommandRadius = 125; // Size of area where goblins will respond to commanding.
 
             SlowingRadius = 100;
@@ -107,6 +108,7 @@ namespace SteeringCS.entity
 
             Pen p = new Pen(VColor, 2);
             Pen r = new Pen(Color.Red, 2);
+            Pen n = new Pen(Color.Green, 2);
 
             if (world.TriangleModeActive)
             {
@@ -136,56 +138,60 @@ namespace SteeringCS.entity
                 Brush brush = new SolidBrush(Color.Black);
                 g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
 
+                // RendezvousPoint.
+                Vector2D debugRendezvousPoint = GetRendezvousPoint();
+                g.DrawEllipse(n, new Rectangle((int)debugRendezvousPoint.X - 15, (int)debugRendezvousPoint.Y - 15, 30, 30));
+                
                 // Command circle.
                 g.DrawEllipse(r, new Rectangle((int)leftCorner - CommandRadius + (int)(size /2), (int)rightCorner - CommandRadius + (int)(size / 2), CommandRadius * 2 , CommandRadius *2));
                 
-                    Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
-                    Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
+                Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
+                Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
 
-                    double segmentDistance = 15;
+                double segmentDistance = 15;
 
-                    var toTarget = goalPosition - currentPosition;
-                    Vector2D step = (goalPosition - Pos).Normalize() * segmentDistance;
+                var toTarget = goalPosition - currentPosition;
+                Vector2D step = (goalPosition - Pos).Normalize() * segmentDistance;
 
-                    bool lineOfSightBlocked = false;
-
-                    while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > segmentDistance)
+                bool lineOfSightBlocked = false;
+                
+                while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > segmentDistance)
+                {
+                    currentPosition += step;
+                    foreach (IObstacle obstacle in world.getObstacles())
                     {
-                        currentPosition += step;
-                        foreach (IObstacle obstacle in world.getObstacles())
+                        if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
                         {
-                            if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
-                            {
-                                lineOfSightBlocked = true;
-                                break;
-                            }
-                        }
-                        foreach (IWall wall in world.getWalls())
-                        {
-                            if (VectorMath.PointInWall(currentPosition, wall))
-                            {
-                                lineOfSightBlocked = true;
-                                break;
-                            }
-                        }
-                        if (!lineOfSightBlocked)
-                        {
-                            g.DrawEllipse(r, new Rectangle((int)currentPosition.X, (int)currentPosition.Y, 1, 1));
-                        }
-                        else
-                        {
+                            lineOfSightBlocked = true;
                             break;
                         }
-
                     }
-                    if (lineOfSightBlocked)
+                    foreach (IWall wall in world.getWalls())
                     {
-                        AddDebugText("No line of sight.", 2);
+                        if (VectorMath.PointInWall(currentPosition, wall))
+                        {
+                            lineOfSightBlocked = true;
+                            break;
+                        }
+                    }
+                    if (!lineOfSightBlocked)
+                    {
+                        g.DrawEllipse(r, new Rectangle((int)currentPosition.X, (int)currentPosition.Y, 1, 1));
                     }
                     else
                     {
-                        AddDebugText("Line of sight!", 2);
+                        break;
                     }
+
+                }
+                if (lineOfSightBlocked)
+                {
+                    AddDebugText("No line of sight.", 2);
+                }
+                else
+                {
+                    AddDebugText("Line of sight!", 2);
+                }
             }
         }
 
@@ -267,7 +273,35 @@ namespace SteeringCS.entity
         // Triggers all listeners and gives them the hobgoblin and command nr.
         public void CallOrder()
         {
+            if (CurrentCommand == 2)
+                RendezvousPoint = GetRendezvousPoint();
             Order?.Invoke(this, CurrentCommand);
+        }
+
+        private Vector2D GetRendezvousPoint()
+        {
+            Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
+            Vector2D goalPosition = new Vector2D(Target.Pos.X, Target.Pos.Y);
+            double segmentDistance = 15;
+            Vector2D step = (goalPosition - Pos).Normalize() * segmentDistance;
+
+            int segmentCount = 0;
+
+            while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > segmentDistance)
+            {
+                currentPosition += step;
+                segmentCount++;
+
+                int defenseSegment = (int)VectorMath.DistanceBetweenPositions(Pos, goalPosition) / 25;
+                if (defenseSegment > 8)
+                    defenseSegment = 8;
+
+                if (segmentCount == defenseSegment && defenseSegment > 1)
+                {
+                    return currentPosition;
+                }
+            }
+            return new Vector2D(0, 0);
         }
 
         public BaseGameEntity Target { get; set; }

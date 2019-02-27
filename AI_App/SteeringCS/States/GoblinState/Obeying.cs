@@ -30,6 +30,11 @@ namespace SteeringCS.States.GoblinState
                 // Guarding current location.
                 goblin.guarding.Act(timeElapsed);
             }
+            else if(goblin.Commander.CurrentCommand == 2)
+            {
+                // Guarding current location.
+                goblin.hunting.Act(timeElapsed);
+            }
         }
 
         public void Enter( )

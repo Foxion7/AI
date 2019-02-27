@@ -163,71 +163,70 @@ namespace SteeringCS.entity
             {
                 Brush brush = new SolidBrush(Color.Black);
                 g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
-
-
-                    Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
-                    Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
+                
+                Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
+                Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
                     
-                    double segmentDistance = 15;
+                double segmentDistance = 15;
 
-                    var toTarget = goalPosition - currentPosition;
-                    Vector2D step = (goalPosition - Pos).Normalize() * segmentDistance;
+                var toTarget = goalPosition - currentPosition;
+                Vector2D step = (goalPosition - Pos).Normalize() * segmentDistance;
 
-                    bool lineOfSightBlocked = false;
+                bool lineOfSightBlocked = false;
 
 
-                    while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > segmentDistance)
+                while (VectorMath.DistanceBetweenPositions(currentPosition, goalPosition) > segmentDistance)
+                {
+                    currentPosition += step;
+                    foreach (IObstacle obstacle in world.getObstacles())
                     {
-                        currentPosition += step;
-                        foreach (IObstacle obstacle in world.getObstacles())
-                        {
-                            #region Localspace try
-                            //if (obstacle.Name.Equals("obstacle4"))
-                            //{
-                            //    var angle = VectorMath.AngleBetweenPositions(Pos, obstacle.Center);
+                        #region Localspace try
+                        //if (obstacle.Name.Equals("obstacle4"))
+                        //{
+                        //    var angle = VectorMath.AngleBetweenPositions(Pos, obstacle.Center);
 
-                            //    Console.WriteLine("Angle: " + angle);
+                        //    Console.WriteLine("Angle: " + angle);
 
-                            //    double relativeX = obstacle.Center.X - Pos.X;
-                            //    double relativeY = obstacle.Center.Y - Pos.Y;
-                            //    double rotatedX = Math.Cos(-angle) * relativeX - Math.Sin(-angle) * relativeY;
-                            //    double rotatedY = Math.Cos(-angle) * relativeY + Math.Sin(-angle) * relativeX;
+                        //    double relativeX = obstacle.Center.X - Pos.X;
+                        //    double relativeY = obstacle.Center.Y - Pos.Y;
+                        //    double rotatedX = Math.Cos(-angle) * relativeX - Math.Sin(-angle) * relativeY;
+                        //    double rotatedY = Math.Cos(-angle) * relativeY + Math.Sin(-angle) * relativeX;
 
-                            //    Console.WriteLine("Obstacle location in local space: " + new Vector2D(rotatedX, rotatedY));
-                            //}
-                            #endregion
-                            if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
-                            {
-                                lineOfSightBlocked = true;
-                                break;
-                            }
-                        }
-                        foreach (IWall wall in world.getWalls())
+                        //    Console.WriteLine("Obstacle location in local space: " + new Vector2D(rotatedX, rotatedY));
+                        //}
+                        #endregion
+                        if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
                         {
-                            if (VectorMath.PointInWall(currentPosition, wall))
-                            {
-                                lineOfSightBlocked = true;
-                                break;
-                            }
-                        }
-                        if (!lineOfSightBlocked)
-                        {
-                            g.DrawEllipse(r, new Rectangle((int)currentPosition.X, (int)currentPosition.Y, 1, 1));
-                        }
-                        else
-                        {
+                            lineOfSightBlocked = true;
                             break;
                         }
-
                     }
-                    if (lineOfSightBlocked)
+                    foreach (IWall wall in world.getWalls())
                     {
-                        AddDebugText("No line of sight.", 2);
+                        if (VectorMath.PointInWall(currentPosition, wall))
+                        {
+                            lineOfSightBlocked = true;
+                            break;
+                        }
+                    }
+                    if (!lineOfSightBlocked)
+                    {
+                        g.DrawEllipse(r, new Rectangle((int)currentPosition.X, (int)currentPosition.Y, 1, 1));
                     }
                     else
                     {
-                        AddDebugText("Line of sight!", 2);
+                        break;
                     }
+
+                }
+                if (lineOfSightBlocked)
+                {
+                    AddDebugText("No line of sight.", 2);
+                }
+                else
+                {
+                    AddDebugText("Line of sight!", 2);
+                }
             }
         }
 
@@ -435,7 +434,7 @@ namespace SteeringCS.entity
 
         public void Obey(Hobgoblin hobgoblin)
         {
-            // If not already under someones command...
+            // If not already under someone's command...
             if(Commander == null)
             {
                 Commander = hobgoblin;

@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BD179484-1369-4437-BD3B-4AECFB627286}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SteeringCS</RootNamespace>
     <AssemblyName>SteeringCS</AssemblyName>
@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,10 +32,20 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Priority Queue, Version=4.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OptimizedPriorityQueue.4.2.0\lib\net45\Priority Queue.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,27 +60,71 @@
     <Compile Include="behaviour\ArrivalBehaviour.cs" />
     <Compile Include="behaviour\EvadeBehaviour.cs" />
     <Compile Include="behaviour\FleeBehaviour.cs" />
-    <Compile Include="behaviour\PursuitAndArriveBehaviour.cs" />
-    <Compile Include="IEntity\IEvader.cs" />
-    <Compile Include="IEntity\IPursuer.cs" />
+    <Compile Include="behaviour\FlockBehaviour.cs" />
+    <Compile Include="behaviour\FollowPathBehaviour.cs" />
+    <Compile Include="entity\Corpse.cs" />
+    <Compile Include="entity\Dummy.cs" />
+    <Compile Include="Interfaces\IGoblinState.cs" />
+    <Compile Include="Interfaces\IHobgoblinState.cs" />
+    <Compile Include="States\GoblinState\Obeying.cs" />
+    <Compile Include="States\GoblinState\Equip.cs" />
+    <Compile Include="States\GoblinState\Regroup.cs" />
+    <Compile Include="States\GoblinState\Hunting.cs" />
+    <Compile Include="States\GoblinState\Guarding.cs" />
+    <Compile Include="States\GoblinState\Wandering.cs" />
+    <Compile Include="States\GoblinState\Retreating.cs" />
+    <Compile Include="States\HobgoblinState\Equip.cs" />
+    <Compile Include="States\HobgoblinState\Guarding.cs" />
+    <Compile Include="States\HobgoblinState\Hunting.cs" />
+    <Compile Include="States\HobgoblinState\Command.cs" />
+    <Compile Include="States\HobgoblinState\Retreating.cs" />
+    <Compile Include="States\HobgoblinState\Wandering.cs" />
+    <Compile Include="util\Graph\Graph.cs" />
+    <Compile Include="util\Graph\GraphEdge.cs" />
+    <Compile Include="util\Graph\GraphNode.cs" />
+    <Compile Include="util\Graph\GraphUtil.cs" />
+    <Compile Include="util\Graph\VectorGraph.cs" />
+    <Compile Include="util\Route.cs" />
+    <Compile Include="behaviour\WallAvoidance.cs" />
+    <Compile Include="behaviour\LeaderFollowingBehaviour.cs" />
+    <Compile Include="behaviour\ObstacleAvoidance.cs" />
+    <Compile Include="entity\Hobgoblin.cs" />
+    <Compile Include="entity\Goblin.cs" />
+    <Compile Include="entity\Wall.cs" />
+    <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Interfaces\IMover.cs" />
+    <Compile Include="entity\Obstacle.cs" />
+    <Compile Include="Interfaces\IGrouper.cs" />
+    <Compile Include="Interfaces\IObstacle.cs" />
+    <Compile Include="Interfaces\IObstacleAvoider.cs" />
     <Compile Include="behaviour\PursuitBehaviour.cs" />
-    <Compile Include="IEntity\IFleer.cs" />
-    <Compile Include="IEntity\ISeeker.cs" />
-    <Compile Include="IEntity\IWanderer.cs" />
-    <Compile Include="IEntity\IArriver.cs" />
+    <Compile Include="Interfaces\IWall.cs" />
+    <Compile Include="Interfaces\IWallAvoider.cs" />
     <Compile Include="behaviour\WanderBehaviour.cs" />
     <Compile Include="entity\BaseGameEntity.cs" />
     <Compile Include="behaviour\SeekBehaviour.cs" />
-    <Compile Include="DBPanel.cs" />
+    <Compile Include="DBPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="entity\MovingEntity.cs" />
-    <Compile Include="entity\Vehicle.cs" />
-    <Compile Include="Form1.cs" />
+    <Compile Include="entity\Hero.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="behaviour\SteeringBehaviour.cs" />
+    <Compile Include="behaviour\ISteeringBehaviour.cs" />
+    <Compile Include="util\InvertedBox.cs" />
+    <Compile Include="util\Cell.cs" />
+    <Compile Include="util\CellSpacePartition.cs" />
+    <Compile Include="util\ModifyProgressBarColor.cs" />
+    <Compile Include="util\StatusBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="_behaviourStatic\staticBehaviours.cs" />
     <Compile Include="util\Vector2D.cs" />
     <Compile Include="util\VectorMath.cs" />
     <Compile Include="world\World.cs" />
@@ -85,6 +140,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

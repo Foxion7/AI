@@ -65,10 +65,10 @@
             this.massSpinnerGoblin = new System.Windows.Forms.NumericUpDown();
             this.maxSpeedSpinnerGoblin = new System.Windows.Forms.NumericUpDown();
             this.menu = new System.Windows.Forms.MainMenu(this.components);
+            this.menu_resetButton = new System.Windows.Forms.MenuItem();
             this.menu_debugList = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
-            this.menu_resetButton = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.dbPanel3.SuspendLayout();
@@ -88,7 +88,7 @@
             this.dbPanel3.Controls.Add(this.DebugEntityInfo);
             this.dbPanel3.Controls.Add(this.DebugEntityName);
             this.dbPanel3.Controls.Add(this.label7);
-            this.dbPanel3.Location = new System.Drawing.Point(1324, 216);
+            this.dbPanel3.Location = new System.Drawing.Point(1324, 622);
             this.dbPanel3.Name = "dbPanel3";
             this.dbPanel3.Size = new System.Drawing.Size(223, 183);
             this.dbPanel3.TabIndex = 36;
@@ -225,7 +225,7 @@
             this.dbPanel2.Controls.Add(this.forceSpinnerGoblin);
             this.dbPanel2.Controls.Add(this.massSpinnerGoblin);
             this.dbPanel2.Controls.Add(this.maxSpeedSpinnerGoblin);
-            this.dbPanel2.Location = new System.Drawing.Point(1324, 405);
+            this.dbPanel2.Location = new System.Drawing.Point(1324, 216);
             this.dbPanel2.Name = "dbPanel2";
             this.dbPanel2.Size = new System.Drawing.Size(223, 400);
             this.dbPanel2.TabIndex = 33;
@@ -449,6 +449,12 @@
             this.menu_resetButton,
             this.menu_debugList});
             // 
+            // menu_resetButton
+            // 
+            this.menu_resetButton.Index = 0;
+            this.menu_resetButton.Text = "Reset";
+            this.menu_resetButton.Click += new System.EventHandler(this.menuItem1_Click);
+            // 
             // menu_debugList
             // 
             this.menu_debugList.Index = 1;
@@ -469,12 +475,6 @@
             // 
             this.menuItem4.Index = 1;
             this.menuItem4.Text = "Wall sensors visible";
-            // 
-            // menu_resetButton
-            // 
-            this.menu_resetButton.Index = 0;
-            this.menu_resetButton.Text = "Reset";
-            this.menu_resetButton.Click += new System.EventHandler(this.menuItem1_Click);
             // 
             // menuItem5
             // 

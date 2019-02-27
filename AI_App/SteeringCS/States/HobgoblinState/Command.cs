@@ -21,43 +21,40 @@ namespace SteeringCS.States.HobgoblinState
 
         public void Act(float timeElapsed)
         {
-
-
             // Gives order.
             hobgoblin.CallOrder();
 
-            // Releases nearby listening goblins from commands.
+            // Command gather(goblins gather at hobgoblin)          
+            // Command release(goblins no longer obey hobgoblin)    
 
-            // Gives command to gathered goblins.
-
-            // Command gather(goblins gather at hobgoblin)
-            // Command release(goblins no longer obey hobgoblin)
             // Command attack(gathered goblins attack without hobgoblin)
-            // Command protect((gathered goblins get between Hero and hobgoblin when hobgoblin is wounded)
+            // Command protect(gathered goblins get between Hero and hobgoblin when hobgoblin is wounded)
             // Command guard(gathered goblins guard a spot)
-            StateCheck();
 
+            StateCheck();
         }
 
-        // Calls for goblins to listen for commands.
+        // Calls for goblins to stop obeying.
         public void Release()
         {
             foreach (Goblin goblin in hobgoblin.world.getGoblins())
             {
-                //if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, goblin.Pos) < 500)
                 goblin.Release(hobgoblin);
             }
-            hobgoblin.AddDebugText("I am no longer actively commanding.", 2);
-
+            hobgoblin.AddDebugText("I don't have minions.", 2);
         }
 
-        // Calls for goblins to listen for commands.
+        // Calls for goblins within range to start obeying.
         public void CallOut()
         {
+            int debugCount = 0;
             foreach(Goblin goblin in hobgoblin.world.getGoblins())
             {
-                if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, goblin.Pos) < 500)
+                if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, goblin.Pos) < hobgoblin.CommandRadius)
                 {
+                    debugCount++;
+                    hobgoblin.AddDebugText("I have " + debugCount + " minions.", 2);
+
                     goblin.Obey(hobgoblin);
                 }
             }
@@ -65,7 +62,7 @@ namespace SteeringCS.States.HobgoblinState
 
         private void StateCheck()
         {
-            if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, hobgoblin.Target.Pos) >= hobgoblin.PassiveDistance || !VectorMath.LineOfSight(hobgoblin.world, hobgoblin.Pos, hobgoblin.Target.Pos))
+            if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, hobgoblin.Target.Pos) >= hobgoblin.CommandRadius || !VectorMath.LineOfSight(hobgoblin.world, hobgoblin.Pos, hobgoblin.Target.Pos))
             {
                 hobgoblin.setState(hobgoblin.hunting);
             }

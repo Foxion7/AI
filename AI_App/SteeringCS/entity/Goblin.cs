@@ -424,7 +424,12 @@ namespace SteeringCS.entity
 
         public void Obey(Hobgoblin hobgoblin)
         {
-            hobgoblin.Order += new Hobgoblin.OrderHandler(ReceivedOrder);
+            // If not already under someones command...
+            if(Commander == null)
+            {
+                Commander = hobgoblin;
+                hobgoblin.Order += new Hobgoblin.OrderHandler(ReceivedOrder);
+            }
         }
 
         public void Release(Hobgoblin hobgoblin)
@@ -441,13 +446,13 @@ namespace SteeringCS.entity
             RemoveDebugText(2);
         }
 
+        // Method called when 'CallOrder' event triggers by Commander
         private void ReceivedOrder(Hobgoblin hobgoblin, int currentOrder)
         {
-            AddDebugText("Obeying orders from " + hobgoblin.Name, 2);
-            Commander = hobgoblin;
-
             if(!FollowingOrder)
                 setState(obey);
+
+            AddDebugText("Obeying orders from " + hobgoblin.Name, 2);
         }
     }
 }

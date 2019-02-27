@@ -48,6 +48,10 @@ namespace SteeringCS.States.GoblinState
                 goblin.WrapAround();
                 goblin.world.rePosGoblin(goblin.Key, goblin.OldPos, goblin.Pos);
             }
+            else if(goblin.Commander.CurrentCommand == 1)
+            {
+
+            }
         }
 
         public void Enter( )
@@ -57,12 +61,12 @@ namespace SteeringCS.States.GoblinState
                 goblin.Target = goblin.Commander;
 
             }
-            goblin.FollowingOrder = true; // Maybe to be removed
+            goblin.FollowingOrder = true;
         }
 
         public void Exit( )
         {
-            goblin.FollowingOrder = false; // Maybe to be removed
+            goblin.FollowingOrder = false;
         }
 
         public override string ToString()

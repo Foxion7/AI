@@ -25,6 +25,7 @@ namespace SteeringCS.entity
         public int AttackRange { get; set; }
         public int AttackSpeed { get; set; }
         public int CurrentCommand { get; set; }
+        public int CommandRadius { get; set; }
 
         // Avoidance behaviour.
         public List<IObstacle> Obstacles => world.getObstacles();
@@ -73,6 +74,7 @@ namespace SteeringCS.entity
             AttackRange = 20;
             AttackSpeed = 30; // Lower is faster.
             CurrentCommand = 0; // Default command.
+            CommandRadius = 125; // Size of area where goblins will respond to commanding.
 
             SlowingRadius = 100;
             PanicDistance = 200; // Distance at which goblin starts fleeing.
@@ -132,6 +134,10 @@ namespace SteeringCS.entity
             {
                 Brush brush = new SolidBrush(Color.Black);
                 g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
+
+                // Command circle.
+                g.DrawEllipse(r, new Rectangle((int)leftCorner - CommandRadius + (int)(size /2), (int)rightCorner - CommandRadius + (int)(size / 2), CommandRadius * 2 , CommandRadius *2));
+
 
                 if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
                 {
@@ -258,7 +264,6 @@ namespace SteeringCS.entity
             if (Order != null)
             {
                 Order(this, CurrentCommand);
-                AddDebugText("I am actively commanding", 2);
             }
         }
 

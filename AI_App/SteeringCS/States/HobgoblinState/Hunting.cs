@@ -74,7 +74,8 @@ namespace SteeringCS.States.HobgoblinState
 
         private void StateCheck()
         {
-            if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, hobgoblin.Target.Pos) < hobgoblin.PassiveDistance && VectorMath.LineOfSight(hobgoblin.world, hobgoblin.Pos, hobgoblin.Target.Pos))
+            // CommandRadius should be PassiveDistance.
+            if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, hobgoblin.Target.Pos) < hobgoblin.CommandRadius && VectorMath.LineOfSight(hobgoblin.world, hobgoblin.Pos, hobgoblin.Target.Pos))
             {
                 hobgoblin.setState(hobgoblin.command);
             }

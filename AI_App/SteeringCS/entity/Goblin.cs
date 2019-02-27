@@ -64,7 +64,7 @@ namespace SteeringCS.entity
             guarding = new Guarding(this);
             wandering = new Wandering(this);
             regroup = new Regroup(this);
-            obey = new Obey(this);
+            obey = new Obeying(this);
             equip = new Equip(this);
             setState(guarding); // Starting state.
 

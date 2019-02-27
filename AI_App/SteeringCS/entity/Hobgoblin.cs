@@ -264,6 +264,7 @@ namespace SteeringCS.entity
             AddDebugText("Previous state: " + previousState, 1);
         }
 
+        // Triggers all listeners and gives them the hobgoblin and command nr.
         public void CallOrder()
         {
             Order?.Invoke(this, CurrentCommand);

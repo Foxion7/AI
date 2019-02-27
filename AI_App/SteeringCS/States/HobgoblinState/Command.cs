@@ -21,7 +21,7 @@ namespace SteeringCS.States.HobgoblinState
 
         public void Act(float timeElapsed)
         {
-            // Gives order.
+            // Gives order to listeners.
             hobgoblin.CallOrder();
 
             // Command gather(goblins gather at hobgoblin)          

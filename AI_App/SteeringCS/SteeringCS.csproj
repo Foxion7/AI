@@ -65,7 +65,7 @@
     <Compile Include="entity\Corpse.cs" />
     <Compile Include="Interfaces\IGoblinState.cs" />
     <Compile Include="Interfaces\IHobgoblinState.cs" />
-    <Compile Include="States\GoblinState\Obey.cs" />
+    <Compile Include="States\GoblinState\Obeying.cs" />
     <Compile Include="States\GoblinState\Equip.cs" />
     <Compile Include="States\GoblinState\Regroup.cs" />
     <Compile Include="States\GoblinState\Hunting.cs" />

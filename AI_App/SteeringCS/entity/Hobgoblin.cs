@@ -235,15 +235,22 @@ namespace SteeringCS.entity
 
         public void setState(IHobgoblinState state)
         {
-            if (previousState != null)
+            if(previousState != null)
             {
+                previousState = currentState;
+
                 previousState.Exit();
             }
+            else
+            {
+                previousState = state;
+            }
 
-            previousState = currentState;
             state.Enter();
             currentState = state;
-            AddDebugText("Current state: " + currentState.ToString(), 0);
+
+            AddDebugText("Current state: " + currentState, 0);
+            AddDebugText("Previous state: " + previousState, 3);
         }
 
         public void CallOrder()
@@ -251,7 +258,7 @@ namespace SteeringCS.entity
             if (Order != null)
             {
                 Order(this, CurrentCommand);
-                AddDebugText("Calling a command to nearby underlings", 2);
+                AddDebugText("I am actively commanding", 2);
             }
         }
 

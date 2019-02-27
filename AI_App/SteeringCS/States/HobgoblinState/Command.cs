@@ -44,11 +44,11 @@ namespace SteeringCS.States.HobgoblinState
         {
             foreach (Goblin goblin in hobgoblin.world.getGoblins())
             {
-                if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, goblin.Pos) < 500)
-                {
-                    goblin.Release(hobgoblin);
-                }
+                //if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, goblin.Pos) < 500)
+                goblin.Release(hobgoblin);
             }
+            hobgoblin.AddDebugText("I am no longer actively commanding.", 2);
+
         }
 
         // Calls for goblins to listen for commands.
@@ -79,6 +79,7 @@ namespace SteeringCS.States.HobgoblinState
 
         public void Exit( )
         {
+
             // Releases goblins from commands.
             Release();
         }

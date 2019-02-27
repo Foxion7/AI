@@ -403,15 +403,23 @@ namespace SteeringCS.entity
 
         public void setState(IGoblinState state)
         {
-            if(previousState != null)
+            if (previousState != null)
             {
+                previousState = currentState;
+
                 previousState.Exit();
             }
+            else
+            {
+                previousState = state;
+            }
 
-            previousState = currentState;
             state.Enter();
             currentState = state;
+
             AddDebugText("Current state: " + currentState, 0);
+            AddDebugText("Previous state: " + previousState, 3);
+
         }
 
         public void Obey(Hobgoblin hobgoblin)
@@ -421,15 +429,16 @@ namespace SteeringCS.entity
 
         public void Release(Hobgoblin hobgoblin)
         {
-            hobgoblin.Order += new Hobgoblin.OrderHandler(IgnoreCommands);
-        }
+            if(hobgoblin.CurrentCommand == 0)
+            {
+                Target = world.Hero;
+            }
 
-        private void IgnoreCommands(Hobgoblin hobgoblin, int currentOrder)
-        {
-            AddDebugText("No longer obeying orders from " + hobgoblin.Name, 2);
+            hobgoblin.Order -= ReceivedOrder;
             Commander = null;
-            FollowingOrder = false;
             setState(guarding);
+
+            RemoveDebugText(2);
         }
 
         private void ReceivedOrder(Hobgoblin hobgoblin, int currentOrder)

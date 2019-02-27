@@ -82,10 +82,12 @@ namespace SteeringCS.States.HobgoblinState
 
         public void Enter( )
         {
+
         }
 
         public void Exit( )
         {
+
         }
 
         public override string ToString()

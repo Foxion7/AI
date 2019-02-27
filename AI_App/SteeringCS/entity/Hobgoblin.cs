@@ -60,8 +60,7 @@ namespace SteeringCS.entity
             wandering = new Wandering(this);
             command = new Command(this);
             equip = new Equip(this);
-            setState(hunting); // Starting state.
-
+            setState(guarding); // Starting state.
             Key = _lastKey + 1;
             _lastKey++;
             debugText = new List<string>();
@@ -77,8 +76,8 @@ namespace SteeringCS.entity
             CommandRadius = 125; // Size of area where goblins will respond to commanding.
 
             SlowingRadius = 100;
-            PanicDistance = 200; // Distance at which goblin starts fleeing.
-            PassiveDistance = 250; // Distance at which goblin goes to guard.
+            PanicDistance = 200; // Distance at which hobgoblin starts fleeing.
+            PassiveDistance = 250; // Distance at which hobgoblin goes to guard.
 
             _SB = new ArrivalBehaviour(me: this, target: Target, slowingRadius: SlowingRadius);
             _FleeB = new FleeBehaviour(me: this, target: Target, panicDistance: PanicDistance);
@@ -88,9 +87,11 @@ namespace SteeringCS.entity
 
             Velocity = new Vector2D(0, 0);
             SlowingRadius = 100;
-
             Scale = 10;
             VColor = Color.Black;
+
+            AddDebugText("Current state: " + currentState, 0);
+            AddDebugText("Previous state: " + previousState, 1);
         }
 
         public override void Update(float timeElapsed)
@@ -137,10 +138,7 @@ namespace SteeringCS.entity
 
                 // Command circle.
                 g.DrawEllipse(r, new Rectangle((int)leftCorner - CommandRadius + (int)(size /2), (int)rightCorner - CommandRadius + (int)(size / 2), CommandRadius * 2 , CommandRadius *2));
-
-
-                if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
-                {
+                
                     Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
                     Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
 
@@ -182,17 +180,12 @@ namespace SteeringCS.entity
                     }
                     if (lineOfSightBlocked)
                     {
-                        RemoveDebugText(1);
+                        AddDebugText("No line of sight.", 2);
                     }
                     else
                     {
-                        AddDebugText("Line of sight to Hero!", 1);
+                        AddDebugText("Line of sight!", 2);
                     }
-                }
-                else
-                {
-                    RemoveDebugText(1);
-                }
             }
         }
 
@@ -208,12 +201,24 @@ namespace SteeringCS.entity
                 }
                 newLine += text;
 
-                // If index is not taken, adds line on index. Else just adds at the end.
+                bool doubleEntry = false;
+
+
+                // Checks for double entries.
+                for (int i = 0; i < debugText.Count(); i++)
+                {
+                    if (debugText[i].Equals(text))
+                    {
+                        doubleEntry = true;
+                    }
+                }
+
+                // If index is not taken, adds line on index. Else (if not double) just adds at the end.
                 if (debugText.Count() > index)
                 {
                     debugText[index] = newLine;
                 }
-                else
+                else if (!doubleEntry)
                 {
                     debugText.Insert(debugText.Count(), newLine);
                 }
@@ -256,15 +261,12 @@ namespace SteeringCS.entity
             currentState = state;
 
             AddDebugText("Current state: " + currentState, 0);
-            AddDebugText("Previous state: " + previousState, 3);
+            AddDebugText("Previous state: " + previousState, 1);
         }
 
         public void CallOrder()
         {
-            if (Order != null)
-            {
-                Order(this, CurrentCommand);
-            }
+            Order?.Invoke(this, CurrentCommand);
         }
 
         public BaseGameEntity Target { get; set; }

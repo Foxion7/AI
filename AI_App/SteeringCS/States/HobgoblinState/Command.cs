@@ -53,7 +53,7 @@ namespace SteeringCS.States.HobgoblinState
                 if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, goblin.Pos) < hobgoblin.CommandRadius)
                 {
                     debugCount++;
-                    hobgoblin.AddDebugText("I have " + debugCount + " minions.", 2);
+                    hobgoblin.AddDebugText("I have [" + debugCount + "] minion(s).", 2);
 
                     goblin.Obey(hobgoblin);
                 }

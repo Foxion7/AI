@@ -56,12 +56,16 @@ namespace SteeringCS.States.GoblinState
 
         public void Enter( )
         {
-            if (goblin.Commander.CurrentCommand == 0)
+            if (goblin.Commander != null)
             {
-                goblin.Target = goblin.Commander;
+                if (goblin.Commander.CurrentCommand == 0)
+                {
+                    goblin.Target = goblin.Commander;
 
+                }
             }
             goblin.FollowingOrder = true;
+
         }
 
         public void Exit( )

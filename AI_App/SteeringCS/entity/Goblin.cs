@@ -107,6 +107,9 @@ namespace SteeringCS.entity
             WanderDistance = 1;
             Scale = 4;
             VColor = Color.Black;
+
+            AddDebugText("Current state: " + currentState, 0);
+            AddDebugText("Previous state: " + previousState, 1);
         }
 
         public override void Update(float timeElapsed)
@@ -161,8 +164,7 @@ namespace SteeringCS.entity
                 Brush brush = new SolidBrush(Color.Black);
                 g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
 
-                if (VectorMath.DistanceBetweenPositions(Pos, world.Hero.Pos) < PassiveDistance)
-                {
+
                     Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
                     Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
                     
@@ -179,10 +181,11 @@ namespace SteeringCS.entity
                         currentPosition += step;
                         foreach (IObstacle obstacle in world.getObstacles())
                         {
+                            #region Localspace try
                             //if (obstacle.Name.Equals("obstacle4"))
                             //{
                             //    var angle = VectorMath.AngleBetweenPositions(Pos, obstacle.Center);
-                                
+
                             //    Console.WriteLine("Angle: " + angle);
 
                             //    double relativeX = obstacle.Center.X - Pos.X;
@@ -192,6 +195,7 @@ namespace SteeringCS.entity
 
                             //    Console.WriteLine("Obstacle location in local space: " + new Vector2D(rotatedX, rotatedY));
                             //}
+                            #endregion
                             if (VectorMath.DistanceBetweenPositions(currentPosition, obstacle.Center) <= obstacle.Radius)
                             {
                                 lineOfSightBlocked = true;
@@ -218,16 +222,12 @@ namespace SteeringCS.entity
                     }
                     if (lineOfSightBlocked)
                     {
-                        RemoveDebugText(1);
+                        AddDebugText("No line of sight.", 2);
                     }
                     else
                     {
-                        AddDebugText("Line of sight to Hero!", 1);
+                        AddDebugText("Line of sight!", 2);
                     }
-                } else
-                {
-                    RemoveDebugText(1);
-                }
             }
         }
 
@@ -370,16 +370,28 @@ namespace SteeringCS.entity
                 }
                 newLine += text;
 
-                // If index is not taken, adds line on index. Else just adds at the end.
+                bool doubleEntry = false;
+
+
+                // Checks for double entries.
+                for (int i = 0; i < debugText.Count(); i++)
+                {
+                    if (debugText[i].Equals(text))
+                    {
+                        doubleEntry = true;
+                    }
+                }
+
+                // If index is not taken, adds line on index. Else (if not double) just adds at the end.
                 if (debugText.Count() > index)
                 {
                     debugText[index] = newLine;
                 }
-                else
+                else if (!doubleEntry)
                 {
                     debugText.Insert(debugText.Count(), newLine);
                 }
-
+                
                 // Adds all debugText texts together to display.
                 string newDebugText = "";
                 for(int i = 0; i < debugText.Count(); i++)
@@ -418,8 +430,7 @@ namespace SteeringCS.entity
             currentState = state;
 
             AddDebugText("Current state: " + currentState, 0);
-            AddDebugText("Previous state: " + previousState, 3);
-
+            AddDebugText("Previous state: " + previousState, 1);
         }
 
         public void Obey(Hobgoblin hobgoblin)
@@ -443,7 +454,8 @@ namespace SteeringCS.entity
             Commander = null;
             setState(guarding);
 
-            RemoveDebugText(2);
+            AddDebugText("Not obeying any orders.", 3);
+
         }
 
         // Method called when 'CallOrder' event triggers by Commander
@@ -452,7 +464,7 @@ namespace SteeringCS.entity
             if(!FollowingOrder)
                 setState(obey);
 
-            AddDebugText("Obeying orders from " + hobgoblin.Name, 2);
+            AddDebugText("Obeying orders from " + hobgoblin.Name, 3);
         }
     }
 }

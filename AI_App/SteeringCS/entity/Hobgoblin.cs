@@ -72,7 +72,7 @@ namespace SteeringCS.entity
             DamagePerAttack = 25;
             AttackRange = 20;
             AttackSpeed = 30; // Lower is faster.
-            CurrentCommand = 0; // Default command.
+            CurrentCommand = 1; // Default command.
             CommandRadius = 125; // Size of area where goblins will respond to commanding.
 
             SlowingRadius = 100;

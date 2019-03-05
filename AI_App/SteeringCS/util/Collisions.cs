@@ -20,7 +20,7 @@ namespace SteeringCS.util
             var right = wall.Pos.X + (wall.Width);
             var top = wall.Pos.Y;
             var bottom = wall.Pos.Y + (wall.Height);
-            return left < point.X && right > point.X && top < point.Y && bottom > point.Y;
+            return left <= point.X && right >= point.X && top <= point.Y && bottom >= point.Y;
         }
 
         public static bool WallCollidesWithLine(IWall wall, Vector2D st, Vector2D ed)

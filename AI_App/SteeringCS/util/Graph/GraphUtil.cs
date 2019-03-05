@@ -7,21 +7,22 @@ using Priority_Queue;
 using SteeringCS.entity;
 using SteeringCS.Interfaces;
 using static SteeringCS.VectorMath;
+using static SteeringCS.util.Collisions;
 
 namespace SteeringCS.util.Graph
 {
     public static class GraphUtil
     {
         public static VectorGraph CreateGraphForMap(int width, int height, int tileSize, List<IObstacle> obstacles,
-            List<IWall> walls)
+            List<IWall> walls, double margin=0)
         {
             double diagonal = Math.Sqrt(tileSize * tileSize * 2);
 
             var memory = new Dictionary<(int, int), Vector2D>();
             var graph = new VectorGraph();
-            for (int x = 0 / 2; x < width / tileSize; x++)
+            for (int x = 0; x < width / tileSize; x++)
             {
-                for (int y = 0 / 2; y < height / tileSize; y++)
+                for (int y = 0; y < height / tileSize; y++)
                 {
                     var current = new Vector2D(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
 

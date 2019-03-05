@@ -54,7 +54,7 @@ namespace SteeringCS
 
             SpawnObstacles();
             SpawnWalls();
-            Graph = GraphUtil.CreateGraphForMap(w, h, 50, _obstacles, _walls);
+            Graph = GraphUtil.CreateGraphForMap(w, h, 75, _obstacles, _walls);
             populate();
         }
 
@@ -98,7 +98,7 @@ namespace SteeringCS
             Wall wall5 = new Wall("wall5", 240, 20, new Vector2D(600, 350 - 220), this);
             _walls.Add(wall5);
 
-            Wall wall6 = new Wall("wall6", 30, 300, new Vector2D(300, 300), this);
+            Wall wall6 = new Wall("wall6", 30, 300, new Vector2D(300, 325), this);
             _walls.Add(wall6);
         }
 

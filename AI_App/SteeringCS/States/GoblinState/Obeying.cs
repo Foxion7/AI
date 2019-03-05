@@ -63,6 +63,10 @@ namespace SteeringCS.States.GoblinState
 
         public void Exit( )
         {
+            if(goblin.Target != goblin.world.Hero)
+            {
+                goblin.Target = goblin.world.Hero;
+            }
             goblin.FollowingOrder = false;
         }
 

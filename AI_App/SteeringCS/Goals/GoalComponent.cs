@@ -8,7 +8,7 @@ namespace SteeringCS.Goals
 {
     public abstract class GoalComponent
     {
-        public void Exit()
+        public void Enter()
         {
             throw new NotImplementedException();
         }

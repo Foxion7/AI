@@ -64,8 +64,10 @@
     <Compile Include="behaviour\FollowPathBehaviour.cs" />
     <Compile Include="entity\Corpse.cs" />
     <Compile Include="entity\Dummy.cs" />
+    <Compile Include="entity\Treasure.cs" />
     <Compile Include="Goals\CompositeGoal.cs" />
     <Compile Include="Goals\Goal.cs" />
+    <Compile Include="Goals\GoalComponent.cs" />
     <Compile Include="Interfaces\IGoblinState.cs" />
     <Compile Include="Interfaces\IHobgoblinState.cs" />
     <Compile Include="States\GoblinState\Obeying.cs" />

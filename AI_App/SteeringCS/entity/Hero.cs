@@ -40,6 +40,8 @@ namespace SteeringCS.entity
 
         public int staminaCost { get; }
         public int cooldownCost { get; }
+
+        public double currentGold { get; set; }
         
         public Hero(string name, Vector2D pos, World w) : base(name, pos, w)
         {
@@ -67,6 +69,8 @@ namespace SteeringCS.entity
 
             staminaCost = 50;
             cooldownCost = 100;
+
+            currentGold = 0;
 
             Scale = 5;
             VColor = Color.Black;
@@ -188,6 +192,13 @@ namespace SteeringCS.entity
             {
                 cooldown += amount;
             }
+        }
+
+        public void CollectTreasure(Treasure treasure)
+        {
+            currentGold += treasure.value;
+            Console.WriteLine("My current gold: " + currentGold);
+            world.DestroyTreasure(treasure);
         }
         
         public BaseGameEntity Target      { get; set; }

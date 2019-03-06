@@ -22,6 +22,7 @@ namespace SteeringCS
         private CellSpacePartition<MovingEntity> _goblinSpace;
         private List<MovingEntity> _hobgoblins = new List<MovingEntity>();
         private List<Corpse> _corpses = new List<Corpse>();
+        private List<Treasure> _treasures = new List<Treasure>();
         private List<IObstacle> _obstacles = new List<IObstacle>();
         private List<IWall> _walls = new List<IWall>();
 
@@ -54,6 +55,8 @@ namespace SteeringCS
 
             SpawnObstacles();
             SpawnWalls();
+            GenerateTreasure(10, 30, new Vector2D(100, 100));
+
             Graph = GraphUtil.CreateGraphForMap(w, h, 75, _obstacles, _walls);
             populate();
         }
@@ -102,7 +105,7 @@ namespace SteeringCS
             _walls.Add(wall6);
         }
 
-        public void SpawnGoblins()
+        public void SpawnGoblin()
         {
             Random r = new Random();
             int rInt = r.Next(0, goblinColors.Count());
@@ -131,9 +134,20 @@ namespace SteeringCS
             _corpses.Add(corpse);
         }
 
+        public void GenerateTreasure(double value, double size, Vector2D pos)
+        {
+            var treasure = new Treasure("Treasure", value, pos, this, size);
+            _treasures.Add(treasure);
+        }
+
         public void DestroyGoblin(Goblin goblin)
         {
             _goblins.Remove(goblin);
+        }
+
+        public void DestroyTreasure(Treasure treasure)
+        {
+            _treasures.Remove(treasure);
         }
 
         public void DestroySeekers()
@@ -188,6 +202,7 @@ namespace SteeringCS
             if(GraphVisible)
                 Graph.Render(g);
             _corpses.ForEach(e => e.Render(g));
+            _treasures.ForEach(e => e.Render(g));
             _goblins.ToList().ForEach(e => e.Render(g));
             _hobgoblins.ForEach(e => e.Render(g));
             _obstacles.ForEach(e => e.Render(g));

@@ -255,7 +255,7 @@ namespace SteeringCS
                     world.VelocityVisible = !world.VelocityVisible;
                     break;
                 case Keys.G:
-                    world.SpawnGoblins();
+                    world.SpawnGoblin();
                     goblinCount.Text = world.getGoblins().Count().ToString();
                     break;
                 case Keys.H:

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SteeringCS._goals
 {
-    public class Goal_Attack : GoalComponent
+    public class Goal_Attack : Goal
     {
         public Goal_Attack(string name) : base(name)
         {
@@ -16,12 +16,12 @@ namespace SteeringCS._goals
 
         int counter = 0;
 
-        public void Enter()
+        public override void Enter()
         {
             Console.WriteLine("enter " + name);
         }
 
-        public void Process()
+        public override void Process()
         {
             counter++;
 
@@ -32,7 +32,7 @@ namespace SteeringCS._goals
             Console.WriteLine("process attacking (counting) " + name);
         }
 
-        public void Exit()
+        public override void Exit()
         {
             Console.WriteLine("exit " + name);
             done = true;

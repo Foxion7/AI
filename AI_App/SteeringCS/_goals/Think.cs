@@ -7,25 +7,25 @@ using System.Threading.Tasks;
 
 namespace SteeringCS._goals
 {
-    public class Think : GoalComponent
+    public class Think : Goal
     {
-        public Think(string name) : base(name)
+        public Think(string name, List<Goal> goals ) : base(name)
         {
             done = false;
         }
 
-        public void Enter()
+        public override void Enter()
         {
             Console.WriteLine("Starting thinking...");
         }
 
-        public void Process()
+        public override void Process()
         {
             Console.WriteLine("Thinking...");
 
         }
 
-        public void Exit()
+        public override void Exit()
         {
             done = true;
 

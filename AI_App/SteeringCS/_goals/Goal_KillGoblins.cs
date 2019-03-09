@@ -7,39 +7,39 @@ using System.Threading.Tasks;
 
 namespace SteeringCS._goals
 {
-    public class Goal_KillGoblins : GoalGroup
+    public class Goal_KillGoblins : Goal
     {
-        public Goal_KillGoblins(string compositeGoalName) : base(compositeGoalName, null)
+        Goal currentGoal;
+        
+        public Goal_KillGoblins(string name, List<Goal> subgoals) : base(name, subgoals)
         {
         }
 
-        public Goal_KillGoblins(string compositeGoalName, List<GoalComponent> goals) : base(compositeGoalName, goals)
+        public Goal_KillGoblins(string name) : base(name)
         {
         }
 
-        GoalComponent currentGoal;
-
-        public void Enter()
+        public override void Enter()
         {
-            currentGoal = goals[0];
+            currentGoal = subgoals[0];
            
             Console.WriteLine("enter comp " + name);
         }
 
-        public void Process()
+        public override void Process()
         {
-            executeGoal(currentGoal);
-            exitCheck();
+            ExecuteGoal(currentGoal);
+            ExitCheck();
 
             Console.WriteLine("process comp " + name);
         }
 
-        public void Exit()
+        public override void Exit()
         {
             Console.WriteLine("exit comp " + name);
         }
 
-        private void executeGoal(GoalComponent goal)
+        private void ExecuteGoal(Goal goal)
         {
             goal.Enter();
             while (!goal.done)
@@ -48,10 +48,10 @@ namespace SteeringCS._goals
             }
         }
 
-        private void exitCheck()
+        private void ExitCheck()
         {
             // Exits if all inner goals are concluded.
-            foreach (Goal goal in goals)
+            foreach (Goal goal in subgoals)
             {
                 if (goal.done)
                 {

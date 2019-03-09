@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SteeringCS._goals;
 using SteeringCS.behaviour;
 using SteeringCS.Goals;
 using SteeringCS.Interfaces;
@@ -25,7 +26,7 @@ namespace SteeringCS.entity
             }
         }
 
-        public GoalComponent think;
+        public Goal think;
 
         public FollowPathBehaviour PB;
         public ISteeringBehaviour OA;
@@ -48,7 +49,6 @@ namespace SteeringCS.entity
         
         public Hero(string name, Vector2D pos, World w) : base(name, pos, w)
         {
-            SetupGoals();
             Mass = 1;
             MaxSpeed = 10;
             MaxForce = 500;
@@ -85,13 +85,8 @@ namespace SteeringCS.entity
         {
             if (!think.done)
             {
-                Console.WriteLine("doing");
                 think.Process();
 
-            }
-            else
-            {
-                Console.WriteLine("done");
             }
             #region old stuff
             //Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
@@ -162,12 +157,12 @@ namespace SteeringCS.entity
        
         private void SetupGoals()
         {
-            GoalComponent attack = new _goals.Goal_Attack("Attack");
-            GoalComponent hunt = new _goals.Goal_Attack("Hunt");
+            Goal attack = new Goal_Attack("Attack");
+            Goal hunt = new Goal_Attack("Hunt");
 
-            GoalComponent killGoblinsStrategy = new GoalGroup("Kill Goblins", new List<GoalComponent> { attack, hunt });
+            Goal killGoblinsStrategy = new Goal_KillGoblins("Kill Goblins", new List<Goal> { attack, hunt });
 
-            think = new GoalGroup("Think", new List<GoalComponent> { killGoblinsStrategy });
+            think = new Think("Think", new List<Goal> { killGoblinsStrategy });
             think.Enter();
         }
 

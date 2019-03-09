@@ -8,37 +8,27 @@ namespace SteeringCS.Goals
 {
     public abstract class GoalComponent
     {
+        public string name { get; set; }
+        public bool done { get; set; }
+
+        protected GoalComponent(string name)
+        {
+            this.name = name;
+        }
+
         public void Enter()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void Process()
         {
-            throw new NotImplementedException();
-
+            //throw new NotImplementedException();
         }
 
         public void Exit()
         {
-            throw new NotImplementedException();
-        }
-
-        public void AddGoal(GoalComponent goal)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public void RemoveGoal(GoalComponent goal)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public string GetGoalName()
-        {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

@@ -8,26 +8,16 @@ namespace SteeringCS.Goals
 {
     public class Goal : GoalComponent
     {
-        string name;
+        public string name { get; }
 
-        public Goal(string name)
+        public Goal(string name):base(name)
         {
             this.name = name;
         }
 
-        public void Enter()
+        public override string ToString()
         {
-            Console.WriteLine("enter " + name);
-        }
-
-        public void Process()
-        {
-            Console.WriteLine("process " + name);
-        }
-
-        public void Exit()
-        {
-            Console.WriteLine("exit " + name);
+            return name;
         }
     }
 }

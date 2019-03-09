@@ -65,7 +65,7 @@
     <Compile Include="entity\Corpse.cs" />
     <Compile Include="entity\Dummy.cs" />
     <Compile Include="entity\Treasure.cs" />
-    <Compile Include="Goals\CompositeGoal.cs" />
+    <Compile Include="Goals\GoalGroup.cs" />
     <Compile Include="Goals\Goal.cs" />
     <Compile Include="Goals\GoalComponent.cs" />
     <Compile Include="Interfaces\IGoblinState.cs" />
@@ -133,6 +133,10 @@
     <Compile Include="util\Vector2D.cs" />
     <Compile Include="util\VectorMath.cs" />
     <Compile Include="world\World.cs" />
+    <Compile Include="_goals\Goal_Attack.cs" />
+    <Compile Include="_goals\Goal_Hunt.cs" />
+    <Compile Include="_goals\Goal_KillGoblins.cs" />
+    <Compile Include="_goals\Think.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

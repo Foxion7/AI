@@ -75,7 +75,7 @@ namespace SteeringCS.States.GoblinState
 
         private void StateCheck()
         {
-            if (VectorMath.DistanceBetweenPositions(goblin.Pos, goblin.Target.Pos) >= goblin.PassiveDistance || !VectorMath.LineOfSight(goblin.world, goblin.Pos, goblin.Target.Pos))
+            if (VectorMath.DistanceBetweenPositions(goblin.Pos, goblin.Target.Pos) >= goblin.PassiveDistance)
             {
                 goblin.setState(goblin.guarding);
             }

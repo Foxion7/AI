@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteeringCS.behaviour;
+using SteeringCS.Goals;
 using SteeringCS.Interfaces;
 using SteeringCS.util;
 
@@ -23,6 +24,8 @@ namespace SteeringCS.entity
                 PB.Path = value;
             }
         }
+
+        public GoalComponent think;
 
         public FollowPathBehaviour PB;
         public ISteeringBehaviour OA;
@@ -45,6 +48,7 @@ namespace SteeringCS.entity
         
         public Hero(string name, Vector2D pos, World w) : base(name, pos, w)
         {
+            SetupGoals();
             Mass = 1;
             MaxSpeed = 10;
             MaxForce = 500;
@@ -74,39 +78,52 @@ namespace SteeringCS.entity
 
             Scale = 5;
             VColor = Color.Black;
+            SetupGoals();
         }
         
         public override void Update(float timeElapsed)
         {
-            Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
-            
-            Vector2D steeringForce = new Vector2D();
-
-            if (PB != null)
+            if (!think.done)
             {
-                steeringForce += PB.Calculate() * 0.33;
-            }
-            if (OA != null)
-            {
-                steeringForce += OA.Calculate() * 0.66;
-            }
-            if (WA != null)
-            {
-                steeringForce += WA.Calculate() * 0.66;
-            }
+                Console.WriteLine("doing");
+                think.Process();
 
-            Vector2D acceleration = steeringForce / Mass;
-
-            Velocity += (acceleration * timeElapsed);
-            Velocity = Velocity.Truncate(MaxSpeed);
-            Pos += (Velocity * timeElapsed);
-
-            if (Velocity.LengthSquared() > 0.00000001)
-            {
-                Heading = Velocity.Normalize();
-                Side = Heading.Perp();
             }
-            WrapAround();
+            else
+            {
+                Console.WriteLine("done");
+            }
+            #region old stuff
+            //Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
+
+            //Vector2D steeringForce = new Vector2D();
+
+            //if (PB != null)
+            //{
+            //    steeringForce += PB.Calculate() * 0.33;
+            //}
+            //if (OA != null)
+            //{
+            //    steeringForce += OA.Calculate() * 0.66;
+            //}
+            //if (WA != null)
+            //{
+            //    steeringForce += WA.Calculate() * 0.66;
+            //}
+
+            //Vector2D acceleration = steeringForce / Mass;
+
+            //Velocity += (acceleration * timeElapsed);
+            //Velocity = Velocity.Truncate(MaxSpeed);
+            //Pos += (Velocity * timeElapsed);
+
+            //if (Velocity.LengthSquared() > 0.00000001)
+            //{
+            //    Heading = Velocity.Normalize();
+            //    Side = Heading.Perp();
+            //}
+            //WrapAround();
+            #endregion
         }
 
         public override void Render(Graphics g)
@@ -141,6 +158,17 @@ namespace SteeringCS.entity
             {
                 g.DrawEllipse(r, new Rectangle((int)(leftCorner - size * 2), (int)(rightCorner - size * 2), (int)size * 5, (int)size * 5));
             }
+        }
+       
+        private void SetupGoals()
+        {
+            GoalComponent attack = new _goals.Goal_Attack("Attack");
+            GoalComponent hunt = new _goals.Goal_Attack("Hunt");
+
+            GoalComponent killGoblinsStrategy = new GoalGroup("Kill Goblins", new List<GoalComponent> { attack, hunt });
+
+            think = new GoalGroup("Think", new List<GoalComponent> { killGoblinsStrategy });
+            think.Enter();
         }
 
         public void Attack()
@@ -193,9 +221,10 @@ namespace SteeringCS.entity
                 cooldown += amount;
             }
         }
-
+        
         public void CollectTreasure(Treasure treasure)
         {
+
             currentGold += treasure.value;
             Console.WriteLine("My current gold: " + currentGold);
             world.DestroyTreasure(treasure);

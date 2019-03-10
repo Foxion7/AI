@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace SteeringCS._goals
 {
-    public class Think : Goal
+    public class Think : GoalComponent
     {
-        public Think(string name, List<Goal> goals ) : base(name)
+        public Think(string name, List<Goal> goals ) : base(name, goals)
         {
             done = false;
         }
@@ -22,7 +22,7 @@ namespace SteeringCS._goals
         public override void Process()
         {
             Console.WriteLine("Thinking...");
-
+            // Choose a strategy here.
         }
 
         public override void Exit()
@@ -30,6 +30,27 @@ namespace SteeringCS._goals
             done = true;
 
             Console.WriteLine("Done thinking.");
+        }
+
+        private void ExecuteGoal(Goal goal)
+        {
+            goal.Enter();
+            while (!goal.done)
+            {
+                goal.Process();
+            }
+        }
+
+        private void ExitCheck()
+        {
+            // Exits if all inner goals are concluded.
+            foreach (Goal goal in subgoals)
+            {
+                if (goal.done)
+                {
+                    Exit();
+                }
+            }
         }
     }
 }

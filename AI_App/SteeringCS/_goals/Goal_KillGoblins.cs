@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SteeringCS._goals
 {
-    public class Goal_KillGoblins : Goal
+    public class Goal_KillGoblins : GoalComponent
     {
         Goal currentGoal;
         
@@ -15,7 +15,7 @@ namespace SteeringCS._goals
         {
         }
 
-        public Goal_KillGoblins(string name) : base(name)
+        public Goal_KillGoblins(string name) : base(name, null)
         {
         }
 

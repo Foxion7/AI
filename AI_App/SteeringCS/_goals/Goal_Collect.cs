@@ -39,7 +39,7 @@ namespace SteeringCS._goals
             hero.AddDebugText("                                    " + name, 2);
 
             counter++;
-            if (counter == 100)
+            if (counter == 50)
             {
                 Exit();
             }
@@ -47,8 +47,9 @@ namespace SteeringCS._goals
 
         public override void Exit()
         {
-            started = false;
+            hero.RemoveDebugText(2);
 
+            started = false;
             done = true;
         }
     }

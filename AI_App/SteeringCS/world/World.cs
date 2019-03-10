@@ -10,6 +10,7 @@ using System.Windows.Forms.VisualStyles;
 using SteeringCS.Interfaces;
 using SteeringCS.util;
 using SteeringCS.util.Graph;
+using SteeringCS._goals;
 
 namespace SteeringCS
 {
@@ -226,6 +227,9 @@ namespace SteeringCS
             SpawnObstacles();
             SpawnWalls();
             populate();
+
+            Hero.currentGoal = new Think("Think", Hero);
+            Hero.currentGoal.Enter();
         }
 
         public void rePosGoblin(int key, Vector2D oldPos, Vector2D newPos)

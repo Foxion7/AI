@@ -97,7 +97,7 @@ namespace SteeringCS
             }
         }
 
-        public void AnalyseEntity(Vector2D mousePos)
+        private void AnalyseEntity(Vector2D mousePos)
         {
             List<MovingEntity> entities = new List<MovingEntity>();
             entities.AddRange(world.getGoblins());
@@ -112,6 +112,13 @@ namespace SteeringCS
                     DebugEntityInfo.Text = entity.DebugText;
                 }
             };
+        }
+
+        private void ClearSelectedEntity()
+        {
+            selectedEntity = null;
+            DebugEntityName.Text = "";
+            DebugEntityInfo.Text = "";
         }
 
         public void UpdateDebugPanel()
@@ -263,6 +270,7 @@ namespace SteeringCS
                     hobgoblinCount.Text = world.getHobgoblins().Count().ToString();
                     break;
                 case Keys.R:
+                    ClearSelectedEntity();
                     world.Reset();
                     break;
                 case Keys.Space:

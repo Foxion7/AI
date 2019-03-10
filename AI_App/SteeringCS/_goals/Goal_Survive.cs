@@ -35,11 +35,12 @@ namespace SteeringCS._goals
 
         public override void Process()
         {
-            if (subgoals.Count > 0)
+            if (subgoals.Count() > 0)
             {
                 if (subgoals.Last().done)
                 {
                     subgoals.Clear();
+                    Exit();
                 }
                 else
                 {
@@ -61,6 +62,7 @@ namespace SteeringCS._goals
 
         public override void Exit()
         {
+            hero.RemoveDebugText(1);
             started = false;
             done = true;
         }

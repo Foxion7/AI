@@ -34,8 +34,9 @@ namespace SteeringCS._goals
         {
             hero.AddDebugText("I am thinking", 0);
 
-            if (subgoals.Count > 0)
+            if (subgoals.Count() > 0)
             {
+                hero.AddDebugText("Current Strategy: " + subgoals[currentGoal], 1);
                 if (subgoals.Last().done)
                 {
                     subgoals.Clear();
@@ -49,11 +50,6 @@ namespace SteeringCS._goals
                     else if (!subgoals[currentGoal].done && subgoals[currentGoal].started)
                     {
                         subgoals[currentGoal].Process();
-                        hero.AddDebugText("Current Strategy: " + subgoals[currentGoal], 1);
-                    }
-                    else if (subgoals[currentGoal].done && currentGoal < subgoals.Count())
-                    {
-                        currentGoal++;
                     }
                 }
             }
@@ -69,18 +65,6 @@ namespace SteeringCS._goals
             done = true;
         }
 
-        private void ExitCheck()
-        {
-            // Exits if all inner goals are concluded.
-            foreach (Goal goal in subgoals)
-            {
-                if (goal.done)
-                {
-                    Exit();
-                }
-            }
-        }
-
         private GoalComponent ChooseStrategy()
         {
             int threatScore = CalculateThreatScore();
@@ -92,7 +76,7 @@ namespace SteeringCS._goals
             else if (threatScore > 0 && threatScore <= 10)
             {
                 Goal attack = new Goal_Attack("Attack", hero);
-                Goal hunt = new Goal_PlanPath("Hunt", hero);
+                Goal hunt = new Goal_PlanPath("PlanPath", hero);
                 return new Goal_KillGoblins("Kill Goblins", new List<Goal> { attack, hunt }, hero);
             }
             else {

@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace SteeringCS._goals
 {
-    public class Goal_Attack : Goal
+    public class Goal_Flee : Goal
     {
         // TODO Remove. This is only used for debugTexts.
         Hero hero;
 
         // TODO Remove. This is only used for debugTexts.
-        public Goal_Attack(string name, Hero hero) : base(name)
+        public Goal_Flee(string name, Hero hero) : base(name)
         {
             started = false;
             done = false;
             this.hero = hero;
         }
 
-        public Goal_Attack(string name) : base(name)
+        public Goal_Flee(string name) : base(name)
         {
             started = false;
             done = false;
@@ -37,7 +37,7 @@ namespace SteeringCS._goals
         public override void Process()
         {
             hero.AddDebugText("                                    " + name, 2);
-            
+
             counter++;
             if(counter == 100)
             {
@@ -47,8 +47,8 @@ namespace SteeringCS._goals
 
         public override void Exit()
         {
-            done = true;
             started = false;
+            done = true;
         }
     }
 }

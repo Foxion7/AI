@@ -27,9 +27,8 @@ namespace SteeringCS.entity
         }
 
         private List<string> debugText;
-
-
-        public Goal think;
+        
+        public Goal currentGoal;
 
         public FollowPathBehaviour PB;
         public ISteeringBehaviour OA;
@@ -82,16 +81,13 @@ namespace SteeringCS.entity
 
             Scale = 5;
             VColor = Color.Black;
-            SetupGoals();
+            currentGoal = new Think("Think", this);
+            currentGoal.Enter();
         }
-        
+
         public override void Update(float timeElapsed)
         {
-            if (!think.done)
-            {
-                think.Process();
-
-            }
+            currentGoal.Process();
             #region old stuff
             //Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
 
@@ -158,17 +154,6 @@ namespace SteeringCS.entity
                 g.DrawEllipse(r, new Rectangle((int)(leftCorner - size * 2), (int)(rightCorner - size * 2), (int)size * 5, (int)size * 5));
             }
         }
-       
-        private void SetupGoals()
-        {
-            Goal attack = new Goal_Attack("Attack");
-            Goal hunt = new Goal_Attack("Hunt");
-
-            Goal killGoblinsStrategy = new Goal_KillGoblins("Kill Goblins", new List<Goal> { attack, hunt });
-
-            think = new Think("Think", new List<Goal> { killGoblinsStrategy }, this);
-            think.Enter();
-        }
 
         public void Attack()
         {
@@ -223,9 +208,7 @@ namespace SteeringCS.entity
         
         public void CollectTreasure(Treasure treasure)
         {
-
             currentGold += treasure.value;
-            Console.WriteLine("My current gold has increased to: " + currentGold);
             world.DestroyTreasure(treasure);
         }
 

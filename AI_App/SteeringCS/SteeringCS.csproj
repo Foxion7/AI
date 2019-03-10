@@ -132,8 +132,13 @@
     <Compile Include="util\Vector2D.cs" />
     <Compile Include="util\VectorMath.cs" />
     <Compile Include="world\World.cs" />
+    <Compile Include="_goals\Goal_Collect.cs" />
+    <Compile Include="_goals\Goal_Discover.cs" />
+    <Compile Include="_goals\Goal_Flee.cs" />
     <Compile Include="_goals\Goal_Attack.cs" />
-    <Compile Include="_goals\Goal_Hunt.cs" />
+    <Compile Include="_goals\Goal_PlanPath.cs" />
+    <Compile Include="_goals\Goal_FindTreasure.cs" />
+    <Compile Include="_goals\Goal_Survive.cs" />
     <Compile Include="_goals\Goal_KillGoblins.cs" />
     <Compile Include="_goals\Think.cs" />
     <EmbeddedResource Include="Form1.resx">

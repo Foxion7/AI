@@ -9,6 +9,7 @@ namespace SteeringCS.Goals
     public abstract class Goal
     {
         public string name { get; }
+        public bool started { get; set; }
         public bool done { get; set; }
         
         public Goal(string name)

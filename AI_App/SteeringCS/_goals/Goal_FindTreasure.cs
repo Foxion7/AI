@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace SteeringCS._goals
 {
-    public class Goal_KillGoblins : GoalComponent
+    public class Goal_FindTreasure : GoalComponent
     {
         // TODO Remove. This is only used for debugTexts.
         Hero hero;
 
         // TODO Remove. This is only used for debugTexts.
-        public Goal_KillGoblins(string name, List<Goal> subgoals, Hero hero) : base(name, subgoals)
+        public Goal_FindTreasure(string name, List<Goal> subgoals, Hero hero) : base(name, subgoals)
         {
             started = false;
             done = false;
             this.hero = hero;
         }
 
-        public Goal_KillGoblins(string name, List<Goal> subgoals) : base(name, subgoals)
+        public Goal_FindTreasure(string name, List<Goal> subgoals) : base(name, subgoals)
         {
             started = false;
             done = false;

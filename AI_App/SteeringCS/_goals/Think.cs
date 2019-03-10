@@ -10,45 +10,63 @@ namespace SteeringCS._goals
 {
     public class Think : GoalComponent
     {
+        // TODO Remove. This is only used for debugTexts.
         Hero hero;
 
-        public Think(string name, List<Goal> goals, Hero hero) : base(name, goals)
+        // TODO Remove. This is only used for debugTexts.
+        public Think(string name, Hero hero) : base(name, new List<Goal>())
         {
             done = false;
             this.hero = hero;
         }
 
+        public Think(string name) : base(name, new List<Goal>())
+        {
+            done = false;
+        }
+
         public override void Enter()
         {
+            hero.AddDebugText("Start thinking", 0);
         }
 
         public override void Process()
         {
             hero.AddDebugText("I am thinking", 0);
 
-            // Choose a strategy here.
-            if (CheckForGoblins())
+            if (subgoals.Count > 0)
             {
-                hero.AddDebugText("Goblin found", 1);
-            } else
+                if (subgoals.Last().done)
+                {
+                    subgoals.Clear();
+                }
+                else
+                {
+                    if (!subgoals[currentGoal].done && !subgoals[currentGoal].started)
+                    {
+                        subgoals[currentGoal].Enter();
+                    }
+                    else if (!subgoals[currentGoal].done && subgoals[currentGoal].started)
+                    {
+                        subgoals[currentGoal].Process();
+                        hero.AddDebugText("Current Strategy: " + subgoals[currentGoal], 1);
+                    }
+                    else if (subgoals[currentGoal].done && currentGoal < subgoals.Count())
+                    {
+                        currentGoal++;
+                    }
+                }
+            }
+            else
             {
-                hero.RemoveDebugText(1);
+                subgoals.Add(ChooseStrategy());
             }
         }
 
         public override void Exit()
         {
+            hero.AddDebugText("Stopping thinking", 0);
             done = true;
-            hero.RemoveDebugText(0);
-        }
-
-        private void ExecuteGoal(Goal goal)
-        {
-            goal.Enter();
-            while (!goal.done)
-            {
-                goal.Process();
-            }
         }
 
         private void ExitCheck()
@@ -63,16 +81,40 @@ namespace SteeringCS._goals
             }
         }
 
-        private bool CheckForGoblins()
+        private GoalComponent ChooseStrategy()
         {
+            int threatScore = CalculateThreatScore();
+            if (threatScore > 10)
+            {
+                Goal flee = new Goal_Flee("Flee", hero);
+                return new Goal_Survive("Survive", new List<Goal> { flee }, hero);
+            }
+            else if (threatScore > 0 && threatScore <= 10)
+            {
+                Goal attack = new Goal_Attack("Attack", hero);
+                Goal hunt = new Goal_PlanPath("Hunt", hero);
+                return new Goal_KillGoblins("Kill Goblins", new List<Goal> { attack, hunt }, hero);
+            }
+            else {
+                Goal discover = new Goal_Discover("Discover", hero);
+                Goal collect = new Goal_Collect("Collect", hero);
+                return new Goal_FindTreasure("Find treasure", new List<Goal> { discover, collect }, hero); ;
+            }
+        }
+
+        private int CalculateThreatScore()
+        {
+            int threatScore = 0;
+            int dangerDistance = 250;
+
             foreach (Goblin goblin in hero.world.getGoblins())
             {
-                if(VectorMath.DistanceBetweenPositions(hero.Pos, goblin.Pos) < 500 && VectorMath.LineOfSight(hero.world, hero.Pos, goblin.Pos))
+                if(VectorMath.DistanceBetweenPositions(hero.Pos, goblin.Pos) < dangerDistance && VectorMath.LineOfSight(hero.world, hero.Pos, goblin.Pos))
                 {
-                    return true;
+                    threatScore += 5;
                 }
             }
-            return false;
+            return threatScore;
         }
     }
 }

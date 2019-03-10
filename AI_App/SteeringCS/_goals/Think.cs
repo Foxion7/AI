@@ -1,4 +1,5 @@
-﻿using SteeringCS.Goals;
+﻿using SteeringCS.entity;
+using SteeringCS.Goals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,27 +10,36 @@ namespace SteeringCS._goals
 {
     public class Think : GoalComponent
     {
-        public Think(string name, List<Goal> goals ) : base(name, goals)
+        Hero hero;
+
+        public Think(string name, List<Goal> goals, Hero hero) : base(name, goals)
         {
             done = false;
+            this.hero = hero;
         }
 
         public override void Enter()
         {
-            Console.WriteLine("Starting thinking...");
         }
 
         public override void Process()
         {
-            Console.WriteLine("Thinking...");
+            hero.AddDebugText("I am thinking", 0);
+
             // Choose a strategy here.
+            if (CheckForGoblins())
+            {
+                hero.AddDebugText("Goblin found", 1);
+            } else
+            {
+                hero.RemoveDebugText(1);
+            }
         }
 
         public override void Exit()
         {
             done = true;
-
-            Console.WriteLine("Done thinking.");
+            hero.RemoveDebugText(0);
         }
 
         private void ExecuteGoal(Goal goal)
@@ -51,6 +61,18 @@ namespace SteeringCS._goals
                     Exit();
                 }
             }
+        }
+
+        private bool CheckForGoblins()
+        {
+            foreach (Goblin goblin in hero.world.getGoblins())
+            {
+                if(VectorMath.DistanceBetweenPositions(hero.Pos, goblin.Pos) < 500 && VectorMath.LineOfSight(hero.world, hero.Pos, goblin.Pos))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -9,6 +9,7 @@ namespace SteeringCS.Goals
     public abstract class GoalComponent : Goal
     {
         public List<Goal> subgoals { get; set; }
+        public int currentGoal { get; set; }
         
         public GoalComponent(string name, List<Goal> subgoals) : base(name)
         {

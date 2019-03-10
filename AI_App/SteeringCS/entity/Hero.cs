@@ -26,6 +26,9 @@ namespace SteeringCS.entity
             }
         }
 
+        private List<string> debugText;
+
+
         public Goal think;
 
         public FollowPathBehaviour PB;
@@ -49,6 +52,7 @@ namespace SteeringCS.entity
         
         public Hero(string name, Vector2D pos, World w) : base(name, pos, w)
         {
+            debugText = new List<string>();
             Mass = 1;
             MaxSpeed = 10;
             MaxForce = 500;
@@ -162,7 +166,7 @@ namespace SteeringCS.entity
 
             Goal killGoblinsStrategy = new Goal_KillGoblins("Kill Goblins", new List<Goal> { attack, hunt });
 
-            think = new Think("Think", new List<Goal> { killGoblinsStrategy });
+            think = new Think("Think", new List<Goal> { killGoblinsStrategy }, this);
             think.Enter();
         }
 
@@ -221,10 +225,65 @@ namespace SteeringCS.entity
         {
 
             currentGold += treasure.value;
-            Console.WriteLine("My current gold: " + currentGold);
+            Console.WriteLine("My current gold has increased to: " + currentGold);
             world.DestroyTreasure(treasure);
         }
-        
+
+        public void AddDebugText(string text, int index)
+        {
+            if (debugText != null)
+            {
+                // If not first text, adds new line.
+                string newLine = "";
+                if (debugText.Count() > 0 && index > 0)
+                {
+                    newLine += "\n";
+                }
+                newLine += text;
+
+                bool doubleEntry = false;
+
+
+                // Checks for double entries.
+                for (int i = 0; i < debugText.Count(); i++)
+                {
+                    if (debugText[i].Equals(text))
+                    {
+                        doubleEntry = true;
+                    }
+                }
+
+                // If index is not taken, adds line on index. Else (if not double) just adds at the end.
+                if (debugText.Count() > index)
+                {
+                    debugText[index] = newLine;
+                }
+                else if (!doubleEntry)
+                {
+                    debugText.Insert(debugText.Count(), newLine);
+                }
+
+                // Adds all debugText texts together to display.
+                string newDebugText = "";
+                for (int i = 0; i < debugText.Count(); i++)
+                {
+                    newDebugText += debugText[i];
+                }
+                DebugText = newDebugText;
+            }
+        }
+
+        public void RemoveDebugText(int index)
+        {
+            if (debugText != null)
+            {
+                if (debugText.Count() > index)
+                {
+                    debugText[index] = "";
+                }
+            }
+        }
+
         public BaseGameEntity Target      { get; set; }
         public MovingEntity Evader        { get; set; }
         public MovingEntity Pursuer       { get; set; }

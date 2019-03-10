@@ -77,7 +77,7 @@ namespace SteeringCS.States.GoblinState
         {
             if (VectorMath.DistanceBetweenPositions(goblin.Pos, goblin.Target.Pos) >= goblin.PassiveDistance)
             {
-                goblin.setState(goblin.guarding);
+                goblin.SetState(goblin.guarding);
             }
         }
 

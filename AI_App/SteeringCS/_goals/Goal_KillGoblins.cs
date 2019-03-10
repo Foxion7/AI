@@ -9,8 +9,6 @@ namespace SteeringCS._goals
 {
     public class Goal_KillGoblins : GoalComponent
     {
-        Goal currentGoal;
-        
         public Goal_KillGoblins(string name, List<Goal> subgoals) : base(name, subgoals)
         {
         }

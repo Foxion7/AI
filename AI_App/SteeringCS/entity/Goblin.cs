@@ -66,7 +66,7 @@ namespace SteeringCS.entity
             regroup = new Regroup(this);
             obey = new Obeying(this);
             equip = new Equip(this);
-            setState(guarding); // Starting state.
+            SetState(guarding); // Starting state.
 
             FollowingOrder = false;
 
@@ -412,7 +412,7 @@ namespace SteeringCS.entity
             }
         }
 
-        public void setState(IGoblinState state)
+        public void SetState(IGoblinState state)
         {
             if (previousState != null)
             {
@@ -451,7 +451,7 @@ namespace SteeringCS.entity
 
             hobgoblin.Order -= ReceivedOrder;
             Commander = null;
-            setState(guarding);
+            SetState(guarding);
 
             AddDebugText("Not obeying any orders.", 3);
 
@@ -461,7 +461,7 @@ namespace SteeringCS.entity
         private void ReceivedOrder(Hobgoblin hobgoblin, int currentOrder)
         {
             if(!FollowingOrder)
-                setState(obey);
+                SetState(obey);
 
             AddDebugText("Obeying orders from " + hobgoblin.Name, 3);
         }

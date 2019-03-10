@@ -30,7 +30,7 @@ namespace SteeringCS.States.GoblinState
         {
             if (VectorMath.DistanceBetweenPositions(goblin.Pos, goblin.Target.Pos) < goblin.PassiveDistance && VectorMath.LineOfSight(goblin.world, goblin.Pos, goblin.Target.Pos))
             {
-                goblin.setState(goblin.hunting);
+                goblin.SetState(goblin.hunting);
             }
         }
 

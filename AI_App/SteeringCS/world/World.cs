@@ -58,7 +58,7 @@ namespace SteeringCS
             SpawnWalls();
             GenerateTreasure(10, 30, new Vector2D(100, 100));
 
-            Graph = GraphUtil.CreateGraphForMap(w, h, 75, _obstacles, _walls);
+            Graph = new VectorGraph(w, h, 75, _obstacles, _walls);
             populate();
         }
 
@@ -267,7 +267,7 @@ namespace SteeringCS
         {
             if(Hero == null)
                 return;
-            Hero.Path = new Route(GraphUtil.AStar(Graph, Hero.Pos, end, GraphUtil.Manhatten).ToList());
+            Hero.Path = new Route(PathFinding.AStar(Graph, Hero.Pos, end, PathFinding.Manhatten).PathSmoothing(_walls, _obstacles).ToList());
         }
     }
 }

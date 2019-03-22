@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using static SteeringCS.util.Collisions;
 namespace SteeringCS.entity
 {
     public class Wall : BaseGameEntity, IWall
@@ -14,6 +14,27 @@ namespace SteeringCS.entity
         public double Width { get; set; }
         public double Height { get; set; }
         public Vector2D Center { get; set; }
+        public bool CollidesWith(Vector2D point)
+        {
+            var left = Pos.X;
+            var right = Pos.X + (Width);
+            var top = Pos.Y;
+            var bottom = Pos.Y + (Height);
+            return left <= point.X && right >= point.X && top <= point.Y && bottom >= point.Y;
+
+        }
+
+        public bool CollidesWith(Vector2D st, Vector2D ed)
+        {
+            Vector2D width = new Vector2D(Width, 0);
+            Vector2D height = new Vector2D(0, Height);
+            Vector2D widthAndHeight = new Vector2D(Width, Height);
+            var left = LineCollidesWithLine(st, ed, Pos, Pos + height);
+            var right = LineCollidesWithLine(st, ed, Pos + width, Pos + widthAndHeight);
+            var top = LineCollidesWithLine(st, ed, Pos, Pos + width);
+            var bottom = LineCollidesWithLine(st, ed, Pos + height, Pos+ widthAndHeight);
+            return (left || right || top || bottom);
+        }
 
         public Wall(string name, double width, double height, Vector2D pos, World w) : base(name, pos, w)
         {

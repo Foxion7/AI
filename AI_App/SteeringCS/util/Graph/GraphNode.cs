@@ -9,8 +9,6 @@ namespace SteeringCS.util.Graph
     //everything in this class assumes two way edges.
     public class GraphNode<T> : FastPriorityQueueNode
     {
-
-
         public readonly T Data;
         private List<GraphEdge<T>> _edges;
         public IEnumerable<GraphEdge<T>> Edges => _edges;

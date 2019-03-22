@@ -22,9 +22,69 @@ namespace SteeringCS.entity
             VColor = Color.Black;
         }
 
+        public bool CollidesWith(Vector2D point) => (point - Center).LengthSquared() < Radius * Radius;
+
+        public bool CollidesWith(Vector2D st, Vector2D ed)
+        {
+            var d = ed - st;
+            var f = st - Center;
+            var r = Radius;
+            double a = d.Dot(d);
+            double b = 2 * f.Dot(d);
+            double c = f.Dot(f) - r * r;
+
+            double discriminant = b * b - 4 * a * c;
+            if (discriminant < 0)
+            {
+                // no intersection
+                return false;
+            }
+            else
+            {
+                // ray didn't totally miss sphere,
+                // so there is a solution to
+                // the equation.
+
+                discriminant = Math.Sqrt(discriminant);
+
+                // either solution may be on or off the ray so need to test both
+                // t1 is always the smaller value, because BOTH discriminant and
+                // a are nonnegative.
+                double t1 = (-b - discriminant) / (2 * a);
+                double t2 = (-b + discriminant) / (2 * a);
+
+                // 3x HIT cases:
+                //          -o->             --|-->  |            |  --|->
+                // Impale(t1 hit,t2 hit), Poke(t1 hit,t2>1), ExitWound(t1<0, t2 hit), 
+
+                // 3x MISS cases:
+                //       ->  o                     o ->              | -> |
+                // FallShort (t1>1,t2>1), Past (t1<0,t2<0), CompletelyInside(t1<0, t2>1)
+
+                if (t1 >= 0 && t1 <= 1)
+                {
+                    // t1 is the intersection, and it's closer than t2
+                    // (since t1 uses -b - discriminant)
+                    // Impale, Poke
+                    return true;
+                }
+
+                // here t1 didn't intersect so we are either started
+                // inside the sphere or completely past it
+                if (t2 >= 0 && t2 <= 1)
+                {
+                    // ExitWound
+                    return true;
+                }
+
+                // no intn: FallShort, Past, CompletelyInside
+                return false;
+            }
+        }
+
         public override void Update(float delta)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void Render(Graphics g)
@@ -42,11 +102,6 @@ namespace SteeringCS.entity
                 Brush brush = new SolidBrush(Color.Black);
                 g.DrawString(Name, SystemFonts.DefaultFont, brush, (float)(Pos.X + size / 2), (float)(Pos.Y - size / 2), new StringFormat());
             }
-        }
-
-        public bool CollisionFound(Vector2D pos)
-        {
-            return VectorMath.DistanceBetweenPositions(pos, Center) <= Radius;
         }
     }
 }

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using Priority_Queue;
+using SteeringCS.Interfaces;
+
 namespace SteeringCS.util.Graph
 {
     public static class PathFinding
     {
-        public static GraphNode<Vector2D> FindClosestNode(VectorGraph graph, Vector2D pos)
+        public static GraphNode<Vector2D> FindClosestNode(Graph<Vector2D> graph, Vector2D pos)
         {
             return graph.Nodes.Aggregate((node1, node2) =>
             {
@@ -41,7 +43,7 @@ namespace SteeringCS.util.Graph
             => (float)(n.Data - m.Data).Length();
         public static float noHeuristic(GraphNode<Vector2D> n, GraphNode<Vector2D> m) => 0;
 
-        public static IEnumerable<Vector2D> AStar(Graph<Vector2D> graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end, Func<GraphNode<Vector2D>, GraphNode<Vector2D>, float> heuristic)
+        public static IEnumerable<Vector2D> AStar(this Graph<Vector2D> graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end, Func<GraphNode<Vector2D>, GraphNode<Vector2D>, float> heuristic)
         {
             foreach (var n in graph.Nodes)
             {
@@ -102,15 +104,14 @@ namespace SteeringCS.util.Graph
             }
             return new List<Vector2D>();
         }
-        public static IEnumerable<Vector2D> Dijkstra(Graph<Vector2D> graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end)
+        public static IEnumerable<Vector2D> Dijkstra(this Graph<Vector2D> graph, GraphNode<Vector2D> start, GraphNode<Vector2D> end)
             => AStar(graph, start, end, heuristic: noHeuristic);
 
-        public static IEnumerable<Vector2D> AStar(VectorGraph graph, Vector2D start, Vector2D end, Func<GraphNode<Vector2D>, GraphNode<Vector2D>, float> heuristic)
+        public static IEnumerable<Vector2D> AStar(this Graph<Vector2D> graph, Vector2D start, Vector2D end, Func<GraphNode<Vector2D>, GraphNode<Vector2D>, float> heuristic)
         {
             var closestS = FindClosestNode(graph, start);
             yield return closestS.Data;
             var closestE = FindClosestNode(graph, end);
-
             var r = AStar(graph, closestS, closestE, heuristic);
             foreach (var vec in r)
             {
@@ -118,6 +119,26 @@ namespace SteeringCS.util.Graph
             }
             if(r.Any())
                 yield return end;
+        }
+    
+        public static IEnumerable<Vector2D> PathSmoothing(this IEnumerable<Vector2D> path, List<IWall> walls,
+            List<IObstacle> obstacles)
+        {
+            Vector2D[] vector2Ds = path as Vector2D[] ?? path.ToArray();
+            Vector2D lastReturned = vector2Ds.First();
+            Vector2D lastReachable = vector2Ds.Skip(1).First();
+
+            yield return lastReturned;
+            foreach (var vector2D in vector2Ds.Skip(2))
+            {
+                if (walls.Any(w => w.CollidesWith(lastReturned, vector2D)) || obstacles.Any(o => o.CollidesWith(lastReturned, vector2D)))
+                {
+                    yield return lastReachable;
+                    lastReturned = lastReachable;
+                }
+                lastReachable = vector2D;
+            }
+            yield return lastReachable;
         }
     }
 }

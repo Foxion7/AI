@@ -15,12 +15,6 @@ namespace SteeringCS.Fuzzylogic
             return _variables[FLVName];
         }
 
-        public void SetConfidenceToZero()
-        {
-            _rules.ForEach(rule => rule.SetConfidenceOfResultToZero());
-        }
-
-
         public void addRule(FuzzyTerm reason, FuzzyTerm result)
         {
             _rules.Add(new FuzzyRule(reason, result));

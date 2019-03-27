@@ -65,6 +65,7 @@
     <Compile Include="entity\Corpse.cs" />
     <Compile Include="entity\Dummy.cs" />
     <Compile Include="entity\Treasure.cs" />
+    <Compile Include="Fuzzylogic\FuzzyLogicExample.cs" />
     <Compile Include="Fuzzylogic\FuzzyRule.cs" />
     <Compile Include="Fuzzylogic\FuzzyTerms\FzAnd.cs" />
     <Compile Include="Fuzzylogic\FuzzyModule.cs" />

@@ -9,15 +9,19 @@ namespace SteeringCS.Fuzzylogic
         List<FuzzyRule> _rules;
         private int _numSamplesToUseForCentroid = 15;
 
-        public void SetConfidenceToZero() {}
-
         public FuzzyVariable CreateFLV(string FLVName)
         {
             _variables.Add(FLVName, new FuzzyVariable());
             return _variables[FLVName];
         }
 
-        void addRule(FuzzyTerm reason, FuzzyTerm result)
+        public void SetConfidenceToZero()
+        {
+            _rules.ForEach(rule => rule.SetConfidenceOfResultToZero());
+        }
+
+
+        public void addRule(FuzzyTerm reason, FuzzyTerm result)
         {
             _rules.Add(new FuzzyRule(reason, result));
         }

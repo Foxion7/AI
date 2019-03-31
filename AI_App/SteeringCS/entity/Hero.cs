@@ -155,6 +155,10 @@ namespace SteeringCS.entity
             }
         }
 
+        public void SetPath(Vector2D end)
+        {
+            Path = world.getRoute(this.Pos, end);
+        }
         public void Attack()
         {
             Goblin closestThreat = null;

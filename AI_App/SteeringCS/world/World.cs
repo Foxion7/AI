@@ -258,7 +258,7 @@ namespace SteeringCS
             return _goblins;
         }
 
-        public void getRoute(Vector2D start, Vector2D end)
+        public Route getRoute(Vector2D start, Vector2D end)
             => new Route(PathFinding.AStar(Graph, start, end, PathFinding.Manhatten).PathSmoothing(_walls, _obstacles).ToList());
         
 

@@ -62,7 +62,7 @@ namespace SteeringCS
         public static bool LineOfSight(World world, Vector2D posA, Vector2D posB)
         {
             Vector2D currentPosition = new Vector2D(posA.X, posA.Y);
-            Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);
+            Vector2D goalPosition = new Vector2D(posB.X, posB.Y);
 
             double segmentDistance = 15;
 

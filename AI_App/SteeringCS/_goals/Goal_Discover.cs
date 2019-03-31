@@ -26,8 +26,6 @@ namespace SteeringCS._goals
             started = false;
             done = false;
         }
-
-        int counter = 0;
         Vector2D pos;
 
         public override void Enter()
@@ -40,22 +38,32 @@ namespace SteeringCS._goals
         public override void Process()
         {
             hero.AddDebugText("                                    " + name, 2);
-            hero.AddDebugText("                                    " + "target pos: " + pos, 3);
-            Console.WriteLine(VectorMath.DistanceBetweenPositions(pos, hero.Pos) < 100);
-            if (hero.Path.Last() && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10) {
+            // If treasure is sighted but player isnt close, go towards treasure
+            if (VectorMath.LineOfSight(hero.world, hero.Pos, hero.world.getTreasure()[0].Pos)
+                && VectorMath.DistanceBetweenPositions(hero.Pos, hero.world.getTreasure()[0].Pos) > 10
+                && pos != hero.world.getTreasure()[0].Pos)
+            {
+                pos = hero.world.getTreasure()[0].Pos;
+                hero.world.setPlayerRoute(pos);
+            }
+            // If treasure is sighted and player is close, stop discovering.
+            else if (VectorMath.LineOfSight(hero.world, hero.Pos, hero.world.getTreasure()[0].Pos)
+            && VectorMath.DistanceBetweenPositions(hero.Pos, hero.world.getTreasure()[0].Pos) <= 10)
+            {
+                Exit();
+            }
+            // If treasure is not sighted, create random goal position.
+            else if (hero.Path.Last() && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10)
+            {
                 pos = hero.getRandomTarget();
                 hero.world.setPlayerRoute(pos);
             }
-            else {
+            else
+            {
                 hero.ApplyForce(hero.WA.Calculate(), hero.timeElapsed);
                 hero.ApplyForce(hero.OA.Calculate(), hero.timeElapsed);
                 hero.ApplyForce(hero.PB.Calculate(), hero.timeElapsed);
             }
-            //counter++;
-            //if (counter == 50)
-            //{
-            //    Exit();
-            //}
         }
 
         public override void Exit()

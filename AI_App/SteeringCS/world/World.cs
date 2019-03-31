@@ -56,7 +56,7 @@ namespace SteeringCS
 
             SpawnObstacles();
             SpawnWalls();
-            GenerateTreasure(10, 30, new Vector2D(100, 100));
+            GenerateTreasure(10, 30, new Vector2D(100, 500));
 
             Graph = new VectorGraph(w, h, 75, _obstacles, _walls);
             populate();
@@ -245,6 +245,11 @@ namespace SteeringCS
         public List<IWall> getWalls()
         {
             return _walls;
+        }
+
+        public List<Treasure> getTreasure()
+        {
+            return _treasures;
         }
         
         public List<MovingEntity> getHobgoblins()

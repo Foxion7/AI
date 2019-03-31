@@ -90,37 +90,6 @@ namespace SteeringCS.entity
         {
             this.timeElapsed = timeElapsed;
             currentGoal.Process();
-            #region old stuff
-            //Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
-
-            //Vector2D steeringForce = new Vector2D();
-
-            //if (PB != null)
-            //{
-            //    steeringForce += PB.Calculate() * 0.33;
-            //}
-            //if (OA != null)
-            //{
-            //    steeringForce += OA.Calculate() * 0.66;
-            //}
-            //if (WA != null)
-            //{
-            //    steeringForce += WA.Calculate() * 0.66;
-            //}
-
-            //Vector2D acceleration = steeringForce / Mass;
-
-            //Velocity += (acceleration * timeElapsed);
-            //Velocity = Velocity.Truncate(MaxSpeed);
-            //Pos += (Velocity * timeElapsed);
-
-            //if (Velocity.LengthSquared() > 0.00000001)
-            //{
-            //    Heading = Velocity.Normalize();
-            //    Side = Heading.Perp();
-            //}
-            //WrapAround();
-            #endregion
         }
 
         public void ApplyForce(Vector2D steeringForce, float timeElapsed)

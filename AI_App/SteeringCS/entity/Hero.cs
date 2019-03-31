@@ -56,7 +56,7 @@ namespace SteeringCS.entity
             debugText = new List<string>();
             Mass = 1;
             Scale = 5;
-            MaxSpeed = 20;
+            MaxSpeed = 3;
             MaxForce = 500;
             PanicDistance = 100;
             OA = new ObstacleAvoidance(this);

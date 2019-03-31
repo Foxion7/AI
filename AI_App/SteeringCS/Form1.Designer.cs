@@ -71,6 +71,7 @@
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.label8 = new System.Windows.Forms.Label();
             this.dbPanel3.SuspendLayout();
             this.HeroPanel.SuspendLayout();
             this.dbPanel2.SuspendLayout();
@@ -204,6 +205,7 @@
             // dbPanel2
             // 
             this.dbPanel2.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.dbPanel2.Controls.Add(this.label8);
             this.dbPanel2.Controls.Add(this.hobgoblinCount);
             this.dbPanel2.Controls.Add(this.goblinCount);
             this.dbPanel2.Controls.Add(this.label14);
@@ -486,6 +488,16 @@
             this.menuItem6.Index = 3;
             this.menuItem6.Text = "Hero attack circle";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.label8.Location = new System.Drawing.Point(44, 331);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(86, 13);
+            this.label8.TabIndex = 34;
+            this.label8.Text = "Space = PAUSE";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -564,6 +576,7 @@
         private System.Windows.Forms.MenuItem menuItem4;
         private System.Windows.Forms.MenuItem menuItem5;
         private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.Label label8;
     }
 }
 

@@ -159,6 +159,8 @@ namespace SteeringCS.entity
         {
             Path = world.getRoute(this.Pos, end);
         }
+
+        public Vector2D getRandomTarget() => world.RandomPos();
         public void Attack()
         {
             Goblin closestThreat = null;

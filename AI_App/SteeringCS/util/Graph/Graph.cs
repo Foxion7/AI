@@ -19,10 +19,7 @@ namespace SteeringCS.util.Graph
             _edges = new List<GraphEdge<T>>();
             _nodes = new Dictionary<T, GraphNode<T>>();
         }
-
-
-
-
+        
         public GraphNode<T> AddNode(T data)
         {
             var node = new GraphNode<T>(data);

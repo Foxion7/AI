@@ -268,5 +268,8 @@ namespace SteeringCS
                 return;
             Hero.Path = new Route(PathFinding.AStar(Graph, Hero.Pos, end, PathFinding.Manhatten).PathSmoothing(_walls, _obstacles).ToList());
         }
+
+        public Vector2D RandomPos()=> Graph.Nodes.ElementAt(_rnd.Next(Graph.Nodes.Count())).Data;
+        
     }
 }

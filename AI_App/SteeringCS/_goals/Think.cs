@@ -68,13 +68,18 @@ namespace SteeringCS._goals
 
         private Goal ChooseStrategy()
         {
+
             int threatScore = CalculateThreatScore();
-            if (threatScore > 10)
-            {
-                Goal flee = new Goal_Flee("Flee", hero);
-                return new Goal_Survive("Survive", new List<Goal> { flee }, hero);
-            }
-            else if (threatScore > 0 && threatScore <= 10)
+
+            // Flight strategy. Not implemented yet.
+            //if (threatScore > 10)
+            //{
+            //    Goal flee = new Goal_Flee("Flee", hero);
+            //    return new Goal_Survive("Survive", new List<Goal> { flee }, hero);
+            //}
+            /* else */
+
+            if (threatScore > 0)
             {
                 Goal hunt = new Goal_Hunt("Hunt", hero);
                 Goal attack = new Goal_Attack("Attack", hero);
@@ -84,7 +89,7 @@ namespace SteeringCS._goals
             {
                 Goal discover = new Goal_Discover("Discover", hero);
                 Goal collect = new Goal_Collect("Collect", hero);
-                return new Goal_FindTreasure("Find treasure", new List<Goal> { discover, collect }, hero); 
+                return new Goal_FindTreasure("Find treasure", new List<Goal> { discover, collect }, hero);
             }
             return new Goal_Wander("Wander", hero);
         }
@@ -92,7 +97,7 @@ namespace SteeringCS._goals
         private int CalculateThreatScore()
         {
             int threatScore = 0;
-            int dangerDistance = 250;
+            int dangerDistance = 500;
             foreach (Goblin goblin in hero.world.getGoblins())
             {
                 if(VectorMath.DistanceBetweenPositions(hero.Pos, goblin.Pos) < dangerDistance && VectorMath.LineOfSight(hero.world, hero.Pos, goblin.Pos))

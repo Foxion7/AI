@@ -1,5 +1,6 @@
 ﻿using SteeringCS.entity;
 using SteeringCS.Goals;
+using SteeringCS.util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,7 @@ namespace SteeringCS._goals
 
             if (hero.world.getGoblins().Count() > 0)
             {
+                // Selects next target.
                 foreach (Goblin goblin in hero.world.getGoblins())
                 {
                     double distance = VectorMath.DistanceBetweenPositions(hero.Pos, goblin.Pos);
@@ -52,23 +54,22 @@ namespace SteeringCS._goals
                         closestDistance = distance;
                     }
                 }
-
-                if (closestGoblin == null && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10)
+                
+                // If goblin is out of attack range, approaches.
+                if (VectorMath.DistanceBetweenPositions(closestGoblin.Pos, hero.Pos) > hero.attackRange)
                 {
-                    pos = hero.getRandomTarget();
-                    hero.world.setPlayerRoute(pos);
+                    hero.Path = new Route(new List<Vector2D>() { closestGoblin.Pos });
                 }
 
-                if (hero.Path.Last() && closestGoblin != null && VectorMath.DistanceBetweenPositions(closestGoblin.Pos, hero.Pos) < 10)
+                // If target is within range, exits to be able to attack.
+                else if (hero.Path.Last() &&  VectorMath.DistanceBetweenPositions(closestGoblin.Pos, hero.Pos) < hero.attackRange)
                 {
                     Exit();
                 }
-                else
-                {
-                    hero.ApplyForce(hero.WA.Calculate(), hero.timeElapsed);
-                    hero.ApplyForce(hero.OA.Calculate(), hero.timeElapsed);
-                    hero.ApplyForce(hero.PB.Calculate(), hero.timeElapsed);
-                }
+
+                hero.ApplyForce(hero.WA.Calculate(), hero.timeElapsed);
+                hero.ApplyForce(hero.OA.Calculate(), hero.timeElapsed);
+                hero.ApplyForce(hero.PB.Calculate(), hero.timeElapsed);
             }
         }
 

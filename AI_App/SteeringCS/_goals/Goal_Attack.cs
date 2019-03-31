@@ -27,8 +27,6 @@ namespace SteeringCS._goals
             done = false;
         }
 
-        int counter = 0;
-
         public override void Enter()
         {
             started = true;

@@ -49,12 +49,14 @@ namespace SteeringCS.entity
         public int cooldownCost { get; }
 
         public double currentGold { get; set; }
+        public double attackRange { get; set; }
         
         public Hero(string name, Vector2D pos, World w) : base(name, pos, w)
         {
             debugText = new List<string>();
             Mass = 1;
-            MaxSpeed = 10;
+            Scale = 5;
+            MaxSpeed = 3;
             MaxForce = 500;
             PanicDistance = 100;
             OA = new ObstacleAvoidance(this);
@@ -75,12 +77,13 @@ namespace SteeringCS.entity
             maxStamina = 100;
             maxCooldown = 100;
 
-            staminaCost = 50;
-            cooldownCost = 100;
+            staminaCost = 25;
+            cooldownCost = 50;
 
             currentGold = 0;
+            
+            attackRange = Scale * 5;
 
-            Scale = 5;
             VColor = Color.Black;
             currentGoal = new Think("Think", this);
             currentGoal.Enter();
@@ -90,6 +93,36 @@ namespace SteeringCS.entity
         {
             this.timeElapsed = timeElapsed;
             currentGoal.Process();
+
+            //Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
+
+            //Vector2D steeringForce = new Vector2D();
+
+            //if (PB != null)
+            //{
+            //    steeringForce += PB.Calculate() * 0.33;
+            //}
+            //if (OA != null)
+            //{
+            //    steeringForce += OA.Calculate() * 0.66;
+            //}
+            //if (WA != null)
+            //{
+            //    steeringForce += WA.Calculate() * 0.66;
+            //}
+
+            //Vector2D acceleration = steeringForce / Mass;
+
+            //Velocity += (acceleration * timeElapsed);
+            //Velocity = Velocity.Truncate(MaxSpeed);
+            //Pos += (Velocity * timeElapsed);
+
+            //if (Velocity.LengthSquared() > 0.00000001)
+            //{
+            //    Heading = Velocity.Normalize();
+            //    Side = Heading.Perp();
+            //}
+            //WrapAround();
         }
 
         public void ApplyForce(Vector2D steeringForce, float timeElapsed)
@@ -155,7 +188,7 @@ namespace SteeringCS.entity
 
             foreach (Goblin goblin in world.getGoblins())
             {
-                if (VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < Scale * 5 && VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < closestDistance)
+                if (VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < attackRange && VectorMath.DistanceBetweenPositions(Pos, goblin.Pos) < closestDistance)
                 {
                     closestThreat = goblin;
                     closestDistance = VectorMath.DistanceBetweenPositions(Pos, goblin.Pos);

@@ -151,16 +151,11 @@ namespace SteeringCS
             _treasures.Remove(treasure);
         }
 
-        public void DestroySeekers()
-        {
-            _goblins.Clear();
-        }
-
         public void Update(float timeElapsed)
         {
             try
             {
-                _goblins.ToList().ForEach(goblin =>
+                _goblins.ForEach(goblin =>
                 {
                     goblin.Update(timeElapsed);
                     enforceNonPenetrationConstraint(goblin);
@@ -263,9 +258,13 @@ namespace SteeringCS
             return _goblins;
         }
 
+        public void getRoute(Vector2D start, Vector2D end)
+            => new Route(PathFinding.AStar(Graph, start, end, PathFinding.Manhatten).PathSmoothing(_walls, _obstacles).ToList());
+        
+
         public void setPlayerRoute(Vector2D end)
         {
-            if(Hero == null)
+            if (Hero == null)
                 return;
             Hero.Path = new Route(PathFinding.AStar(Graph, Hero.Pos, end, PathFinding.Manhatten).PathSmoothing(_walls, _obstacles).ToList());
         }

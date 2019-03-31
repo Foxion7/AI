@@ -121,6 +121,21 @@ namespace SteeringCS.entity
             #endregion
         }
 
+        public void ApplyForce(Vector2D steeringForce, float timeElapsed)
+        {
+            Vector2D acceleration = steeringForce / Mass;
+
+            Velocity += (acceleration * timeElapsed);
+            Velocity = Velocity.Truncate(MaxSpeed);
+            Pos += (Velocity * timeElapsed);
+
+            if (Velocity.LengthSquared() > 0.00000001)
+            {
+                Heading = Velocity.Normalize();
+                Side = Heading.Perp();
+            }
+            WrapAround();
+        }
         public override void Render(Graphics g)
         {
             double leftCorner = Pos.X - Scale;

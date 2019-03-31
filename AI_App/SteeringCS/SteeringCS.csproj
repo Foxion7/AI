@@ -152,8 +152,7 @@
     <Compile Include="_goals\Goal_Discover.cs" />
     <Compile Include="_goals\Goal_Flee.cs" />
     <Compile Include="_goals\Goal_Attack.cs" />
-    <Compile Include="_goals\Goal_FollowPath.cs" />
-    <Compile Include="_goals\Goal_PlanPath.cs" />
+    <Compile Include="_goals\Goal_Hunt.cs" />
     <Compile Include="_goals\Goal_FindTreasure.cs" />
     <Compile Include="_goals\Goal_Survive.cs" />
     <Compile Include="_goals\Goal_KillGoblins.cs" />

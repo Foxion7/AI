@@ -56,7 +56,7 @@ namespace SteeringCS
 
             SpawnObstacles();
             SpawnWalls();
-            GenerateTreasure(10, 30, new Vector2D(100, 500));
+            GenerateTreasure();
 
             Graph = new VectorGraph(w, h, 75, _obstacles, _walls);
             populate();
@@ -135,9 +135,9 @@ namespace SteeringCS
             _corpses.Add(corpse);
         }
 
-        public void GenerateTreasure(double value, double size, Vector2D pos)
+        public void GenerateTreasure()
         {
-            var treasure = new Treasure("Treasure", value, pos, this, size);
+            var treasure = new Treasure("Treasure", 10, new Vector2D(100, 500), this, 30);
             _treasures.Add(treasure);
         }
 
@@ -221,6 +221,7 @@ namespace SteeringCS
             _walls = new List<IWall>();
             SpawnObstacles();
             SpawnWalls();
+            GenerateTreasure();
             populate();
 
             Hero.currentGoal = new Think("Think", Hero);

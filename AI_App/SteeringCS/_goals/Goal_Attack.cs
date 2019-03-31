@@ -37,12 +37,9 @@ namespace SteeringCS._goals
         public override void Process()
         {
             hero.AddDebugText("                                    " + name, 2);
-            
-            counter++;
-            if(counter == 50)
-            {
-                Exit();
-            }
+
+            hero.Attack();
+            Exit();
         }
 
         public override void Exit()

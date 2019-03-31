@@ -38,12 +38,12 @@ namespace SteeringCS._goals
         public override void Process()
         {
             hero.AddDebugText("                                    " + name, 2);
-            
-            // Chooses random position.
-            if (hero.Path.Last() && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10)
+
+            double distanceToTarget = VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos);
+
+            if (hero.Path.Last() && distanceToTarget < 10)
             {
-                pos = hero.getRandomTarget();
-                hero.world.setPlayerRoute(pos);
+                Exit();
             }
             // Moves to random position.
             else

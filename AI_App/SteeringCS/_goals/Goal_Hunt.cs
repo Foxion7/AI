@@ -8,31 +8,29 @@ using System.Threading.Tasks;
 
 namespace SteeringCS._goals
 {
-    public class Goal_Discover : Goal
+    public class Goal_Hunt: Goal
     {
         // TODO Remove. This is only used for debugTexts.
         Hero hero;
 
         // TODO Remove. This is only used for debugTexts.
-        public Goal_Discover(string name, Hero hero) : base(name)
+        public Goal_Hunt(string name, Hero hero) : base(name)
         {
             started = false;
             done = false;
             this.hero = hero;
         }
 
-        public Goal_Discover(string name) : base(name)
+        public Goal_Hunt(string name) : base(name)
         {
-            started = false;
             done = false;
+            started = false;
         }
 
         Vector2D pos;
 
         public override void Enter()
         {
-            pos = hero.getRandomTarget();
-            hero.world.setPlayerRoute(pos);
             started = true;
         }
 
@@ -40,24 +38,38 @@ namespace SteeringCS._goals
         {
             hero.AddDebugText("                                    " + name, 2);
 
-                // If treasure is sighted, stop looking.
-                if (VectorMath.LineOfSight(hero.world, hero.Pos, hero.world.getTreasure()[0].Pos))
+            Goblin closestGoblin = null;
+            double closestDistance = int.MaxValue;
+
+            if (hero.world.getGoblins().Count() > 0)
+            {
+                foreach (Goblin goblin in hero.world.getGoblins())
                 {
-                    Exit();
+                    double distance = VectorMath.DistanceBetweenPositions(hero.Pos, goblin.Pos);
+                    if (distance < closestDistance && VectorMath.LineOfSight(hero.world, hero.Pos, goblin.Pos))
+                    {
+                        closestGoblin = goblin;
+                        closestDistance = distance;
+                    }
                 }
-                // If treasure is not sighted, create random goal position.
-                else if (hero.Path.Last() && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10)
+
+                if (closestGoblin == null && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10)
                 {
                     pos = hero.getRandomTarget();
                     hero.world.setPlayerRoute(pos);
                 }
-                // Moves to random position.
+
+                if (hero.Path.Last() && closestGoblin != null && VectorMath.DistanceBetweenPositions(closestGoblin.Pos, hero.Pos) < 10)
+                {
+                    Exit();
+                }
                 else
                 {
                     hero.ApplyForce(hero.WA.Calculate(), hero.timeElapsed);
                     hero.ApplyForce(hero.OA.Calculate(), hero.timeElapsed);
                     hero.ApplyForce(hero.PB.Calculate(), hero.timeElapsed);
                 }
+            }
         }
 
         public override void Exit()

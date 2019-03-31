@@ -93,7 +93,6 @@ namespace SteeringCS._goals
         {
             int threatScore = 0;
             int dangerDistance = 250;
-
             foreach (Goblin goblin in hero.world.getGoblins())
             {
                 if(VectorMath.DistanceBetweenPositions(hero.Pos, goblin.Pos) < dangerDistance && VectorMath.LineOfSight(hero.world, hero.Pos, goblin.Pos))

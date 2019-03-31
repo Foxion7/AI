@@ -148,6 +148,7 @@
     <Compile Include="util\VectorMath.cs" />
     <Compile Include="world\World.cs" />
     <Compile Include="_goals\Goal_Collect.cs" />
+    <Compile Include="_goals\Goal_Wander.cs" />
     <Compile Include="_goals\Goal_Discover.cs" />
     <Compile Include="_goals\Goal_Flee.cs" />
     <Compile Include="_goals\Goal_Attack.cs" />

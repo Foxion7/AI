@@ -35,28 +35,34 @@ namespace SteeringCS._goals
 
         public override void Process()
         {
-            if (subgoals.Count() > 0)
+            if (hero.world.getTreasure().Count() > 0)
             {
-                if (subgoals.Last().done)
+                if (subgoals.Count() > 0)
                 {
-                    subgoals.Clear();
-                    Exit();
+                    if (subgoals.Last().done)
+                    {
+                        subgoals.Clear();
+                        Exit();
+                    }
+                    else
+                    {
+                        if (!subgoals[currentGoal].done && !subgoals[currentGoal].started)
+                        {
+                            subgoals[currentGoal].Enter();
+                        }
+                        else if (!subgoals[currentGoal].done && subgoals[currentGoal].started)
+                        {
+                            subgoals[currentGoal].Process();
+                        }
+                        else if (subgoals[currentGoal].done && currentGoal < subgoals.Count())
+                        {
+                            currentGoal++;
+                        }
+                    }
                 }
-                else
-                {
-                    if (!subgoals[currentGoal].done && !subgoals[currentGoal].started)
-                    {
-                        subgoals[currentGoal].Enter();
-                    }
-                    else if (!subgoals[currentGoal].done && subgoals[currentGoal].started)
-                    {
-                        subgoals[currentGoal].Process();
-                    }
-                    else if (subgoals[currentGoal].done && currentGoal < subgoals.Count())
-                    {
-                        currentGoal++;
-                    }
-                }
+            } else
+            {
+                Exit();
             }
         }
 

@@ -27,7 +27,7 @@ namespace SteeringCS._goals
             done = false;
         }
 
-        int counter = 0;
+        Vector2D pos;
 
         public override void Enter()
         {
@@ -38,10 +38,22 @@ namespace SteeringCS._goals
         {
             hero.AddDebugText("                                    " + name, 2);
 
-            counter++;
-            if (counter == 50)
+            if(VectorMath.DistanceBetweenPositions(hero.Pos, hero.world.getTreasure()[0].Pos) > 10 && pos != hero.world.getTreasure()[0].Pos)
             {
+                pos = hero.world.getTreasure()[0].Pos;
+                hero.world.setPlayerRoute(pos);
+
+            } else if (VectorMath.DistanceBetweenPositions(hero.Pos, hero.world.getTreasure()[0].Pos) <= 10)
+            {
+                hero.CollectTreasure(hero.world.getTreasure()[0]);
                 Exit();
+            }
+            // Moves to random position.
+            else
+            {
+                hero.ApplyForce(hero.WA.Calculate(), hero.timeElapsed);
+                hero.ApplyForce(hero.OA.Calculate(), hero.timeElapsed);
+                hero.ApplyForce(hero.PB.Calculate(), hero.timeElapsed);
             }
         }
 

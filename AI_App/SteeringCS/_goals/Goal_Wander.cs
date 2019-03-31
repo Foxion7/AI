@@ -8,41 +8,51 @@ using System.Threading.Tasks;
 
 namespace SteeringCS._goals
 {
-    public class Goal_Hunt: Goal
+    public class Goal_Wander : Goal
     {
         // TODO Remove. This is only used for debugTexts.
         Hero hero;
 
         // TODO Remove. This is only used for debugTexts.
-        public Goal_Hunt(string name, Hero hero) : base(name)
+        public Goal_Wander(string name, Hero hero) : base(name)
         {
             started = false;
             done = false;
             this.hero = hero;
         }
 
-        public Goal_Hunt(string name) : base(name)
+        public Goal_Wander(string name) : base(name)
         {
-            done = false;
             started = false;
+            done = false;
         }
-
-        int counter = 0;
+        Vector2D pos;
 
         public override void Enter()
         {
+            pos = hero.getRandomTarget();
+            hero.world.setPlayerRoute(pos);
             started = true;
         }
 
         public override void Process()
         {
             hero.AddDebugText("                                    " + name, 2);
-
-            counter++;
-            if (counter == 50)
+            
+            // Chooses random position.
+            if (hero.Path.Last() && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10)
             {
-                Exit();
+                pos = hero.getRandomTarget();
+                hero.world.setPlayerRoute(pos);
             }
+            // Moves to random position.
+            else
+            {
+                hero.ApplyForce(hero.WA.Calculate(), hero.timeElapsed);
+                hero.ApplyForce(hero.OA.Calculate(), hero.timeElapsed);
+                hero.ApplyForce(hero.PB.Calculate(), hero.timeElapsed);
+            }
+            
         }
 
         public override void Exit()

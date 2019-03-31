@@ -38,32 +38,26 @@ namespace SteeringCS._goals
         public override void Process()
         {
             hero.AddDebugText("                                    " + name, 2);
-            // If treasure is sighted but player isnt close, go towards treasure
-            if (VectorMath.LineOfSight(hero.world, hero.Pos, hero.world.getTreasure()[0].Pos)
-                && VectorMath.DistanceBetweenPositions(hero.Pos, hero.world.getTreasure()[0].Pos) > 10
-                && pos != hero.world.getTreasure()[0].Pos)
-            {
-                pos = hero.world.getTreasure()[0].Pos;
-                hero.world.setPlayerRoute(pos);
-            }
-            // If treasure is sighted and player is close, stop discovering.
-            else if (VectorMath.LineOfSight(hero.world, hero.Pos, hero.world.getTreasure()[0].Pos)
-            && VectorMath.DistanceBetweenPositions(hero.Pos, hero.world.getTreasure()[0].Pos) <= 10)
-            {
-                Exit();
-            }
-            // If treasure is not sighted, create random goal position.
-            else if (hero.Path.Last() && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10)
-            {
-                pos = hero.getRandomTarget();
-                hero.world.setPlayerRoute(pos);
-            }
-            else
-            {
-                hero.ApplyForce(hero.WA.Calculate(), hero.timeElapsed);
-                hero.ApplyForce(hero.OA.Calculate(), hero.timeElapsed);
-                hero.ApplyForce(hero.PB.Calculate(), hero.timeElapsed);
-            }
+
+                // If treasure is sighted, stop looking.
+                if (VectorMath.LineOfSight(hero.world, hero.Pos, hero.world.getTreasure()[0].Pos))
+                {
+                    Exit();
+                }
+                // If treasure is not sighted, create random goal position.
+                else if (hero.Path.Last() && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10)
+                {
+                    pos = hero.getRandomTarget();
+                    hero.world.setPlayerRoute(pos);
+                }
+                // Moves to random position.
+                else
+                {
+                    hero.ApplyForce(hero.WA.Calculate(), hero.timeElapsed);
+                    hero.ApplyForce(hero.OA.Calculate(), hero.timeElapsed);
+                    hero.ApplyForce(hero.PB.Calculate(), hero.timeElapsed);
+                }
+            
         }
 
         public override void Exit()

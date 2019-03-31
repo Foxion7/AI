@@ -34,7 +34,8 @@ namespace SteeringCS._goals
         {
             hero.AddDebugText("I am thinking", 0);
 
-            if (subgoals.Count() > 0)
+            
+            if (subgoals.Count() > 0 && subgoals.Last() != null)
             {
                 hero.AddDebugText("Current Strategy: " + subgoals[currentGoal], 1);
                 if (subgoals.Last().done)
@@ -65,7 +66,7 @@ namespace SteeringCS._goals
             done = true;
         }
 
-        private GoalComponent ChooseStrategy()
+        private Goal ChooseStrategy()
         {
             int threatScore = CalculateThreatScore();
             if (threatScore > 10)
@@ -75,15 +76,17 @@ namespace SteeringCS._goals
             }
             else if (threatScore > 0 && threatScore <= 10)
             {
+                Goal hunt = new Goal_Hunt("Hunt", hero);
                 Goal attack = new Goal_Attack("Attack", hero);
-                Goal hunt = new Goal_PlanPath("PlanPath", hero);
-                return new Goal_KillGoblins("Kill Goblins", new List<Goal> { attack, hunt }, hero);
+                return new Goal_KillGoblins("Kill Goblins", new List<Goal> { hunt, attack }, hero);
             }
-            else {
+            else if (hero.world.getTreasure().Count() > 0)
+            {
                 Goal discover = new Goal_Discover("Discover", hero);
                 Goal collect = new Goal_Collect("Collect", hero);
-                return new Goal_FindTreasure("Find treasure", new List<Goal> { discover, collect }, hero); ;
+                return new Goal_FindTreasure("Find treasure", new List<Goal> { discover, collect }, hero); 
             }
+            return new Goal_Wander("Wander", hero);
         }
 
         private int CalculateThreatScore()

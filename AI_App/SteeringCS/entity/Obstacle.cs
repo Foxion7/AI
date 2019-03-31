@@ -100,7 +100,7 @@ namespace SteeringCS.entity
             if (world.DebugMode)
             {
                 Brush brush = new SolidBrush(Color.Black);
-                g.DrawString(Name, SystemFonts.DefaultFont, brush, (float)(Pos.X + size / 2), (float)(Pos.Y - size / 2), new StringFormat());
+                //g.DrawString(Name, SystemFonts.DefaultFont, brush, (float)(Pos.X + size / 2), (float)(Pos.Y - size / 2), new StringFormat());
             }
         }
     }

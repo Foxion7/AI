@@ -14,6 +14,7 @@ namespace SteeringCS.Fuzzylogic
 
         public FuzzyVariable()
         {
+            _memberSets = new Dictionary<string, FuzzySet>();
             _minRange = 0.0;
             _maxRange = 0.0;
         }

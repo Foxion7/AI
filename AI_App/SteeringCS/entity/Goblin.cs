@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using SteeringCS.behaviour;
+using SteeringCS.Fuzzylogic;
+using SteeringCS.Fuzzylogic.FuzzyTerms;
 using SteeringCS.Interfaces;
 using SteeringCS.States.GoblinState;
 
@@ -10,12 +12,18 @@ namespace SteeringCS.entity
 {
     public class Goblin : MovingEntity, IGrouper, IObstacleAvoider, IWallAvoider
     {
-        // For thread safety.
+        // For thread safety and message passing
         private static int _lastKey = 0;
         public readonly int Key;
 
+        //fuzzy logic
+        private FuzzyModule FuzzyLogicModule;
+        
+        //the higher this is the better his condition is. We could tie it to actual HP or something
+        public int CurrentCondition = 80;
+        //his rage score. Maybe make it tick up whenever he sees the hero character.
+        public int CurrentAnger = 80;
         private List<string> debugText;
-
         public Color VColor { get; set; }
         public double BraveryDistance { get; set; }
         public double PassiveDistance { get; set; }
@@ -24,7 +32,7 @@ namespace SteeringCS.entity
         public int DamagePerAttack { get; set; }
         public int AttackRange { get; set; }
         public int AttackSpeed { get; set; }
-
+        private readonly double _constMaxSpeed;
         public Hobgoblin Commander { get; set; }
         public bool FollowingOrder { get; set; }
 
@@ -58,6 +66,34 @@ namespace SteeringCS.entity
         
         public Goblin(string name, Vector2D pos, World w, MovingEntity Target) : base(name, pos, w)
         {
+            //fuzzy logic
+            FuzzyLogicModule = new FuzzyModule();
+            var angerFLV = FuzzyLogicModule.CreateFLV("anger");
+            FzSet calm      = angerFLV.AddLeftShoulderSet("calm", 0, 20, 40);
+            FzSet irritated = angerFLV.AddTriangularSet("irritated", 20, 40, 50);
+            FzSet angry     = angerFLV.AddRightShoulderSet("angry", 40, 50, 100);
+
+            var healthFLV = FuzzyLogicModule.CreateFLV("health");
+            FzSet sick = healthFLV.AddLeftShoulderSet("sick", 0, 30, 40);
+            FzSet sickish = healthFLV.AddTriangularSet("sickish", 30, 40, 50);
+            FzSet healthy = healthFLV.AddRightShoulderSet("healthy", 40, 50, 100);
+
+
+            var speedFLV = FuzzyLogicModule.CreateFLV("speed");
+            FzSet slow = speedFLV.AddLeftShoulderSet("slow", 20, 40, 60);
+            FzSet mediocre = speedFLV.AddTriangularSet("mediocre", 40, 60, 80);
+            FzSet fast = speedFLV.AddRightShoulderSet("fast", 60, 99, 100);
+
+            FuzzyLogicModule.addRule(new FzAnd(calm, healthy), mediocre);
+            FuzzyLogicModule.addRule(new FzAnd(calm, sickish), slow);
+            FuzzyLogicModule.addRule(new FzAnd(calm, sick), slow);
+            FuzzyLogicModule.addRule(new FzAnd(irritated, healthy), fast);
+            FuzzyLogicModule.addRule(new FzAnd(irritated, sickish), mediocre);
+            FuzzyLogicModule.addRule(new FzAnd(irritated, sick), slow);
+            FuzzyLogicModule.addRule(new FzAnd(angry, healthy), fast);
+            FuzzyLogicModule.addRule(new FzAnd(angry, sickish), fast);
+            FuzzyLogicModule.addRule(new FzAnd(angry, sick), mediocre);
+
             // State.
             hunting = new Hunting(this);
             retreating = new Retreating(this);
@@ -75,6 +111,7 @@ namespace SteeringCS.entity
             debugText = new List<string>();
             this.Target = Target;
             Mass = 50;
+            _constMaxSpeed = 5;
             MaxSpeed = 5;
             MaxForce = 25;
             DamagePerAttack = 10;
@@ -114,6 +151,11 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
+            FuzzyLogicModule.Fuzzify("anger", CurrentAnger);
+            FuzzyLogicModule.Fuzzify("health", CurrentCondition);
+
+            var speedMod = FuzzyLogicModule.DeFuzzify("speed");
+            MaxSpeed = (float) (_constMaxSpeed * speedMod / 100);
             currentState.Act(timeElapsed);
         }
 

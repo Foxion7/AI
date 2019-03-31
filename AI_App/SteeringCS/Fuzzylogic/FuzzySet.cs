@@ -23,7 +23,7 @@ namespace SteeringCS.Fuzzylogic
         //then this method sets the DOM (in this context, the DOM represents a
         //confidence level) to the maximum of the parameter value or the set's
         //existing m_dDOM value
-        public void ORwithDOM(double val) => Math.Max(val, DegreeOfMembership);
+        public void ORwithDOM(double val) => DegreeOfMembership = Math.Max(val, DegreeOfMembership);
 
     };
 }

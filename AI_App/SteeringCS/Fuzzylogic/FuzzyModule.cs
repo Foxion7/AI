@@ -5,9 +5,16 @@ namespace SteeringCS.Fuzzylogic
 {
     public class FuzzyModule
     {
-        Dictionary<string, FuzzyVariable> _variables;
-        List<FuzzyRule> _rules;
-        private int _numSamplesToUseForCentroid = 15;
+
+        private Dictionary<string, FuzzyVariable> _variables;
+        private List<FuzzyRule> _rules;
+        public int NumSamplesToUseForCentroid { get; set; } = 15;
+
+        public FuzzyModule()
+        {
+            _rules = new List<FuzzyRule>();
+            _variables = new Dictionary<string, FuzzyVariable>();
+        }
 
         public FuzzyVariable CreateFLV(string FLVName)
         {
@@ -25,7 +32,7 @@ namespace SteeringCS.Fuzzylogic
             _variables[NameOfFLV].Fuzzify(val);
         }
 
-        public double DeFuzzify(string NameOfFLV, DefuzzifyMethod method = DefuzzifyMethod.centroid, int NumSamples = 15)
+        public double DeFuzzify(string NameOfFLV, DefuzzifyMethod method = DefuzzifyMethod.MaxAv, int NumSamples = 15)
         {
             //clear the DOMs of all the consequents
             _rules.ForEach(rule => rule.SetConfidenceOfResultToZero());
@@ -34,14 +41,14 @@ namespace SteeringCS.Fuzzylogic
             //now defuzzify the resultant conclusion using the specified method
             switch (method)
             {
-                case DefuzzifyMethod.centroid:
+                case DefuzzifyMethod.Centroid:
                     return _variables[NameOfFLV].DeFuzzifyCentroid(NumSamples);
-                case DefuzzifyMethod.max_av:
+                case DefuzzifyMethod.MaxAv:
                     return _variables[NameOfFLV].DeFuzzifyMaxAv();
             }
             return 0;
         }
     }
 
-    public enum DefuzzifyMethod { max_av, centroid };
+    public enum DefuzzifyMethod { MaxAv, Centroid };
 }

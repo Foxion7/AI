@@ -42,7 +42,7 @@ namespace SteeringCS._goals
             hero.AddDebugText("                                    " + name, 2);
             hero.AddDebugText("                                    " + "target pos: " + pos, 3);
             Console.WriteLine(VectorMath.DistanceBetweenPositions(pos, hero.Pos) < 100);
-            if (VectorMath.DistanceBetweenPositions(pos, hero.Pos) < 10) {
+            if (hero.Path.Last() && VectorMath.DistanceBetweenPositions(hero.Path.CurrentWaypoint(), hero.Pos) < 10) {
                 pos = hero.getRandomTarget();
                 hero.world.setPlayerRoute(pos);
             }

@@ -10,6 +10,7 @@
             Set = set;
         }
 
+        public double GetRepresentativeVal => Set.GetRepresentativeVal();
         public override double GetDom() => Set.DegreeOfMembership;
 
         public override void ClearDOM() => Set.ClearDOM();

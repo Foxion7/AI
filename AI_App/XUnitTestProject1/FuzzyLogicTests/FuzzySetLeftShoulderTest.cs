@@ -2,7 +2,7 @@
 using SteeringCS.Fuzzylogic.FuzzySets;
 using Xunit;
 
-namespace XUnitTestProject1
+namespace XUnitTestProject1.FuzzyLogicTests
 {
     public class FuzzySetLeftShoulderTest
     {

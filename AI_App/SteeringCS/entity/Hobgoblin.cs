@@ -74,7 +74,7 @@ namespace SteeringCS.entity
             AttackRange = 20;
             AttackSpeed = 30; // Lower is faster.
             CurrentCommand = 3; // Default command.
-            CommandRadius = 125; // Size of area where goblins will respond to commanding.
+            CommandRadius = 250; // Size of area where goblins will respond to commanding.
 
             SlowingRadius = 100;
             PanicDistance = 200; // Distance at which hobgoblin starts fleeing.
@@ -97,7 +97,6 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
-
             currentState.Act(timeElapsed);
         }
 
@@ -137,7 +136,7 @@ namespace SteeringCS.entity
             if (world.DebugMode)
             {
                 Brush brush = new SolidBrush(Color.Black);
-                g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
+                //g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
 
                 // RendezvousPoint.
                 Vector2D debugRendezvousPoint = GetRendezvousPoint();

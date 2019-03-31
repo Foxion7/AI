@@ -92,7 +92,7 @@ namespace SteeringCS
         {
             if (e.Button == MouseButtons.Left)
             {
-                world.setPlayerRoute(new Vector2D(e.X, e.Y));
+                world.Hero.Path = new Route(new List<Vector2D>() { new Vector2D(e.X, e.Y) });
                 AnalyseEntity(new Vector2D(e.X, e.Y));
             }
         }

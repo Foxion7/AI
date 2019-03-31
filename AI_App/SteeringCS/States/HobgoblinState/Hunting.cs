@@ -50,7 +50,7 @@ namespace SteeringCS.States.HobgoblinState
             }
             else if (AttackAvailable())
             {
-                //AttackPlayer();
+                AttackPlayer();
             }
 
             // Checks wether a state change is in order.

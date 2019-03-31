@@ -23,7 +23,6 @@ namespace SteeringCS.States.HobgoblinState
         {
             // Gives order to listeners.
             hobgoblin.CallOrder();
-
             StateCheck();
         }
 
@@ -55,6 +54,7 @@ namespace SteeringCS.States.HobgoblinState
 
         private void StateCheck()
         {
+            // If player is too far or there is no line of sight, state goes to hunting.
             if (VectorMath.DistanceBetweenPositions(hobgoblin.Pos, hobgoblin.Target.Pos) >= hobgoblin.CommandRadius || !VectorMath.LineOfSight(hobgoblin.world, hobgoblin.Pos, hobgoblin.Target.Pos))
             {
                 hobgoblin.setState(hobgoblin.hunting);

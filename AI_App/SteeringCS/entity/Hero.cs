@@ -56,7 +56,7 @@ namespace SteeringCS.entity
             debugText = new List<string>();
             Mass = 1;
             Scale = 5;
-            MaxSpeed = 3;
+            MaxSpeed = 20;
             MaxForce = 500;
             PanicDistance = 100;
             OA = new ObstacleAvoidance(this);
@@ -94,6 +94,7 @@ namespace SteeringCS.entity
             this.timeElapsed = timeElapsed;
             currentGoal.Process();
 
+            #region Debug
             //Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);
 
             //Vector2D steeringForce = new Vector2D();
@@ -123,6 +124,7 @@ namespace SteeringCS.entity
             //    Side = Heading.Perp();
             //}
             //WrapAround();
+            #endregion
         }
 
         public void ApplyForce(Vector2D steeringForce, float timeElapsed)

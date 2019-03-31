@@ -204,7 +204,7 @@ namespace SteeringCS.entity
             if (world.DebugMode)
             {
                 Brush brush = new SolidBrush(Color.Black);
-                g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
+                //g.DrawString(DebugText, SystemFonts.DefaultFont, brush, (float)(Pos.X + size), (float)(Pos.Y - size / 2), new StringFormat());
                 
                 Vector2D currentPosition = new Vector2D(Pos.X, Pos.Y);
                 Vector2D goalPosition = new Vector2D(world.Hero.Pos.X, world.Hero.Pos.Y);

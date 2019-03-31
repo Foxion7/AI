@@ -28,21 +28,34 @@ namespace SteeringCS._goals
         }
 
         int counter = 0;
+        Vector2D pos;
 
         public override void Enter()
         {
+            pos = hero.getRandomTarget();
+            hero.world.setPlayerRoute(pos);
             started = true;
         }
 
         public override void Process()
         {
             hero.AddDebugText("                                    " + name, 2);
-
-            counter++;
-            if (counter == 50)
-            {
-                Exit();
+            hero.AddDebugText("                                    " + "target pos: " + pos, 3);
+            Console.WriteLine(VectorMath.DistanceBetweenPositions(pos, hero.Pos) < 100);
+            if (VectorMath.DistanceBetweenPositions(pos, hero.Pos) < 10) {
+                pos = hero.getRandomTarget();
+                hero.world.setPlayerRoute(pos);
             }
+            else {
+                hero.ApplyForce(hero.WA.Calculate(), hero.timeElapsed);
+                hero.ApplyForce(hero.OA.Calculate(), hero.timeElapsed);
+                hero.ApplyForce(hero.PB.Calculate(), hero.timeElapsed);
+            }
+            //counter++;
+            //if (counter == 50)
+            //{
+            //    Exit();
+            //}
         }
 
         public override void Exit()

@@ -29,6 +29,7 @@ namespace SteeringCS.entity
         private List<string> debugText;
         
         public Goal currentGoal;
+        public float timeElapsed;
 
         public FollowPathBehaviour PB;
         public ISteeringBehaviour OA;
@@ -87,6 +88,7 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
+            this.timeElapsed = timeElapsed;
             currentGoal.Process();
             #region old stuff
             //Center = new Vector2D(Pos.X + Scale, Pos.Y + Scale);

@@ -20,9 +20,11 @@ namespace SteeringCS.entity
         private FuzzyModule FuzzyLogicModule;
         
         //the higher this is the better his condition is. We could tie it to actual HP or something
-        public int CurrentCondition = 80;
+        private static Random _rnd = new Random();
+
+        public int CurrentCondition;
         //his rage score. Maybe make it tick up whenever he sees the hero character.
-        public int CurrentAnger = 80;
+        public double CurrentAnger;
         private List<string> debugText;
         public Color VColor { get; set; }
         public double BraveryDistance { get; set; }
@@ -77,8 +79,7 @@ namespace SteeringCS.entity
             FzSet sick = healthFLV.AddLeftShoulderSet("sick", 0, 30, 40);
             FzSet sickish = healthFLV.AddTriangularSet("sickish", 30, 40, 50);
             FzSet healthy = healthFLV.AddRightShoulderSet("healthy", 40, 50, 100);
-
-
+            
             var speedFLV = FuzzyLogicModule.CreateFLV("speed");
             FzSet slow = speedFLV.AddLeftShoulderSet("slow", 20, 40, 60);
             FzSet mediocre = speedFLV.AddTriangularSet("mediocre", 40, 60, 80);
@@ -117,6 +118,8 @@ namespace SteeringCS.entity
             DamagePerAttack = 10;
             AttackRange = 10;
             AttackSpeed = 15; // Lower is faster.
+            CurrentCondition = _rnd.Next(0, 100);
+            CurrentAnger = _rnd.Next(0, 50);
 
             GroupValue = 10;
             NeighborsRange = 100;
@@ -151,6 +154,7 @@ namespace SteeringCS.entity
 
         public override void Update(float timeElapsed)
         {
+            CurrentAnger+= 0.1;
             FuzzyLogicModule.Fuzzify("anger", CurrentAnger);
             FuzzyLogicModule.Fuzzify("health", CurrentCondition);
 

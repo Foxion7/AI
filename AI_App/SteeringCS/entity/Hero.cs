@@ -161,6 +161,7 @@ namespace SteeringCS.entity
         }
 
         public Vector2D getRandomTarget() => world.RandomPos();
+            
         public void Attack()
         {
             Goblin closestThreat = null;

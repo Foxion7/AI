@@ -22,9 +22,11 @@ namespace SteeringCS.Fuzzylogic
             return _variables[FLVName];
         }
 
-        public void addRule(FuzzyTerm reason, FuzzyTerm result)
+        public FuzzyRule addRule(FuzzyTerm reason, FuzzyTerm result)
         {
-            _rules.Add(new FuzzyRule(reason, result));
+            var r = new FuzzyRule(reason, result);
+            _rules.Add(r);
+            return r;
         }
 
         public void Fuzzify(string NameOfFLV, double val)

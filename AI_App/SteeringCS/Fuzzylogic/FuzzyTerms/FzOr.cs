@@ -2,7 +2,7 @@
 
 namespace SteeringCS.Fuzzylogic.FuzzyTerms
 {
-    class FzOr : FuzzyTerm
+    public class FzOr : FuzzyTerm
     {
         private FuzzyTerm[] _terms;
 
